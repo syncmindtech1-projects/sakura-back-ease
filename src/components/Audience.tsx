@@ -1,67 +1,78 @@
 import { motion } from "framer-motion";
-import { Car, Monitor, Baby, HardHat, Dumbbell, Scale } from "lucide-react";
+import { Link } from "react-router-dom";
+import { ArrowRight } from "lucide-react";
 
-const audiences = [
+const collarTypes = [
   {
-    icon: Car,
-    title: "Long-Distance Drivers",
-    desc: "Prolonged sitting causes pressure on spinal discs and leads to chronic lower back pain.",
+    title: "White Collar Jobs",
+    emoji: "👔",
+    desc: "Professional, managerial, and office-based careers",
+    examples: ["Software Engineers", "Accountants", "Lawyers", "Product Managers", "Marketing Directors"],
+    color: "primary",
+    href: "/jobs?collar=white",
   },
   {
-    icon: Monitor,
-    title: "Office Workers",
-    desc: "Hours of sitting with poor posture creates muscle imbalances and stiffness in the lumbar region.",
-  },
-  {
-    icon: Baby,
-    title: "Mothers with Young Babies",
-    desc: "Frequent bending, lifting and carrying puts extra strain on the lower back muscles.",
-  },
-  {
-    icon: HardHat,
-    title: "Manual Labor Workers",
-    desc: "Repetitive heavy lifting and physical strain accelerates wear on spinal structures.",
-  },
-  {
-    icon: Dumbbell,
-    title: "Sportsmen & Athletes",
-    desc: "Intense training and impact sports can lead to muscle fatigue and lower back injuries.",
-  },
-  {
-    icon: Scale,
-    title: "Overweight Individuals",
-    desc: "Excess weight increases load on the spine, leading to chronic discomfort and pain.",
+    title: "Blue Collar Jobs",
+    emoji: "🔧",
+    desc: "Skilled trades, manual labor, and technical work",
+    examples: ["Electricians", "Plumbers", "Welders", "HVAC Technicians", "CDL Drivers"],
+    color: "highlight",
+    href: "/jobs?collar=blue",
   },
 ];
 
 const Audience = () => {
   return (
-    <section id="audience" className="py-16 md:py-24 bg-card">
+    <section className="py-16 md:py-24">
       <div className="container mx-auto px-4 md:px-8">
-        <motion.h2
-          className="text-2xl md:text-3xl font-bold text-center text-foreground mb-12"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-        >
-          Who can benefit from using Sakura
-        </motion.h2>
+        <div className="text-center mb-12">
+          <motion.span
+            className="text-sm font-semibold text-highlight uppercase tracking-wider"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+          >
+            For Everyone
+          </motion.span>
+          <motion.h2
+            className="text-3xl md:text-4xl font-bold font-display text-foreground mt-2"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            Jobs for Every Type of Worker
+          </motion.h2>
+        </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {audiences.map((item, i) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+          {collarTypes.map((type, i) => (
             <motion.div
-              key={item.title}
-              className="flex flex-col items-center text-center"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              key={type.title}
+              className="group relative rounded-3xl border border-border bg-card p-8 hover:shadow-elevated transition-all overflow-hidden"
+              initial={{ opacity: 0, x: i === 0 ? -30 : 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: i * 0.08 }}
+              transition={{ duration: 0.5, delay: i * 0.15 }}
             >
-              <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mb-4">
-                <item.icon size={32} className="text-primary" />
+              <div className="absolute top-0 right-0 text-[120px] opacity-5 -translate-y-4 translate-x-4">
+                {type.emoji}
               </div>
-              <h3 className="text-base font-semibold text-foreground mb-1">{item.title}</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed max-w-[260px]">{item.desc}</p>
+              <span className="text-5xl mb-4 block">{type.emoji}</span>
+              <h3 className="text-2xl font-bold font-display text-foreground mb-2">{type.title}</h3>
+              <p className="text-sm text-muted-foreground mb-4">{type.desc}</p>
+              <div className="flex flex-wrap gap-2 mb-6">
+                {type.examples.map((ex) => (
+                  <span key={ex} className="text-xs px-3 py-1 rounded-full bg-secondary text-secondary-foreground font-medium">
+                    {ex}
+                  </span>
+                ))}
+              </div>
+              <Link
+                to={type.href}
+                className="inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline"
+              >
+                Explore {type.title} <ArrowRight size={14} />
+              </Link>
             </motion.div>
           ))}
         </div>

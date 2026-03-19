@@ -1,62 +1,60 @@
 import { motion } from "framer-motion";
-import { Play } from "lucide-react";
+import { UserPlus, Search, FileCheck, Briefcase } from "lucide-react";
 
 const steps = [
-  "Lie down on a bed or sofa and position the device under your lower back",
-  "Choose the treatment session on the device remote control",
-  "Enjoy your home physiotherapy session for 15 minutes",
+  { icon: UserPlus, title: "Create Account", desc: "Sign up for free in under 60 seconds" },
+  { icon: Search, title: "Search Jobs", desc: "Browse by category, location, or keyword" },
+  { icon: FileCheck, title: "Apply Easily", desc: "One-click apply with your saved profile" },
+  { icon: Briefcase, title: "Get Hired", desc: "Land your dream job and start your career" },
 ];
 
 const HowItWorks = () => {
   return (
-    <section id="how-it-works" className="py-16 md:py-24 gradient-hero">
+    <section className="py-16 md:py-24">
       <div className="container mx-auto px-4 md:px-8">
-        <motion.h2
-          className="text-2xl md:text-3xl font-bold text-center text-foreground mb-12"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-        >
-          This is how easy it is to use Sakura
-        </motion.h2>
-
-        <div className="flex flex-col lg:flex-row items-center gap-10 lg:gap-16">
-          {/* Video placeholder */}
-          <motion.div
-            className="lg:w-1/2 w-full"
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
+        <div className="text-center mb-12">
+          <motion.span
+            className="text-sm font-semibold text-primary uppercase tracking-wider"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
           >
-            <div className="relative rounded-2xl overflow-hidden bg-muted aspect-video flex items-center justify-center shadow-card cursor-pointer group">
-              <div className="absolute inset-0 bg-foreground/5 group-hover:bg-foreground/10 transition-colors" />
-              <div className="w-16 h-16 rounded-full bg-accent flex items-center justify-center shadow-cta group-hover:scale-110 transition-transform">
-                <Play size={28} className="text-accent-foreground ml-1" />
-              </div>
-              <span className="absolute bottom-4 left-4 text-sm font-medium text-muted-foreground">
-                Watch tutorial
-              </span>
-            </div>
-          </motion.div>
-
-          {/* Steps */}
-          <motion.div
-            className="lg:w-1/2 w-full flex flex-col gap-6"
-            initial={{ opacity: 0, x: 20 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            Simple Process
+          </motion.span>
+          <motion.h2
+            className="text-3xl md:text-4xl font-bold font-display text-foreground mt-2"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.2 }}
           >
-            {steps.map((step, i) => (
-              <div key={i} className="flex items-start gap-4">
-                <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center shrink-0">
-                  <span className="text-primary-foreground font-bold text-sm">{i + 1}</span>
-                </div>
-                <p className="text-foreground text-base leading-relaxed pt-2">{step}</p>
+            How It Works
+          </motion.h2>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {steps.map((step, i) => (
+            <motion.div
+              key={step.title}
+              className="relative text-center"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.12 }}
+            >
+              {/* Connector line */}
+              {i < steps.length - 1 && (
+                <div className="hidden lg:block absolute top-10 left-[60%] w-[80%] h-[2px] bg-border" />
+              )}
+              <div className="relative mx-auto w-20 h-20 rounded-2xl gradient-primary flex items-center justify-center mb-4 shadow-glow">
+                <step.icon size={32} className="text-primary-foreground" />
+                <span className="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-accent text-accent-foreground text-xs font-bold flex items-center justify-center">
+                  {i + 1}
+                </span>
               </div>
-            ))}
-          </motion.div>
+              <h3 className="text-lg font-semibold font-display text-foreground mb-1">{step.title}</h3>
+              <p className="text-sm text-muted-foreground">{step.desc}</p>
+            </motion.div>
+          ))}
         </div>
       </div>
     </section>
