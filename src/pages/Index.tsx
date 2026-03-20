@@ -11,6 +11,7 @@ import Testimonials from "@/components/Testimonials";
 import Newsletter from "@/components/Newsletter";
 import CTASection from "@/components/CTASection";
 import Footer from "@/components/Footer";
+import AdsBanner from "@/components/AdsBanner";
 
 const Index = () => {
   return (
@@ -19,11 +20,14 @@ const Index = () => {
       <Hero />
       <Stats />
       <FeaturedJobs />
+      <AdsBanner variant="banner" adIndex={0} />
       <JobCategories />
       <Features />
+      <AdsBanner variant="banner" adIndex={1} />
       <HowItWorks />
       <Audience />
       <TopCompanies />
+      <AdsBanner variant="banner" adIndex={2} />
       <Testimonials />
       <Newsletter />
       <CTASection />
