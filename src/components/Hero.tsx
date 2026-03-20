@@ -1,19 +1,29 @@
 import { motion } from "framer-motion";
 import { Search, MapPin, Briefcase, TrendingUp, Star, Zap } from "lucide-react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const popularSearches = ["React Developer", "Electrician", "Nurse", "Data Scientist", "Plumber", "Product Manager"];
 
 const Hero = () => {
   const [query, setQuery] = useState("");
   const [location, setLocation] = useState("");
+  const navigate = useNavigate();
+
+  const handleSearch = () => {
+    const params = new URLSearchParams();
+    if (query) params.set("q", query);
+    if (location) params.set("location", location);
+    navigate(`/jobs?${params.toString()}`);
+  };
 
   return (
     <section className="relative overflow-hidden">
-      {/* Background */}
-      <div className="absolute inset-0 gradient-hero" />
-      <div className="absolute top-20 left-10 w-72 h-72 bg-primary/5 rounded-full blur-3xl" />
-      <div className="absolute bottom-10 right-10 w-96 h-96 bg-accent/5 rounded-full blur-3xl" />
+      {/* Warm, calming background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-[hsl(210,40%,96%)] via-[hsl(200,35%,97%)] to-[hsl(45,30%,96%)]" />
+      <div className="absolute top-20 left-10 w-72 h-72 bg-[hsl(210,60%,85%/0.3)] rounded-full blur-3xl" />
+      <div className="absolute bottom-10 right-10 w-96 h-96 bg-[hsl(45,60%,88%/0.3)] rounded-full blur-3xl" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[hsl(160,40%,90%/0.2)] rounded-full blur-3xl" />
 
       <div className="relative container mx-auto px-4 md:px-8 py-16 md:py-28">
         <div className="max-w-4xl mx-auto text-center">
@@ -64,6 +74,7 @@ const Hero = () => {
                 placeholder="Job title, keyword, or company"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleSearch()}
                 className="bg-transparent w-full text-sm text-foreground placeholder:text-muted-foreground outline-none"
               />
             </div>
@@ -74,10 +85,14 @@ const Hero = () => {
                 placeholder="City, state, or remote"
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleSearch()}
                 className="bg-transparent w-full text-sm text-foreground placeholder:text-muted-foreground outline-none"
               />
             </div>
-            <button className="gradient-primary text-primary-foreground font-semibold px-8 py-3 rounded-xl hover:opacity-90 transition-opacity flex items-center gap-2 justify-center">
+            <button
+              onClick={handleSearch}
+              className="gradient-primary text-primary-foreground font-semibold px-8 py-3 rounded-xl hover:opacity-90 transition-opacity flex items-center gap-2 justify-center active:scale-[0.97] transition-transform"
+            >
               <Search size={18} />
               Search
             </button>
@@ -94,7 +109,8 @@ const Hero = () => {
             {popularSearches.map((s) => (
               <button
                 key={s}
-                className="text-xs px-3 py-1.5 rounded-full bg-card border border-border text-muted-foreground hover:text-foreground hover:border-primary/30 transition-colors"
+                onClick={() => { setQuery(s); navigate(`/jobs?q=${encodeURIComponent(s)}`); }}
+                className="text-xs px-3 py-1.5 rounded-full bg-card border border-border text-muted-foreground hover:text-foreground hover:border-primary/30 transition-colors active:scale-95"
               >
                 {s}
               </button>
