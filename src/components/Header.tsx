@@ -85,7 +85,7 @@ const Header = () => {
     <>
       {/* Top banner */}
       <div className="gradient-primary text-primary-foreground text-center text-sm py-2.5 font-medium tracking-wide">
-        🚀 Over <strong>24,500+</strong> jobs added this week — Find your dream career today!
+        🌍 <strong>100% FREE</strong> job browsing — 24,500+ jobs across Uganda, Africa, UAE, Europe & Americas!
       </div>
 
       <header className="sticky top-0 z-50 glass">
