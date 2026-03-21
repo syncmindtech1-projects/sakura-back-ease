@@ -22,10 +22,12 @@ const Index = () => {
       <FeaturedJobs />
       <AdsBanner variant="banner" adIndex={0} />
       <JobCategories />
+      <AdsBanner variant="banner" adIndex={3} />
       <Features />
       <AdsBanner variant="banner" adIndex={1} />
       <HowItWorks />
       <Audience />
+      <AdsBanner variant="banner" adIndex={4} />
       <TopCompanies />
       <AdsBanner variant="banner" adIndex={2} />
       <Testimonials />

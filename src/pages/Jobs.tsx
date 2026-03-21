@@ -8,7 +8,7 @@ import { useSearchParams } from "react-router-dom";
 
 const jobTypes = ["All", "Full-time", "Part-time", "Contract", "Freelance", "Internship"];
 const collarFilters = ["All", "White Collar", "Blue Collar"];
-const locationFilters = ["All Locations", "San Francisco, CA", "New York, NY", "Houston, TX", "Austin, TX", "Remote", "Chicago, IL", "Nationwide"];
+const locationFilters = ["All Locations", "Uganda", "Kenya", "Tanzania", "Rwanda", "Nigeria", "South Africa", "UAE", "UK", "USA", "Canada", "Remote"];
 const sortOptions = ["Most Recent", "Salary: High to Low", "Salary: Low to High"];
 
 const Jobs = () => {
@@ -37,7 +37,10 @@ const Jobs = () => {
       if (typeFilter !== "All" && job.type !== typeFilter) return false;
       if (collarFilter === "White Collar" && job.collar !== "white") return false;
       if (collarFilter === "Blue Collar" && job.collar !== "blue") return false;
-      if (locationFilter !== "All Locations" && !job.location.includes(locationFilter.replace(", CA", "").replace(", NY", "").replace(", TX", "").replace(", IL", ""))) return false;
+      if (locationFilter !== "All Locations") {
+        if (locationFilter === "Remote") { if (!job.remote) return false; }
+        else if (!job.location.toLowerCase().includes(locationFilter.toLowerCase())) return false;
+      }
       if (searchQuery) {
         const q = searchQuery.toLowerCase();
         return job.title.toLowerCase().includes(q) || job.company.toLowerCase().includes(q) || job.tags.some(t => t.toLowerCase().includes(q)) || job.description.toLowerCase().includes(q);
