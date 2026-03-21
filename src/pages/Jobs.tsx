@@ -8,7 +8,7 @@ import { useSearchParams } from "react-router-dom";
 
 const jobTypes = ["All", "Full-time", "Part-time", "Contract", "Freelance", "Internship"];
 const collarFilters = ["All", "White Collar", "Blue Collar"];
-const locationFilters = ["All Locations", "San Francisco, CA", "New York, NY", "Houston, TX", "Austin, TX", "Remote", "Chicago, IL", "Nationwide"];
+const locationFilters = ["All Locations", "Uganda", "Kenya", "Tanzania", "Rwanda", "Nigeria", "South Africa", "UAE", "UK", "USA", "Canada", "Remote"];
 const sortOptions = ["Most Recent", "Salary: High to Low", "Salary: Low to High"];
 
 const Jobs = () => {
