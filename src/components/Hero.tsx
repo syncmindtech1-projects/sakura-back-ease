@@ -3,7 +3,7 @@ import { Search, MapPin, Briefcase, TrendingUp, Star, Zap } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const popularSearches = ["React Developer", "Electrician", "Nurse", "Data Scientist", "Plumber", "Product Manager"];
+const popularSearches = ["Software Developer", "Electrician", "Nurse", "Data Scientist", "Plumber", "Teacher", "Driver", "Accountant"];
 
 const Hero = () => {
   const [query, setQuery] = useState("");
