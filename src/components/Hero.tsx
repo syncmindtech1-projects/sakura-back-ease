@@ -34,7 +34,7 @@ const Hero = () => {
             className="inline-flex items-center gap-2 bg-primary/10 text-primary rounded-full px-4 py-2 text-sm font-medium mb-6"
           >
             <Zap size={16} />
-            <span>24,500+ new jobs posted this week</span>
+            <span>🇺🇬 Uganda's #1 Free Job Board — 24,500+ jobs across Africa, UAE, Europe & Americas</span>
           </motion.div>
 
           <motion.h1
