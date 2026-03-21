@@ -135,8 +135,8 @@ const Hero = () => {
             transition={{ delay: 0.6 }}
           >
             {[
-              { icon: Briefcase, label: "24,500+ Jobs", sub: "Updated hourly" },
-              { icon: Star, label: "8,200+ Companies", sub: "Verified employers" },
+              { icon: Briefcase, label: "24,500+ Free Jobs", sub: "Always 100% free" },
+              { icon: Star, label: "50+ Countries", sub: "Africa, UAE, Europe & Americas" },
               { icon: TrendingUp, label: "3.2M+ Users", sub: "Growing community" },
             ].map((item) => (
               <div key={item.label} className="flex items-center gap-3">
