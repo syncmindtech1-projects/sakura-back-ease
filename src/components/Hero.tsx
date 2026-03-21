@@ -92,7 +92,7 @@ const Hero = () => {
               <MapPin size={20} className="text-muted-foreground shrink-0" />
               <input
                 type="text"
-                placeholder="City, state, or remote"
+                placeholder="City, country, or remote"
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleSearch()}
