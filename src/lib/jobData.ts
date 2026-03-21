@@ -212,17 +212,17 @@ export const featuredJobs: Job[] = [
 ];
 
 export const topCompanies = [
-  { name: "TechVault Inc.", industry: "Technology", jobs: 145, logo: "🟣" },
-  { name: "Metro Health Center", industry: "Healthcare", jobs: 89, logo: "🟢" },
-  { name: "PowerGrid Solutions", industry: "Construction", jobs: 67, logo: "🔵" },
-  { name: "DataPulse Analytics", industry: "Analytics", jobs: 52, logo: "🟡" },
-  { name: "Goldman & Pierce", industry: "Finance", jobs: 43, logo: "🟠" },
-  { name: "LogiFlow Corp", industry: "Logistics", jobs: 38, logo: "🔴" },
+  { name: "Andela Uganda", industry: "Technology", jobs: 145, logo: "🟣" },
+  { name: "Mulago Hospital", industry: "Healthcare", jobs: 89, logo: "🟢" },
+  { name: "Umeme Limited", industry: "Energy", jobs: 67, logo: "🔵" },
+  { name: "Safaricom PLC", industry: "Telecoms", jobs: 52, logo: "🟡" },
+  { name: "Stanbic Bank", industry: "Finance", jobs: 43, logo: "🟠" },
+  { name: "DHL East Africa", industry: "Logistics", jobs: 38, logo: "🔴" },
 ];
 
 export const stats = [
-  { label: "Active Jobs", value: "24,500+", icon: "📋" },
+  { label: "Free Job Listings", value: "24,500+", icon: "📋" },
   { label: "Companies", value: "8,200+", icon: "🏢" },
-  { label: "Job Seekers", value: "3.2M+", icon: "👥" },
-  { label: "Placements", value: "1.5M+", icon: "✅" },
+  { label: "Countries Covered", value: "50+", icon: "🌍" },
+  { label: "Successful Placements", value: "1.5M+", icon: "✅" },
 ];
