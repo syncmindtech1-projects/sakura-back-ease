@@ -37,7 +37,10 @@ const Jobs = () => {
       if (typeFilter !== "All" && job.type !== typeFilter) return false;
       if (collarFilter === "White Collar" && job.collar !== "white") return false;
       if (collarFilter === "Blue Collar" && job.collar !== "blue") return false;
-      if (locationFilter !== "All Locations" && !job.location.includes(locationFilter.replace(", CA", "").replace(", NY", "").replace(", TX", "").replace(", IL", ""))) return false;
+      if (locationFilter !== "All Locations") {
+        if (locationFilter === "Remote") { if (!job.remote) return false; }
+        else if (!job.location.toLowerCase().includes(locationFilter.toLowerCase())) return false;
+      }
       if (searchQuery) {
         const q = searchQuery.toLowerCase();
         return job.title.toLowerCase().includes(q) || job.company.toLowerCase().includes(q) || job.tags.some(t => t.toLowerCase().includes(q)) || job.description.toLowerCase().includes(q);
