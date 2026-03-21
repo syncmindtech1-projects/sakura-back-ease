@@ -46,8 +46,18 @@ const Hero = () => {
             Find Your Next{" "}
             <span className="text-gradient">Dream Career</span>
             <br />
-            <span className="text-muted-foreground text-3xl md:text-5xl lg:text-5xl font-semibold">
-              All Jobs. One Platform.
+            <span className="relative inline-block">
+              <span className="text-gradient font-extrabold">For Free</span>
+              <motion.span
+                className="absolute -bottom-1 left-0 w-full h-1 bg-gradient-to-r from-primary to-accent rounded-full"
+                initial={{ scaleX: 0 }}
+                animate={{ scaleX: 1 }}
+                transition={{ delay: 0.8, duration: 0.6 }}
+              />
+            </span>
+            <br />
+            <span className="text-muted-foreground text-2xl md:text-4xl lg:text-4xl font-semibold">
+              All Jobs. Every Industry. One Platform.
             </span>
           </motion.h1>
 
@@ -57,7 +67,7 @@ const Hero = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.6 }}
           >
-            From software engineering to skilled trades — we curate jobs across every industry so you don't have to search everywhere.
+            From software engineering to skilled trades — browse <strong className="text-foreground">100% free</strong> job listings across Uganda, East Africa, UAE, Europe, USA & Canada. White collar & blue collar, all in one place.
           </motion.p>
 
           {/* Search Bar */}
