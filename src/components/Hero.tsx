@@ -3,7 +3,7 @@ import { Search, MapPin, Briefcase, TrendingUp, Star, Zap } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const popularSearches = ["React Developer", "Electrician", "Nurse", "Data Scientist", "Plumber", "Product Manager"];
+const popularSearches = ["Software Developer", "Electrician", "Nurse", "Data Scientist", "Plumber", "Teacher", "Driver", "Accountant"];
 
 const Hero = () => {
   const [query, setQuery] = useState("");
@@ -34,7 +34,7 @@ const Hero = () => {
             className="inline-flex items-center gap-2 bg-primary/10 text-primary rounded-full px-4 py-2 text-sm font-medium mb-6"
           >
             <Zap size={16} />
-            <span>24,500+ new jobs posted this week</span>
+            <span>🇺🇬 Uganda's #1 Free Job Board — 24,500+ jobs across Africa, UAE, Europe & Americas</span>
           </motion.div>
 
           <motion.h1
@@ -46,8 +46,18 @@ const Hero = () => {
             Find Your Next{" "}
             <span className="text-gradient">Dream Career</span>
             <br />
-            <span className="text-muted-foreground text-3xl md:text-5xl lg:text-5xl font-semibold">
-              All Jobs. One Platform.
+            <span className="relative inline-block">
+              <span className="text-gradient font-extrabold">For Free</span>
+              <motion.span
+                className="absolute -bottom-1 left-0 w-full h-1 bg-gradient-to-r from-primary to-accent rounded-full"
+                initial={{ scaleX: 0 }}
+                animate={{ scaleX: 1 }}
+                transition={{ delay: 0.8, duration: 0.6 }}
+              />
+            </span>
+            <br />
+            <span className="text-muted-foreground text-2xl md:text-4xl lg:text-4xl font-semibold">
+              All Jobs. Every Industry. One Platform.
             </span>
           </motion.h1>
 
@@ -57,7 +67,7 @@ const Hero = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.6 }}
           >
-            From software engineering to skilled trades — we curate jobs across every industry so you don't have to search everywhere.
+            From software engineering to skilled trades — browse <strong className="text-foreground">100% free</strong> job listings across Uganda, East Africa, UAE, Europe, USA & Canada. White collar & blue collar, all in one place.
           </motion.p>
 
           {/* Search Bar */}
@@ -82,7 +92,7 @@ const Hero = () => {
               <MapPin size={20} className="text-muted-foreground shrink-0" />
               <input
                 type="text"
-                placeholder="City, state, or remote"
+                placeholder="City, country, or remote"
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleSearch()}
@@ -125,8 +135,8 @@ const Hero = () => {
             transition={{ delay: 0.6 }}
           >
             {[
-              { icon: Briefcase, label: "24,500+ Jobs", sub: "Updated hourly" },
-              { icon: Star, label: "8,200+ Companies", sub: "Verified employers" },
+              { icon: Briefcase, label: "24,500+ Free Jobs", sub: "Always 100% free" },
+              { icon: Star, label: "50+ Countries", sub: "Africa, UAE, Europe & Americas" },
               { icon: TrendingUp, label: "3.2M+ Users", sub: "Growing community" },
             ].map((item) => (
               <div key={item.label} className="flex items-center gap-3">
