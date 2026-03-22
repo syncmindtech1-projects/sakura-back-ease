@@ -14,6 +14,9 @@ export interface Job {
   urgent?: boolean;
   description: string;
   tags: string[];
+  applyUrl: string;
+  requirements?: string[];
+  benefits?: string[];
 }
 
 export const jobCategories = [
@@ -48,6 +51,9 @@ export const featuredJobs: Job[] = [
     remote: true,
     description: "Build scalable web applications using React, Node.js, and cloud services for international clients. Collaborate with distributed teams across Africa and North America.",
     tags: ["React", "Node.js", "AWS"],
+    applyUrl: "https://andela.com/careers",
+    requirements: ["5+ years experience in full-stack development", "Proficiency in React, Node.js, TypeScript", "Experience with AWS or GCP", "Strong communication skills"],
+    benefits: ["Remote work flexibility", "Health insurance", "Learning & development budget", "Stock options"],
   },
   {
     id: "ug-2",
@@ -63,6 +69,9 @@ export const featuredJobs: Job[] = [
     urgent: true,
     description: "Install, maintain, and repair electrical systems in commercial buildings and industrial facilities across Eastern Uganda.",
     tags: ["Electrical", "Commercial", "Licensed"],
+    applyUrl: "https://www.umeme.co.ug/careers",
+    requirements: ["Valid electrician license", "3+ years commercial experience", "Knowledge of electrical codes", "Ability to read blueprints"],
+    benefits: ["Competitive salary", "On-site training", "Safety equipment provided"],
   },
   {
     id: "ug-3",
@@ -78,6 +87,9 @@ export const featuredJobs: Job[] = [
     urgent: true,
     description: "Provide critical patient care in the Intensive Care Unit. Must have BSN and at least 2 years ICU experience.",
     tags: ["Nursing", "ICU", "BSN Required"],
+    applyUrl: "https://www.health.go.ug/jobs",
+    requirements: ["BSN degree", "2+ years ICU experience", "Valid nursing license", "BLS/ACLS certification"],
+    benefits: ["Government pension", "Medical cover", "Professional development"],
   },
   {
     id: "ug-4",
@@ -92,6 +104,8 @@ export const featuredJobs: Job[] = [
     logo: "🔵",
     description: "Handle residential and industrial plumbing installations, water system repairs, and preventive maintenance contracts.",
     tags: ["Plumbing", "Water Systems", "Maintenance"],
+    applyUrl: "https://www.nwsc.co.ug/careers",
+    requirements: ["Plumbing certification", "Experience with industrial systems", "Valid driver's license"],
   },
   {
     id: "ug-5",
@@ -107,6 +121,9 @@ export const featuredJobs: Job[] = [
     featured: true,
     description: "Perform financial modeling, risk analysis, and investment advisory for corporate and institutional clients.",
     tags: ["Finance", "Risk Analysis", "Excel"],
+    applyUrl: "https://www.stanbicbank.co.ug/uganda/careers",
+    requirements: ["Degree in Finance/Accounting", "CFA or CPA preferred", "3+ years in financial analysis", "Advanced Excel skills"],
+    benefits: ["Performance bonus", "Health & life insurance", "Pension scheme", "Training opportunities"],
   },
   {
     id: "ug-6",
@@ -122,6 +139,8 @@ export const featuredJobs: Job[] = [
     urgent: true,
     description: "Perform MIG and TIG welding on structural steel for construction projects. Must read blueprints and weld to code specifications.",
     tags: ["MIG Welding", "TIG", "Structural Steel"],
+    applyUrl: "https://www.roofings.co.ug/careers",
+    requirements: ["Welding certification", "Experience with MIG/TIG", "Blueprint reading ability"],
   },
   {
     id: "ug-7",
@@ -137,6 +156,9 @@ export const featuredJobs: Job[] = [
     featured: true,
     description: "Lead brand campaigns, digital marketing strategy, and customer acquisition initiatives for Uganda's largest telecom.",
     tags: ["Digital Marketing", "Brand Strategy", "Telecoms"],
+    applyUrl: "https://www.mtn.co.ug/careers",
+    requirements: ["5+ years marketing experience", "Degree in Marketing/Business", "Digital marketing expertise", "Team leadership skills"],
+    benefits: ["Airtime & data allowance", "Health insurance", "Performance bonus", "Company car"],
   },
   {
     id: "ug-8",
@@ -151,6 +173,7 @@ export const featuredJobs: Job[] = [
     logo: "🟠",
     description: "Operate excavators, bulldozers, and graders for road construction projects in Eastern Uganda.",
     tags: ["Excavator", "Road Construction", "CDL"],
+    applyUrl: "https://www.brightermonday.co.ug/jobs",
   },
   {
     id: "ug-9",
@@ -165,6 +188,9 @@ export const featuredJobs: Job[] = [
     logo: "🟢",
     description: "Manage auditing engagements, prepare financial statements, and ensure compliance with IFRS standards.",
     tags: ["CPA", "Auditing", "IFRS"],
+    applyUrl: "https://www2.deloitte.com/ug/en/careers.html",
+    requirements: ["CPA qualification", "Degree in Accounting", "2+ years audit experience", "IFRS knowledge"],
+    benefits: ["Global career opportunities", "Professional development", "Health insurance", "Annual bonus"],
   },
   {
     id: "ug-10",
@@ -179,6 +205,7 @@ export const featuredJobs: Job[] = [
     logo: "🟣",
     description: "Oversee kitchen operations, develop seasonal menus, and manage a team of 15 cooks for the 5-star hotel restaurant.",
     tags: ["Culinary", "Hotel", "Menu Planning"],
+    applyUrl: "https://www.serenahotels.com/kampala/careers",
   },
 
   // === KENYA ===
@@ -196,6 +223,9 @@ export const featuredJobs: Job[] = [
     featured: true,
     description: "Lead M-Pesa product roadmap, drive feature prioritization, and manage cross-functional teams building next-gen payment solutions.",
     tags: ["Product Management", "Fintech", "M-Pesa"],
+    applyUrl: "https://www.safaricom.co.ke/about/careers",
+    requirements: ["5+ years product management", "Fintech experience preferred", "MBA or equivalent", "Agile methodology expertise"],
+    benefits: ["Competitive salary", "M-Pesa wallet bonus", "Health & pension", "Stock options"],
   },
   {
     id: "ke-2",
@@ -210,6 +240,7 @@ export const featuredJobs: Job[] = [
     logo: "🟠",
     description: "Drive cross-border transport routes (Mombasa–Kampala–Kigali corridor). Valid driving license BCE class required.",
     tags: ["CDL", "Cross-border", "East Africa"],
+    applyUrl: "https://www.brightermonday.co.ke/jobs",
   },
   {
     id: "ke-3",
@@ -225,6 +256,7 @@ export const featuredJobs: Job[] = [
     remote: true,
     description: "Design intuitive mobile banking experiences for 17M+ customers across 6 African countries.",
     tags: ["Figma", "Mobile UX", "Banking"],
+    applyUrl: "https://equitygroupholdings.com/ke/careers",
   },
   {
     id: "ke-4",
@@ -239,6 +271,7 @@ export const featuredJobs: Job[] = [
     logo: "🔵",
     description: "Provide physical security for corporate offices. Must have valid Kenya Police Clearance Certificate.",
     tags: ["Security", "Corporate", "Licensed"],
+    applyUrl: "https://www.g4s.com/en-ke/careers",
   },
 
   // === TANZANIA ===
@@ -255,6 +288,7 @@ export const featuredJobs: Job[] = [
     logo: "🔴",
     description: "Oversee daily warehouse operations, manage team of 30+ associates, and optimize inventory management systems.",
     tags: ["Logistics", "Warehouse", "Inventory"],
+    applyUrl: "https://www.dhl.com/tz-en/home/careers.html",
   },
   {
     id: "tz-2",
@@ -270,6 +304,7 @@ export const featuredJobs: Job[] = [
     featured: true,
     description: "Plan and supervise mining operations at North Mara Gold Mine. BSc Mining Engineering required.",
     tags: ["Mining", "Gold", "Operations"],
+    applyUrl: "https://www.barrick.com/English/careers",
   },
 
   // === RWANDA ===
@@ -286,6 +321,7 @@ export const featuredJobs: Job[] = [
     logo: "🟢",
     description: "Analyze banking data to drive business intelligence and support strategic decision-making for Rwanda's largest bank.",
     tags: ["SQL", "Power BI", "Banking"],
+    applyUrl: "https://www.bk.rw/careers",
   },
 
   // === NIGERIA ===
@@ -303,6 +339,7 @@ export const featuredJobs: Job[] = [
     remote: true,
     description: "Create beautiful, user-centered designs for Africa's leading payment infrastructure company. Shape fintech products used by millions.",
     tags: ["Figma", "Design Systems", "Fintech"],
+    applyUrl: "https://flutterwave.com/us/careers",
   },
   {
     id: "ng-2",
@@ -317,6 +354,7 @@ export const featuredJobs: Job[] = [
     logo: "🟠",
     description: "Optimize oil and gas extraction processes, manage well completion programs, and ensure environmental compliance.",
     tags: ["Oil & Gas", "Reservoir Engineering", "HSE"],
+    applyUrl: "https://www.shell.com.ng/careers.html",
   },
 
   // === SOUTH AFRICA ===
@@ -334,6 +372,7 @@ export const featuredJobs: Job[] = [
     remote: true,
     description: "Build and maintain CI/CD pipelines, manage Kubernetes clusters, and ensure 99.99% uptime for global e-commerce platforms.",
     tags: ["Kubernetes", "AWS", "Terraform"],
+    applyUrl: "https://www.prosus.com/careers",
   },
 
   // === UAE ===
@@ -350,6 +389,7 @@ export const featuredJobs: Job[] = [
     logo: "🟠",
     description: "Install and service HVAC systems in commercial high-rise buildings across Dubai. EPA certification preferred.",
     tags: ["HVAC", "Installation", "Chiller Systems"],
+    applyUrl: "https://www.bayt.com/en/uae/jobs/hvac-technician-jobs/",
   },
   {
     id: "ae-2",
@@ -365,6 +405,9 @@ export const featuredJobs: Job[] = [
     featured: true,
     description: "Lead infrastructure projects including roads, bridges, and utilities for Dubai's expanding urban developments.",
     tags: ["Civil Engineering", "AutoCAD", "Project Management"],
+    applyUrl: "https://www.emaar.com/en/careers",
+    requirements: ["BSc Civil Engineering", "5+ years infrastructure experience", "AutoCAD proficiency", "PMP certification preferred"],
+    benefits: ["Tax-free salary", "Housing allowance", "Annual flights home", "Health insurance"],
   },
   {
     id: "ae-3",
@@ -379,6 +422,7 @@ export const featuredJobs: Job[] = [
     logo: "🟣",
     description: "Provide world-class guest services at a 5-star luxury resort. Multilingual skills are a plus. Accommodation provided.",
     tags: ["Front Desk", "Hospitality", "Multilingual"],
+    applyUrl: "https://www.jumeirah.com/en/careers",
   },
   {
     id: "ae-4",
@@ -394,6 +438,7 @@ export const featuredJobs: Job[] = [
     urgent: true,
     description: "Supervise construction crews on residential tower projects. Must have 5+ years experience and valid UAE trade license.",
     tags: ["Construction", "Supervision", "Residential"],
+    applyUrl: "https://www.habtoorgroup.com/en/careers",
   },
 
   // === UNITED KINGDOM ===
@@ -412,6 +457,9 @@ export const featuredJobs: Job[] = [
     remote: true,
     description: "Design and deploy ML models at scale to drive business decisions across AWS services. PhD or MSc in relevant field preferred.",
     tags: ["Python", "Machine Learning", "TensorFlow"],
+    applyUrl: "https://www.amazon.jobs/en-gb/",
+    requirements: ["PhD/MSc in CS, Statistics, or related", "3+ years ML experience", "Python, TensorFlow/PyTorch", "Experience with large-scale data"],
+    benefits: ["Relocation package", "Stock options", "Health & dental", "Learning budget"],
   },
   {
     id: "uk-2",
@@ -427,6 +475,7 @@ export const featuredJobs: Job[] = [
     urgent: true,
     description: "Provide patient care in acute medical wards. Band 5 position with career progression opportunities. NMC registration required.",
     tags: ["NMC Registered", "Acute Care", "Band 5"],
+    applyUrl: "https://www.jobs.nhs.uk/",
   },
   {
     id: "uk-3",
@@ -441,6 +490,7 @@ export const featuredJobs: Job[] = [
     logo: "🟠",
     description: "Carry out first and second fix carpentry on new-build residential properties. CSCS card required.",
     tags: ["Carpentry", "CSCS", "New Build"],
+    applyUrl: "https://www.barrattcareers.co.uk/",
   },
 
   // === GERMANY ===
@@ -457,6 +507,7 @@ export const featuredJobs: Job[] = [
     logo: "🔵",
     description: "Design and test electric vehicle powertrain components. German language skills B2+ required.",
     tags: ["EV", "Powertrain", "CATIA"],
+    applyUrl: "https://www.bmwgroup.jobs/",
   },
 
   // === CANADA ===
@@ -475,6 +526,9 @@ export const featuredJobs: Job[] = [
     remote: true,
     description: "Build merchant-facing features for the world's leading e-commerce platform using Ruby on Rails and React.",
     tags: ["Ruby on Rails", "React", "GraphQL"],
+    applyUrl: "https://www.shopify.com/careers",
+    requirements: ["3+ years full-stack experience", "Ruby on Rails proficiency", "React/TypeScript", "GraphQL knowledge"],
+    benefits: ["Remote-first culture", "Stock options", "Health & wellness", "$5K learning budget"],
   },
   {
     id: "ca-2",
@@ -490,6 +544,7 @@ export const featuredJobs: Job[] = [
     urgent: true,
     description: "Install, assemble, and maintain piping systems in oil sands facilities. Red Seal certification required.",
     tags: ["Pipefitting", "Red Seal", "Oil Sands"],
+    applyUrl: "https://www.suncor.com/en/careers",
   },
   {
     id: "ca-3",
@@ -504,6 +559,7 @@ export const featuredJobs: Job[] = [
     logo: "🟣",
     description: "Provide emergency nursing care in one of Canada's top teaching hospitals. CNO registration and BLS certification required.",
     tags: ["Emergency Nursing", "CNO", "BLS"],
+    applyUrl: "https://www.uhn.ca/careers",
   },
 
   // === UNITED STATES ===
@@ -522,6 +578,9 @@ export const featuredJobs: Job[] = [
     remote: true,
     description: "Design multi-cloud architectures for enterprise customers. Lead technical solution design for Fortune 500 companies.",
     tags: ["GCP", "Cloud Architecture", "Enterprise"],
+    applyUrl: "https://careers.google.com/",
+    requirements: ["8+ years cloud architecture", "GCP/AWS/Azure certifications", "Enterprise consulting experience", "Strong presentation skills"],
+    benefits: ["Top-tier compensation", "RSUs", "Free meals & gym", "20% time projects"],
   },
   {
     id: "us-2",
@@ -536,6 +595,7 @@ export const featuredJobs: Job[] = [
     logo: "🔵",
     description: "Perform electrical installations in commercial and residential buildings across NYC. NYS Master Electrician license required.",
     tags: ["Master Electrician", "NEC Code", "Commercial"],
+    applyUrl: "https://www.ibew3.org/jobs",
   },
   {
     id: "us-3",
@@ -550,6 +610,7 @@ export const featuredJobs: Job[] = [
     logo: "🟣",
     description: "Provide patient care alongside physicians in internal medicine. PA-C certification and state licensure required.",
     tags: ["PA-C", "Internal Medicine", "Clinical"],
+    applyUrl: "https://jobs.mayoclinic.org/",
   },
   {
     id: "us-4",
@@ -564,6 +625,7 @@ export const featuredJobs: Job[] = [
     logo: "🟠",
     description: "Regional LTL freight delivery across Texas, Oklahoma, and Louisiana. Home most weekends. CDL-A required.",
     tags: ["CDL-A", "LTL Freight", "Regional"],
+    applyUrl: "https://careers.fedex.com/freight",
   },
   {
     id: "us-5",
@@ -579,6 +641,7 @@ export const featuredJobs: Job[] = [
     featured: true,
     description: "Support M&A transactions, build financial models, and prepare pitch materials for Fortune 500 deals.",
     tags: ["M&A", "Financial Modeling", "DCF"],
+    applyUrl: "https://www.goldmansachs.com/careers/",
   },
   {
     id: "us-6",
@@ -593,6 +656,7 @@ export const featuredJobs: Job[] = [
     logo: "🔴",
     description: "Install residential and light commercial HVAC systems. EPA Section 608 certification required.",
     tags: ["HVAC", "EPA Certified", "Residential"],
+    applyUrl: "https://www.corporate.carrier.com/careers/",
   },
   {
     id: "us-7",
@@ -607,6 +671,7 @@ export const featuredJobs: Job[] = [
     logo: "🟣",
     description: "Lead integrated marketing campaigns for Nike's North American running category. 8+ years experience required.",
     tags: ["Brand Marketing", "Campaign Strategy", "D2C"],
+    applyUrl: "https://jobs.nike.com/",
   },
 
   // === ETHIOPIA ===
@@ -623,6 +688,7 @@ export const featuredJobs: Job[] = [
     logo: "🔴",
     description: "Supervise garment production lines, ensure quality standards, and manage shift schedules for 100+ workers.",
     tags: ["Textile", "Production", "Quality Control"],
+    applyUrl: "https://www.ethiojobs.net/",
   },
 
   // === GHANA ===
@@ -640,6 +706,7 @@ export const featuredJobs: Job[] = [
     remote: true,
     description: "Build and maintain Android applications for MTN's 25M+ subscriber base. Kotlin/Java experience required.",
     tags: ["Android", "Kotlin", "Mobile"],
+    applyUrl: "https://www.mtn.com.gh/careers",
   },
 
   // === MORE UGANDA JOBS ===
@@ -656,6 +723,7 @@ export const featuredJobs: Job[] = [
     logo: "🟢",
     description: "Teach mathematics to secondary students (S1-S6) following the Cambridge International curriculum.",
     tags: ["Teaching", "Mathematics", "Cambridge"],
+    applyUrl: "https://www.brightermonday.co.ug/jobs",
   },
   {
     id: "ug-12",
@@ -670,6 +738,7 @@ export const featuredJobs: Job[] = [
     logo: "🔴",
     description: "Maintain and repair diesel engines for brewery fleet vehicles and generator systems.",
     tags: ["Diesel Mechanic", "Fleet", "Generators"],
+    applyUrl: "https://www.diageo.com/en/careers",
   },
   {
     id: "ug-13",
@@ -684,6 +753,7 @@ export const featuredJobs: Job[] = [
     logo: "🟣",
     description: "Oversee pharmaceutical manufacturing quality assurance and regulatory compliance for ARV production.",
     tags: ["Pharmacy", "GMP", "Quality Assurance"],
+    applyUrl: "https://www.cipla.co.ug/careers",
   },
   {
     id: "ug-14",
@@ -698,6 +768,7 @@ export const featuredJobs: Job[] = [
     logo: "🟢",
     description: "Train smallholder coffee farmers on best practices, pest management, and post-harvest handling techniques.",
     tags: ["Agriculture", "Coffee", "Extension"],
+    applyUrl: "https://www.ucda.go.ug/careers",
   },
   {
     id: "ug-15",
@@ -712,6 +783,7 @@ export const featuredJobs: Job[] = [
     logo: "🟠",
     description: "Deliver food and packages across Kampala using the SafeBoda app. Must own a motorcycle and have a valid permit.",
     tags: ["Delivery", "Motorcycle", "Flexible Hours"],
+    applyUrl: "https://safeboda.com/ug/",
   },
 
   // === MORE INTERNATIONAL ===
@@ -728,6 +800,7 @@ export const featuredJobs: Job[] = [
     logo: "🟣",
     description: "Design seasonal collections for luxury fashion houses under the LVMH umbrella. Fashion degree and portfolio required.",
     tags: ["Fashion Design", "Luxury", "Couture"],
+    applyUrl: "https://www.lvmh.com/join-us/",
   },
   {
     id: "sg-1",
@@ -742,6 +815,7 @@ export const featuredJobs: Job[] = [
     logo: "🔵",
     description: "Monitor and respond to security threats, conduct vulnerability assessments, and implement security controls.",
     tags: ["SIEM", "Incident Response", "CISSP"],
+    applyUrl: "https://www.dbs.com/careers/",
   },
   {
     id: "au-1",
@@ -757,6 +831,7 @@ export const featuredJobs: Job[] = [
     urgent: true,
     description: "Maintain and repair heavy mining equipment including haul trucks and excavators. FIFO roster: 2 weeks on, 1 week off.",
     tags: ["Mining", "Diesel", "FIFO"],
+    applyUrl: "https://www.bhp.com/careers",
   },
   {
     id: "us-8",
@@ -771,6 +846,7 @@ export const featuredJobs: Job[] = [
     logo: "🟢",
     description: "Provide preventive dental care including cleanings, X-rays, and patient education. RDH license required.",
     tags: ["Dental", "RDH", "Preventive Care"],
+    applyUrl: "https://careers.aspendental.com/",
   },
   {
     id: "us-9",
@@ -785,6 +861,7 @@ export const featuredJobs: Job[] = [
     logo: "🟠",
     description: "Pick, pack, and ship customer orders in a fast-paced fulfillment center. Shifts available including overnight.",
     tags: ["Warehouse", "Fulfillment", "Flexible Shifts"],
+    applyUrl: "https://www.amazon.jobs/",
   },
   {
     id: "ke-5",
@@ -799,6 +876,7 @@ export const featuredJobs: Job[] = [
     logo: "🟡",
     description: "Drive customer acquisition through SEO, SEM, social media, and email marketing for East Africa's largest e-commerce platform.",
     tags: ["SEO", "Google Ads", "E-commerce"],
+    applyUrl: "https://group.jumia.com/careers",
   },
   {
     id: "ug-16",
@@ -813,6 +891,7 @@ export const featuredJobs: Job[] = [
     logo: "🟣",
     description: "Provide legal advisory on corporate transactions, mergers, and regulatory compliance across East African markets.",
     tags: ["Corporate Law", "M&A", "Compliance"],
+    applyUrl: "https://www.bowmanslaw.com/careers/",
   },
   {
     id: "ug-17",
@@ -827,6 +906,7 @@ export const featuredJobs: Job[] = [
     logo: "🔵",
     description: "Apply interior and exterior paint finishes on commercial buildings. Experience with spray equipment preferred.",
     tags: ["Painting", "Commercial", "Spray Equipment"],
+    applyUrl: "https://www.kansaiplascon.com/careers",
   },
   {
     id: "ae-5",
@@ -841,6 +921,7 @@ export const featuredJobs: Job[] = [
     logo: "🟡",
     description: "Manage daily store operations, lead sales team, and achieve revenue targets for a flagship retail outlet.",
     tags: ["Retail Management", "Sales", "KPIs"],
+    applyUrl: "https://www.majidalfuttaim.com/en/careers",
   },
 ];
 

@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import Index from "./pages/Index";
 import Jobs from "./pages/Jobs";
+import JobDetail from "./pages/JobDetail";
 import Categories from "./pages/Categories";
 import Companies from "./pages/Companies";
 import RemoteJobs from "./pages/RemoteJobs";
@@ -30,6 +31,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/jobs" element={<Jobs />} />
+          <Route path="/jobs/:id" element={<JobDetail />} />
           <Route path="/categories" element={<Categories />} />
           <Route path="/categories/:category" element={<Categories />} />
           <Route path="/companies" element={<Companies />} />

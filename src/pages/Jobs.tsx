@@ -1,10 +1,10 @@
 import PageLayout from "@/components/PageLayout";
 import AdsBanner from "@/components/AdsBanner";
 import { motion } from "framer-motion";
-import { MapPin, Clock, Bookmark, Search, Briefcase, ChevronDown, SlidersHorizontal } from "lucide-react";
+import { MapPin, Clock, Bookmark, Search, Briefcase, SlidersHorizontal, ExternalLink } from "lucide-react";
 import { featuredJobs } from "@/lib/jobData";
 import { useState, useMemo } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, Link } from "react-router-dom";
 
 const jobTypes = ["All", "Full-time", "Part-time", "Contract", "Freelance", "Internship"];
 const collarFilters = ["All", "White Collar", "Blue Collar"];
@@ -174,51 +174,59 @@ const Jobs = () => {
                 {filtered.map((job, i) => (
                   <motion.div
                     key={job.id}
-                    className="group bg-card rounded-2xl border border-border p-5 hover:shadow-elevated hover:border-primary/20 transition-all cursor-pointer"
+                    className="group bg-card rounded-2xl border border-border p-5 hover:shadow-elevated hover:border-primary/20 transition-all"
                     initial={{ opacity: 0, y: 16 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: i * 0.03 }}
                   >
-                    <div className="flex flex-col sm:flex-row sm:items-start gap-4">
-                      <div className="w-12 h-12 rounded-xl bg-secondary flex items-center justify-center text-xl shrink-0">
-                        {job.logo}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 flex-wrap mb-1">
-                          <span className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded-md ${job.collar === 'white' ? 'bg-primary/10 text-primary' : 'bg-highlight/10 text-highlight'}`}>
-                            {job.collar === 'white' ? '👔 White' : '🔧 Blue'}
-                          </span>
-                          {job.remote && <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded-md bg-accent/10 text-accent">Remote</span>}
-                          {job.urgent && <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded-md gradient-warm text-highlight-foreground">Urgent</span>}
-                          {job.featured && <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded-md gradient-primary text-primary-foreground">Featured</span>}
+                    <Link to={`/jobs/${job.id}`} className="block">
+                      <div className="flex flex-col sm:flex-row sm:items-start gap-4">
+                        <div className="w-12 h-12 rounded-xl bg-secondary flex items-center justify-center text-xl shrink-0">
+                          {job.logo}
                         </div>
-                        <h3 className="text-base font-semibold text-foreground group-hover:text-primary transition-colors">{job.title}</h3>
-                        <p className="text-sm text-muted-foreground">{job.company}</p>
-                        <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{job.description}</p>
-                        <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground mt-2">
-                          <span className="flex items-center gap-1"><MapPin size={12} />{job.location}</span>
-                          <span className="flex items-center gap-1"><Clock size={12} />{job.posted}</span>
-                          <span className="flex items-center gap-1"><Briefcase size={12} />{job.type}</span>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 flex-wrap mb-1">
+                            <span className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded-md ${job.collar === 'white' ? 'bg-primary/10 text-primary' : 'bg-highlight/10 text-highlight'}`}>
+                              {job.collar === 'white' ? '👔 White' : '🔧 Blue'}
+                            </span>
+                            {job.remote && <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded-md bg-accent/10 text-accent">Remote</span>}
+                            {job.urgent && <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded-md gradient-warm text-highlight-foreground">Urgent</span>}
+                            {job.featured && <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded-md gradient-primary text-primary-foreground">Featured</span>}
+                          </div>
+                          <h3 className="text-base font-semibold text-foreground group-hover:text-primary transition-colors">{job.title}</h3>
+                          <p className="text-sm text-muted-foreground">{job.company}</p>
+                          <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{job.description}</p>
+                          <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground mt-2">
+                            <span className="flex items-center gap-1"><MapPin size={12} />{job.location}</span>
+                            <span className="flex items-center gap-1"><Clock size={12} />{job.posted}</span>
+                            <span className="flex items-center gap-1"><Briefcase size={12} />{job.type}</span>
+                          </div>
+                          <div className="flex flex-wrap gap-1.5 mt-2">
+                            {job.tags.map((tag) => (
+                              <span key={tag} className="text-[11px] px-2 py-0.5 rounded-md bg-secondary text-secondary-foreground font-medium">{tag}</span>
+                            ))}
+                          </div>
                         </div>
-                        <div className="flex flex-wrap gap-1.5 mt-2">
-                          {job.tags.map((tag) => (
-                            <span key={tag} className="text-[11px] px-2 py-0.5 rounded-md bg-secondary text-secondary-foreground font-medium">{tag}</span>
-                          ))}
+                        <div className="flex sm:flex-col items-center sm:items-end gap-3 sm:gap-2 shrink-0" onClick={(e) => e.preventDefault()}>
+                          <span className="text-sm font-bold text-foreground">{job.salary}</span>
+                          <button
+                            onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggleSave(job.id); }}
+                            className={`p-2 rounded-lg transition-colors ${savedJobs.has(job.id) ? 'bg-primary/10 text-primary' : 'hover:bg-secondary text-muted-foreground hover:text-foreground'}`}
+                          >
+                            <Bookmark size={16} className={savedJobs.has(job.id) ? 'fill-primary' : ''} />
+                          </button>
+                          <a
+                            href={job.applyUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            className="inline-flex items-center gap-1 text-xs font-semibold gradient-primary text-primary-foreground px-4 py-2 rounded-lg hover:opacity-90 transition-opacity active:scale-95"
+                          >
+                            Apply <ExternalLink size={12} />
+                          </a>
                         </div>
                       </div>
-                      <div className="flex sm:flex-col items-center sm:items-end gap-3 sm:gap-2 shrink-0">
-                        <span className="text-sm font-bold text-foreground">{job.salary}</span>
-                        <button
-                          onClick={(e) => { e.stopPropagation(); toggleSave(job.id); }}
-                          className={`p-2 rounded-lg transition-colors ${savedJobs.has(job.id) ? 'bg-primary/10 text-primary' : 'hover:bg-secondary text-muted-foreground hover:text-foreground'}`}
-                        >
-                          <Bookmark size={16} className={savedJobs.has(job.id) ? 'fill-primary' : ''} />
-                        </button>
-                        <button className="text-xs font-semibold gradient-primary text-primary-foreground px-4 py-2 rounded-lg hover:opacity-90 transition-opacity active:scale-95">
-                          Apply
-                        </button>
-                      </div>
-                    </div>
+                    </Link>
                   </motion.div>
                 ))}
               </div>
@@ -237,7 +245,6 @@ const Jobs = () => {
                 </div>
               )}
 
-              {/* Inline ad after results */}
               <div className="mt-6">
                 <AdsBanner variant="inline" adIndex={0} />
               </div>
