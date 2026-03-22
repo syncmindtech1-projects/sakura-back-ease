@@ -36,77 +36,81 @@ const FeaturedJobs = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {featuredJobs.slice(0, 9).map((job, i) => (
-            <motion.div
-              key={job.id}
-              className="group bg-card rounded-2xl border border-border p-5 hover:shadow-elevated hover:border-primary/20 transition-all duration-300 cursor-pointer relative"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.05 }}
-            >
-              {/* Badges */}
-              <div className="flex items-center gap-2 mb-3">
-                {job.featured && (
-                  <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md gradient-primary text-primary-foreground">
-                    Featured
-                  </span>
-                )}
-                {job.urgent && (
-                  <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md gradient-warm text-highlight-foreground">
-                    Urgent
-                  </span>
-                )}
-                {job.remote && (
-                  <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-accent/10 text-accent">
-                    Remote
-                  </span>
-                )}
-                <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md ${job.collar === 'white' ? 'bg-primary/10 text-primary' : 'bg-highlight/10 text-highlight'}`}>
-                  {job.collar === 'white' ? '👔 White Collar' : '🔧 Blue Collar'}
-                </span>
-              </div>
-
-              {/* Company & Title */}
-              <div className="flex items-start gap-3 mb-3">
-                <div className="w-11 h-11 rounded-xl bg-secondary flex items-center justify-center text-xl shrink-0">
-                  {job.logo}
-                </div>
-                <div className="min-w-0">
-                  <h3 className="text-base font-semibold text-foreground group-hover:text-primary transition-colors truncate">
-                    {job.title}
-                  </h3>
-                  <p className="text-sm text-muted-foreground">{job.company}</p>
-                </div>
-              </div>
-
-              {/* Meta */}
-              <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground mb-3">
-                <span className="flex items-center gap-1"><MapPin size={12} />{job.location}</span>
-                <span className="flex items-center gap-1"><Clock size={12} />{job.posted}</span>
-              </div>
-
-              {/* Tags */}
-              <div className="flex flex-wrap gap-1.5 mb-4">
-                {job.tags.map((tag) => (
-                  <span key={tag} className="text-[11px] px-2 py-0.5 rounded-md bg-secondary text-secondary-foreground font-medium">
-                    {tag}
-                  </span>
-                ))}
-              </div>
-
-              {/* Footer */}
-              <div className="flex items-center justify-between pt-3 border-t border-border">
-                <span className="text-sm font-bold text-foreground">{job.salary}</span>
-                <div className="flex items-center gap-2">
-                  <button className="p-1.5 rounded-lg hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors">
-                    <Bookmark size={16} />
-                  </button>
-                  <span className="text-xs font-medium bg-secondary text-secondary-foreground px-3 py-1.5 rounded-lg">
-                    {job.type}
+            <Link key={job.id} to={`/jobs/${job.id}`} className="block">
+              <motion.div
+                className="group bg-card rounded-2xl border border-border p-5 hover:shadow-elevated hover:border-primary/20 transition-all duration-300 cursor-pointer relative h-full"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.05 }}
+              >
+                {/* Badges */}
+                <div className="flex items-center gap-2 mb-3 flex-wrap">
+                  {job.featured && (
+                    <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md gradient-primary text-primary-foreground">
+                      Featured
+                    </span>
+                  )}
+                  {job.urgent && (
+                    <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md gradient-warm text-highlight-foreground">
+                      Urgent
+                    </span>
+                  )}
+                  {job.remote && (
+                    <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-accent/10 text-accent">
+                      Remote
+                    </span>
+                  )}
+                  <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md ${job.collar === 'white' ? 'bg-primary/10 text-primary' : 'bg-highlight/10 text-highlight'}`}>
+                    {job.collar === 'white' ? '👔 White Collar' : '🔧 Blue Collar'}
                   </span>
                 </div>
-              </div>
-            </motion.div>
+
+                {/* Company & Title */}
+                <div className="flex items-start gap-3 mb-3">
+                  <div className="w-11 h-11 rounded-xl bg-secondary flex items-center justify-center text-xl shrink-0">
+                    {job.logo}
+                  </div>
+                  <div className="min-w-0">
+                    <h3 className="text-base font-semibold text-foreground group-hover:text-primary transition-colors truncate">
+                      {job.title}
+                    </h3>
+                    <p className="text-sm text-muted-foreground">{job.company}</p>
+                  </div>
+                </div>
+
+                {/* Meta */}
+                <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground mb-3">
+                  <span className="flex items-center gap-1"><MapPin size={12} />{job.location}</span>
+                  <span className="flex items-center gap-1"><Clock size={12} />{job.posted}</span>
+                </div>
+
+                {/* Tags */}
+                <div className="flex flex-wrap gap-1.5 mb-4">
+                  {job.tags.map((tag) => (
+                    <span key={tag} className="text-[11px] px-2 py-0.5 rounded-md bg-secondary text-secondary-foreground font-medium">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+
+                {/* Footer */}
+                <div className="flex items-center justify-between pt-3 border-t border-border">
+                  <span className="text-sm font-bold text-foreground">{job.salary}</span>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={(e) => e.preventDefault()}
+                      className="p-1.5 rounded-lg hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                      <Bookmark size={16} />
+                    </button>
+                    <span className="text-xs font-medium bg-secondary text-secondary-foreground px-3 py-1.5 rounded-lg">
+                      {job.type}
+                    </span>
+                  </div>
+                </div>
+              </motion.div>
+            </Link>
           ))}
         </div>
 
