@@ -2,8 +2,10 @@ import { motion } from "framer-motion";
 import { Search, MapPin, Briefcase, TrendingUp, Star, Zap } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { getJobStats } from "@/lib/jobData";
 
 const popularSearches = ["Software Developer", "Electrician", "Nurse", "Data Scientist", "Plumber", "Teacher", "Driver", "Accountant"];
+const { totalJobs, countries } = getJobStats();
 
 const Hero = () => {
   const [query, setQuery] = useState("");
@@ -34,7 +36,7 @@ const Hero = () => {
             className="inline-flex items-center gap-2 bg-primary/10 text-primary rounded-full px-4 py-2 text-sm font-medium mb-6"
           >
             <Zap size={16} />
-            <span>🇺🇬 Uganda's #1 Free Job Board — 24,500+ jobs across Africa, UAE, Europe & Americas</span>
+            <span>🇺🇬 Uganda's #1 Free Job Board — {totalJobs}+ jobs across Africa, UAE, Europe & Americas</span>
           </motion.div>
 
           <motion.h1
@@ -135,8 +137,8 @@ const Hero = () => {
             transition={{ delay: 0.6 }}
           >
             {[
-              { icon: Briefcase, label: "24,500+ Free Jobs", sub: "Always 100% free" },
-              { icon: Star, label: "50+ Countries", sub: "Africa, UAE, Europe & Americas" },
+              { icon: Briefcase, label: `${totalJobs}+ Free Jobs`, sub: "Always 100% free" },
+              { icon: Star, label: `${countries}+ Countries`, sub: "Africa, UAE, Europe & Americas" },
               { icon: TrendingUp, label: "3.2M+ Users", sub: "Growing community" },
             ].map((item) => (
               <div key={item.label} className="flex items-center gap-3">
