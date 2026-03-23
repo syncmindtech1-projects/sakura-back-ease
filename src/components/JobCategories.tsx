@@ -1,7 +1,9 @@
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
-import { jobCategories } from "@/lib/jobData";
+import { getJobCategoriesWithCounts } from "@/lib/jobData";
+
+const jobCategories = getJobCategoriesWithCounts();
 
 const JobCategories = () => {
   return (

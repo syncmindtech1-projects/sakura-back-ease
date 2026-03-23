@@ -2,8 +2,10 @@ import { motion } from "framer-motion";
 import { Search, MapPin, Briefcase, TrendingUp, Star, Zap } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { getJobStats } from "@/lib/jobData";
 
 const popularSearches = ["Software Developer", "Electrician", "Nurse", "Data Scientist", "Plumber", "Teacher", "Driver", "Accountant"];
+const { totalJobs, countries } = getJobStats();
 
 const Hero = () => {
   const [query, setQuery] = useState("");

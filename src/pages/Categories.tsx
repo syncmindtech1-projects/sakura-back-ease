@@ -3,7 +3,9 @@ import AdsBanner from "@/components/AdsBanner";
 import { motion } from "framer-motion";
 import { ArrowRight, Search, Briefcase, MapPin, Clock } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
-import { jobCategories, featuredJobs } from "@/lib/jobData";
+import { getJobCategoriesWithCounts, featuredJobs } from "@/lib/jobData";
+
+const jobCategories = getJobCategoriesWithCounts();
 import { useState } from "react";
 
 const Categories = () => {
