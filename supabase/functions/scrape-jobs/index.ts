@@ -8,6 +8,10 @@ const JOB_SOURCES = [
   { url: 'https://www.brightermonday.co.ke/jobs', region: 'Kenya', name: 'BrighterMonday Kenya' },
   { url: 'https://www.fuzu.com/uganda/jobs', region: 'Uganda', name: 'Fuzu Uganda' },
   { url: 'https://www.fuzu.com/kenya/jobs', region: 'Kenya', name: 'Fuzu Kenya' },
+  { url: 'https://wellfound.com/jobs', region: 'Global', name: 'Wellfound (AngelList)' },
+  { url: 'https://web3.career/', region: 'Global', name: 'Web3.career' },
+  { url: 'https://web3.career/remote-jobs', region: 'Remote', name: 'Web3.career Remote' },
+  { url: 'https://wellfound.com/role/r/software-engineer', region: 'Global', name: 'Wellfound Engineering' },
   { url: 'https://www.linkedin.com/jobs/search/?location=Uganda', region: 'Uganda', name: 'LinkedIn Uganda' },
   { url: 'https://www.linkedin.com/jobs/search/?location=Dubai', region: 'UAE', name: 'LinkedIn UAE' },
 ];
@@ -26,9 +30,9 @@ Deno.serve(async (req) => {
       );
     }
 
-    const { sourceIndex = 0, query } = await req.json().catch(() => ({}));
+    const { sourceIndex = 0, query, scrapeAll = false } = await req.json().catch(() => ({}));
 
-    // If query provided, use Firecrawl search
+    // Search mode
     if (query) {
       console.log('Searching jobs:', query);
       const response = await fetch('https://api.firecrawl.dev/v1/search', {
@@ -58,38 +62,54 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Otherwise scrape a specific job board
-    const source = JOB_SOURCES[sourceIndex] || JOB_SOURCES[0];
-    console.log('Scraping:', source.name, source.url);
+    // Scrape all sources or a specific one
+    const sourcesToScrape = scrapeAll ? JOB_SOURCES : [JOB_SOURCES[sourceIndex] || JOB_SOURCES[0]];
+    const results = [];
 
-    const response = await fetch('https://api.firecrawl.dev/v1/scrape', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        url: source.url,
-        formats: ['markdown', 'links'],
-        onlyMainContent: true,
-      }),
-    });
+    for (const source of sourcesToScrape) {
+      console.log('Scraping:', source.name, source.url);
+      try {
+        const response = await fetch('https://api.firecrawl.dev/v1/scrape', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${apiKey}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            url: source.url,
+            formats: ['markdown', 'links'],
+            onlyMainContent: true,
+          }),
+        });
 
-    const data = await response.json();
-    if (!response.ok) {
-      return new Response(
-        JSON.stringify({ success: false, error: data.error || `Scrape failed: ${response.status}` }),
-        { status: response.status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
+        const data = await response.json();
+        if (response.ok) {
+          results.push({
+            source: source.name,
+            region: source.region,
+            data: data.data || data,
+          });
+        } else {
+          console.error(`Failed to scrape ${source.name}:`, data.error);
+          results.push({ source: source.name, region: source.region, error: data.error });
+        }
+      } catch (err) {
+        console.error(`Error scraping ${source.name}:`, err);
+        results.push({ source: source.name, region: source.region, error: String(err) });
+      }
+
+      // Small delay between requests to avoid rate limiting
+      if (sourcesToScrape.length > 1) {
+        await new Promise(r => setTimeout(r, 500));
+      }
     }
 
     return new Response(
       JSON.stringify({
         success: true,
-        type: 'scrape',
-        source: source.name,
-        region: source.region,
-        data: data.data || data,
+        type: scrapeAll ? 'scrape_all' : 'scrape',
+        sources: JOB_SOURCES.map(s => ({ name: s.name, region: s.region, url: s.url })),
+        results,
       }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
