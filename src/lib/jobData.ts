@@ -17,21 +17,22 @@ export interface Job {
   applyUrl: string;
   requirements?: string[];
   benefits?: string[];
+  status?: "active" | "coming_soon";
 }
 
 export const jobCategories = [
-  { name: "Technology", icon: "💻", count: 2840, color: "primary" },
-  { name: "Healthcare", icon: "🏥", count: 1920, color: "accent" },
-  { name: "Finance", icon: "💰", count: 1560, color: "highlight" },
-  { name: "Construction", icon: "🏗️", count: 1340, color: "primary" },
-  { name: "Education", icon: "📚", count: 980, color: "accent" },
-  { name: "Marketing", icon: "📢", count: 870, color: "highlight" },
-  { name: "Manufacturing", icon: "🏭", count: 760, color: "primary" },
-  { name: "Transportation", icon: "🚛", count: 650, color: "accent" },
-  { name: "Hospitality", icon: "🏨", count: 590, color: "highlight" },
-  { name: "Retail", icon: "🛒", count: 1200, color: "primary" },
-  { name: "Engineering", icon: "⚙️", count: 1100, color: "accent" },
-  { name: "Legal", icon: "⚖️", count: 430, color: "highlight" },
+  { name: "Technology", icon: "💻", color: "primary" },
+  { name: "Healthcare", icon: "🏥", color: "accent" },
+  { name: "Finance", icon: "💰", color: "highlight" },
+  { name: "Construction", icon: "🏗️", color: "primary" },
+  { name: "Education", icon: "📚", color: "accent" },
+  { name: "Marketing", icon: "📢", color: "highlight" },
+  { name: "Manufacturing", icon: "🏭", color: "primary" },
+  { name: "Transportation", icon: "🚛", color: "accent" },
+  { name: "Hospitality", icon: "🏨", color: "highlight" },
+  { name: "Retail", icon: "🛒", color: "primary" },
+  { name: "Engineering", icon: "⚙️", color: "accent" },
+  { name: "Legal", icon: "⚖️", color: "highlight" },
 ];
 
 export const featuredJobs: Job[] = [
@@ -71,7 +72,7 @@ export const featuredJobs: Job[] = [
     tags: ["Electrical", "Commercial", "Licensed"],
     applyUrl: "https://www.umeme.co.ug/careers",
     requirements: ["Valid electrician license", "3+ years commercial experience", "Knowledge of electrical codes", "Ability to read blueprints"],
-    benefits: ["Competitive salary", "On-site training", "Safety equipment provided"],
+    benefits: ["Competitive salary", "On-site training", "Safety equipment provided", "Transport allowance"],
   },
   {
     id: "ug-3",
@@ -89,7 +90,7 @@ export const featuredJobs: Job[] = [
     tags: ["Nursing", "ICU", "BSN Required"],
     applyUrl: "https://www.health.go.ug/jobs",
     requirements: ["BSN degree", "2+ years ICU experience", "Valid nursing license", "BLS/ACLS certification"],
-    benefits: ["Government pension", "Medical cover", "Professional development"],
+    benefits: ["Government pension", "Medical cover", "Professional development", "Housing allowance"],
   },
   {
     id: "ug-4",
@@ -105,7 +106,8 @@ export const featuredJobs: Job[] = [
     description: "Handle residential and industrial plumbing installations, water system repairs, and preventive maintenance contracts.",
     tags: ["Plumbing", "Water Systems", "Maintenance"],
     applyUrl: "https://www.nwsc.co.ug/careers",
-    requirements: ["Plumbing certification", "Experience with industrial systems", "Valid driver's license"],
+    requirements: ["Plumbing certification", "Experience with industrial systems", "Valid driver's license", "Ability to work outdoors"],
+    benefits: ["Competitive salary", "Uniform & tools provided", "Transport allowance", "Medical insurance"],
   },
   {
     id: "ug-5",
@@ -140,7 +142,8 @@ export const featuredJobs: Job[] = [
     description: "Perform MIG and TIG welding on structural steel for construction projects. Must read blueprints and weld to code specifications.",
     tags: ["MIG Welding", "TIG", "Structural Steel"],
     applyUrl: "https://www.roofings.co.ug/careers",
-    requirements: ["Welding certification", "Experience with MIG/TIG", "Blueprint reading ability"],
+    requirements: ["Welding certification", "Experience with MIG/TIG", "Blueprint reading ability", "Safety awareness"],
+    benefits: ["Competitive wages", "Safety gear provided", "Overtime pay", "Meals on site"],
   },
   {
     id: "ug-7",
@@ -174,6 +177,8 @@ export const featuredJobs: Job[] = [
     description: "Operate excavators, bulldozers, and graders for road construction projects in Eastern Uganda.",
     tags: ["Excavator", "Road Construction", "CDL"],
     applyUrl: "https://www.brightermonday.co.ug/jobs",
+    requirements: ["Valid heavy equipment license", "3+ years operating experience", "Road construction knowledge", "Physical fitness"],
+    benefits: ["Competitive pay", "On-site accommodation", "Meals provided", "Transport to site"],
   },
   {
     id: "ug-9",
@@ -206,6 +211,8 @@ export const featuredJobs: Job[] = [
     description: "Oversee kitchen operations, develop seasonal menus, and manage a team of 15 cooks for the 5-star hotel restaurant.",
     tags: ["Culinary", "Hotel", "Menu Planning"],
     applyUrl: "https://www.serenahotels.com/kampala/careers",
+    requirements: ["Culinary diploma or degree", "3+ years as a sous chef", "Knowledge of international cuisines", "Food safety certification"],
+    benefits: ["Staff meals", "Health insurance", "Accommodation discount", "Career growth within hotel chain"],
   },
 
   // === KENYA ===
@@ -241,6 +248,8 @@ export const featuredJobs: Job[] = [
     description: "Drive cross-border transport routes (Mombasa–Kampala–Kigali corridor). Valid driving license BCE class required.",
     tags: ["CDL", "Cross-border", "East Africa"],
     applyUrl: "https://www.brightermonday.co.ke/jobs",
+    requirements: ["Valid BCE driving license", "5+ years long-haul experience", "Cross-border documentation knowledge", "Clean driving record"],
+    benefits: ["Per-diem allowance", "Health insurance", "Annual leave", "Fuel card"],
   },
   {
     id: "ke-3",
@@ -257,6 +266,8 @@ export const featuredJobs: Job[] = [
     description: "Design intuitive mobile banking experiences for 17M+ customers across 6 African countries.",
     tags: ["Figma", "Mobile UX", "Banking"],
     applyUrl: "https://equitygroupholdings.com/ke/careers",
+    requirements: ["3+ years UX design experience", "Figma proficiency", "Portfolio of mobile apps", "User research skills"],
+    benefits: ["Remote flexibility", "Health insurance", "Professional development", "Performance bonus"],
   },
   {
     id: "ke-4",
@@ -272,6 +283,25 @@ export const featuredJobs: Job[] = [
     description: "Provide physical security for corporate offices. Must have valid Kenya Police Clearance Certificate.",
     tags: ["Security", "Corporate", "Licensed"],
     applyUrl: "https://www.g4s.com/en-ke/careers",
+    requirements: ["Valid police clearance", "Security training certificate", "Good physical fitness", "Previous security experience"],
+    benefits: ["Uniform provided", "Medical cover", "Overtime pay", "Training opportunities"],
+  },
+  {
+    id: "ke-5",
+    title: "Digital Marketing Specialist",
+    company: "Jumia Kenya",
+    location: "Nairobi, Kenya",
+    type: "Full-time",
+    category: "Marketing",
+    collar: "white",
+    salary: "KES 120K – 220K/mo",
+    posted: "10 hours ago",
+    logo: "🟡",
+    description: "Drive customer acquisition through SEO, SEM, social media, and email marketing for East Africa's largest e-commerce platform.",
+    tags: ["SEO", "Google Ads", "E-commerce"],
+    applyUrl: "https://group.jumia.com/careers",
+    requirements: ["3+ years digital marketing experience", "Google Ads & Analytics certified", "SEO/SEM expertise", "E-commerce background preferred"],
+    benefits: ["Staff discounts", "Health insurance", "Flexible hours", "Performance bonus"],
   },
 
   // === TANZANIA ===
@@ -289,6 +319,8 @@ export const featuredJobs: Job[] = [
     description: "Oversee daily warehouse operations, manage team of 30+ associates, and optimize inventory management systems.",
     tags: ["Logistics", "Warehouse", "Inventory"],
     applyUrl: "https://www.dhl.com/tz-en/home/careers.html",
+    requirements: ["Degree in Supply Chain/Logistics", "5+ years warehouse management", "Team leadership experience", "Inventory software proficiency"],
+    benefits: ["Competitive salary", "Health insurance", "Career development", "Performance incentives"],
   },
   {
     id: "tz-2",
@@ -305,6 +337,8 @@ export const featuredJobs: Job[] = [
     description: "Plan and supervise mining operations at North Mara Gold Mine. BSc Mining Engineering required.",
     tags: ["Mining", "Gold", "Operations"],
     applyUrl: "https://www.barrick.com/English/careers",
+    requirements: ["BSc Mining Engineering", "5+ years mine planning", "Regulatory compliance knowledge", "AutoCAD/Surpac proficiency"],
+    benefits: ["Housing provided on-site", "Flight allowance", "Health & dental", "Annual bonus"],
   },
 
   // === RWANDA ===
@@ -322,6 +356,8 @@ export const featuredJobs: Job[] = [
     description: "Analyze banking data to drive business intelligence and support strategic decision-making for Rwanda's largest bank.",
     tags: ["SQL", "Power BI", "Banking"],
     applyUrl: "https://www.bk.rw/careers",
+    requirements: ["Degree in Statistics/CS/Finance", "SQL & Power BI proficiency", "2+ years data analysis", "Banking sector knowledge preferred"],
+    benefits: ["Competitive salary", "Health insurance", "Professional training", "Performance bonus"],
   },
 
   // === NIGERIA ===
@@ -340,6 +376,8 @@ export const featuredJobs: Job[] = [
     description: "Create beautiful, user-centered designs for Africa's leading payment infrastructure company. Shape fintech products used by millions.",
     tags: ["Figma", "Design Systems", "Fintech"],
     applyUrl: "https://flutterwave.com/us/careers",
+    requirements: ["3+ years UI/UX experience", "Strong Figma portfolio", "Design systems knowledge", "Fintech interest"],
+    benefits: ["Remote-first culture", "Health insurance", "Stock options", "Learning budget"],
   },
   {
     id: "ng-2",
@@ -355,6 +393,8 @@ export const featuredJobs: Job[] = [
     description: "Optimize oil and gas extraction processes, manage well completion programs, and ensure environmental compliance.",
     tags: ["Oil & Gas", "Reservoir Engineering", "HSE"],
     applyUrl: "https://www.shell.com.ng/careers.html",
+    requirements: ["BSc Petroleum Engineering", "5+ years O&G experience", "HSE certification", "Reservoir simulation skills"],
+    benefits: ["Competitive compensation", "Housing allowance", "Health & dental", "Annual flights"],
   },
 
   // === SOUTH AFRICA ===
@@ -373,6 +413,8 @@ export const featuredJobs: Job[] = [
     description: "Build and maintain CI/CD pipelines, manage Kubernetes clusters, and ensure 99.99% uptime for global e-commerce platforms.",
     tags: ["Kubernetes", "AWS", "Terraform"],
     applyUrl: "https://www.prosus.com/careers",
+    requirements: ["4+ years DevOps experience", "Kubernetes & Docker expertise", "AWS/GCP certification", "Terraform/IaC skills"],
+    benefits: ["Remote work", "Stock options", "Health insurance", "Learning budget"],
   },
 
   // === UAE ===
@@ -390,6 +432,8 @@ export const featuredJobs: Job[] = [
     description: "Install and service HVAC systems in commercial high-rise buildings across Dubai. EPA certification preferred.",
     tags: ["HVAC", "Installation", "Chiller Systems"],
     applyUrl: "https://www.bayt.com/en/uae/jobs/hvac-technician-jobs/",
+    requirements: ["HVAC certification", "3+ years commercial experience", "Chiller system knowledge", "Working at heights certified"],
+    benefits: ["Tax-free salary", "Accommodation provided", "Annual flight home", "Health insurance"],
   },
   {
     id: "ae-2",
@@ -423,6 +467,8 @@ export const featuredJobs: Job[] = [
     description: "Provide world-class guest services at a 5-star luxury resort. Multilingual skills are a plus. Accommodation provided.",
     tags: ["Front Desk", "Hospitality", "Multilingual"],
     applyUrl: "https://www.jumeirah.com/en/careers",
+    requirements: ["Hospitality diploma preferred", "1+ years front desk experience", "Fluent English", "Customer service skills"],
+    benefits: ["Accommodation & meals", "Uniform provided", "Health insurance", "Staff discounts on hotels"],
   },
   {
     id: "ae-4",
@@ -439,6 +485,25 @@ export const featuredJobs: Job[] = [
     description: "Supervise construction crews on residential tower projects. Must have 5+ years experience and valid UAE trade license.",
     tags: ["Construction", "Supervision", "Residential"],
     applyUrl: "https://www.habtoorgroup.com/en/careers",
+    requirements: ["5+ years construction supervision", "UAE trade license", "Team management skills", "Safety compliance knowledge"],
+    benefits: ["Competitive salary", "Accommodation", "Transport provided", "Annual flight home"],
+  },
+  {
+    id: "ae-5",
+    title: "Retail Store Manager",
+    company: "Majid Al Futtaim",
+    location: "Dubai Mall, UAE",
+    type: "Full-time",
+    category: "Retail",
+    collar: "white",
+    salary: "AED 12K – 18K/mo",
+    posted: "4 hours ago",
+    logo: "🟡",
+    description: "Manage daily store operations, lead sales team, and achieve revenue targets for a flagship retail outlet.",
+    tags: ["Retail Management", "Sales", "KPIs"],
+    applyUrl: "https://www.majidalfuttaim.com/en/careers",
+    requirements: ["5+ years retail management", "Sales target track record", "Team leadership", "Arabic language a plus"],
+    benefits: ["Tax-free salary", "Commission on sales", "Health insurance", "Staff discounts"],
   },
 
   // === UNITED KINGDOM ===
@@ -476,6 +541,8 @@ export const featuredJobs: Job[] = [
     description: "Provide patient care in acute medical wards. Band 5 position with career progression opportunities. NMC registration required.",
     tags: ["NMC Registered", "Acute Care", "Band 5"],
     applyUrl: "https://www.jobs.nhs.uk/",
+    requirements: ["NMC registration", "BSc Nursing", "Acute care experience", "Right to work in UK"],
+    benefits: ["NHS pension", "27 days annual leave", "Professional development", "Flexible working"],
   },
   {
     id: "uk-3",
@@ -491,6 +558,8 @@ export const featuredJobs: Job[] = [
     description: "Carry out first and second fix carpentry on new-build residential properties. CSCS card required.",
     tags: ["Carpentry", "CSCS", "New Build"],
     applyUrl: "https://www.barrattcareers.co.uk/",
+    requirements: ["NVQ Level 2/3 Carpentry", "CSCS card", "2+ years site experience", "Own hand tools"],
+    benefits: ["Competitive pay", "Pension scheme", "25 days holiday", "On-site parking"],
   },
 
   // === GERMANY ===
@@ -508,6 +577,8 @@ export const featuredJobs: Job[] = [
     description: "Design and test electric vehicle powertrain components. German language skills B2+ required.",
     tags: ["EV", "Powertrain", "CATIA"],
     applyUrl: "https://www.bmwgroup.jobs/",
+    requirements: ["MSc Mechanical/Electrical Engineering", "3+ years automotive", "CATIA V5 proficiency", "German B2+"],
+    benefits: ["Company car program", "Pension scheme", "30 days holiday", "Relocation support"],
   },
 
   // === CANADA ===
@@ -545,6 +616,8 @@ export const featuredJobs: Job[] = [
     description: "Install, assemble, and maintain piping systems in oil sands facilities. Red Seal certification required.",
     tags: ["Pipefitting", "Red Seal", "Oil Sands"],
     applyUrl: "https://www.suncor.com/en/careers",
+    requirements: ["Red Seal Pipefitter certification", "5+ years industrial experience", "WHMIS & H2S Alive", "Safety-oriented mindset"],
+    benefits: ["Camp accommodation", "Flights provided", "Overtime rates", "Health & dental"],
   },
   {
     id: "ca-3",
@@ -560,6 +633,8 @@ export const featuredJobs: Job[] = [
     description: "Provide emergency nursing care in one of Canada's top teaching hospitals. CNO registration and BLS certification required.",
     tags: ["Emergency Nursing", "CNO", "BLS"],
     applyUrl: "https://www.uhn.ca/careers",
+    requirements: ["CNO registration", "BScN degree", "BLS/ACLS certified", "2+ years ER experience"],
+    benefits: ["Comprehensive benefits", "Pension plan", "Tuition reimbursement", "Union representation"],
   },
 
   // === UNITED STATES ===
@@ -596,6 +671,8 @@ export const featuredJobs: Job[] = [
     description: "Perform electrical installations in commercial and residential buildings across NYC. NYS Master Electrician license required.",
     tags: ["Master Electrician", "NEC Code", "Commercial"],
     applyUrl: "https://www.ibew3.org/jobs",
+    requirements: ["NYS Master Electrician license", "10+ years experience", "NEC code knowledge", "OSHA certification"],
+    benefits: ["Union wages", "Health & pension", "Annuity fund", "Paid training"],
   },
   {
     id: "us-3",
@@ -611,6 +688,8 @@ export const featuredJobs: Job[] = [
     description: "Provide patient care alongside physicians in internal medicine. PA-C certification and state licensure required.",
     tags: ["PA-C", "Internal Medicine", "Clinical"],
     applyUrl: "https://jobs.mayoclinic.org/",
+    requirements: ["PA-C certification", "State licensure", "2+ years clinical experience", "DEA registration"],
+    benefits: ["Top-tier benefits", "CME allowance", "Relocation assistance", "Retirement plan"],
   },
   {
     id: "us-4",
@@ -626,6 +705,8 @@ export const featuredJobs: Job[] = [
     description: "Regional LTL freight delivery across Texas, Oklahoma, and Louisiana. Home most weekends. CDL-A required.",
     tags: ["CDL-A", "LTL Freight", "Regional"],
     applyUrl: "https://careers.fedex.com/freight",
+    requirements: ["CDL-A license", "2+ years OTR experience", "Clean MVR", "DOT medical card"],
+    benefits: ["Home weekends", "Health & dental", "401(k) match", "Paid time off"],
   },
   {
     id: "us-5",
@@ -642,6 +723,8 @@ export const featuredJobs: Job[] = [
     description: "Support M&A transactions, build financial models, and prepare pitch materials for Fortune 500 deals.",
     tags: ["M&A", "Financial Modeling", "DCF"],
     applyUrl: "https://www.goldmansachs.com/careers/",
+    requirements: ["Top-tier university degree", "Investment banking experience", "Financial modeling expertise", "Series 79 preferred"],
+    benefits: ["Industry-leading compensation", "Health & dental", "Meal stipend", "Gym membership"],
   },
   {
     id: "us-6",
@@ -657,6 +740,8 @@ export const featuredJobs: Job[] = [
     description: "Install residential and light commercial HVAC systems. EPA Section 608 certification required.",
     tags: ["HVAC", "EPA Certified", "Residential"],
     applyUrl: "https://www.corporate.carrier.com/careers/",
+    requirements: ["EPA Section 608 certification", "2+ years HVAC install", "Valid driver's license", "Physical fitness"],
+    benefits: ["Company vehicle", "Health benefits", "Tool allowance", "Overtime pay"],
   },
   {
     id: "us-7",
@@ -672,6 +757,42 @@ export const featuredJobs: Job[] = [
     description: "Lead integrated marketing campaigns for Nike's North American running category. 8+ years experience required.",
     tags: ["Brand Marketing", "Campaign Strategy", "D2C"],
     applyUrl: "https://jobs.nike.com/",
+    requirements: ["8+ years marketing leadership", "D2C and brand marketing", "MBA preferred", "Sports industry experience"],
+    benefits: ["Product discounts", "RSUs", "Fitness center", "Sabbatical program"],
+  },
+  {
+    id: "us-8",
+    title: "Dental Hygienist",
+    company: "Aspen Dental",
+    location: "Chicago, IL, USA",
+    type: "Full-time",
+    category: "Healthcare",
+    collar: "white",
+    salary: "$72K – $90K/yr",
+    posted: "3 hours ago",
+    logo: "🟢",
+    description: "Provide preventive dental care including cleanings, X-rays, and patient education. RDH license required.",
+    tags: ["Dental", "RDH", "Preventive Care"],
+    applyUrl: "https://careers.aspendental.com/",
+    requirements: ["RDH license", "Associate/Bachelor in Dental Hygiene", "CPR certification", "1+ years clinical experience"],
+    benefits: ["Competitive pay", "Health & dental", "CE allowance", "401(k)"],
+  },
+  {
+    id: "us-9",
+    title: "Warehouse Associate",
+    company: "Amazon Fulfillment",
+    location: "Houston, TX, USA",
+    type: "Full-time",
+    category: "Manufacturing",
+    collar: "blue",
+    salary: "$17 – $22/hr",
+    posted: "2 hours ago",
+    logo: "🟠",
+    description: "Pick, pack, and ship customer orders in a fast-paced fulfillment center. Shifts available including overnight.",
+    tags: ["Warehouse", "Fulfillment", "Flexible Shifts"],
+    applyUrl: "https://www.amazon.jobs/",
+    requirements: ["Must be 18+", "Ability to lift 50 lbs", "Stand/walk for 10+ hours", "Reliable transportation"],
+    benefits: ["$18+/hr starting pay", "Health from Day 1", "Career Choice program", "Paid time off"],
   },
 
   // === ETHIOPIA ===
@@ -689,6 +810,8 @@ export const featuredJobs: Job[] = [
     description: "Supervise garment production lines, ensure quality standards, and manage shift schedules for 100+ workers.",
     tags: ["Textile", "Production", "Quality Control"],
     applyUrl: "https://www.ethiojobs.net/",
+    requirements: ["Diploma in Textile/Manufacturing", "3+ years supervisory role", "Quality control knowledge", "Shift management experience"],
+    benefits: ["Competitive salary", "Transport provided", "Meals on-site", "Performance bonus"],
   },
 
   // === GHANA ===
@@ -707,6 +830,8 @@ export const featuredJobs: Job[] = [
     description: "Build and maintain Android applications for MTN's 25M+ subscriber base. Kotlin/Java experience required.",
     tags: ["Android", "Kotlin", "Mobile"],
     applyUrl: "https://www.mtn.com.gh/careers",
+    requirements: ["3+ years Android development", "Kotlin/Java proficiency", "Published apps on Play Store", "API integration experience"],
+    benefits: ["Remote flexibility", "Airtime & data allowance", "Health insurance", "Training budget"],
   },
 
   // === MORE UGANDA JOBS ===
@@ -724,6 +849,8 @@ export const featuredJobs: Job[] = [
     description: "Teach mathematics to secondary students (S1-S6) following the Cambridge International curriculum.",
     tags: ["Teaching", "Mathematics", "Cambridge"],
     applyUrl: "https://www.brightermonday.co.ug/jobs",
+    requirements: ["Degree in Mathematics/Education", "PGCE or teaching qualification", "2+ years teaching experience", "Cambridge curriculum knowledge"],
+    benefits: ["School holidays", "Health insurance", "Professional development", "Subsidized meals"],
   },
   {
     id: "ug-12",
@@ -739,6 +866,8 @@ export const featuredJobs: Job[] = [
     description: "Maintain and repair diesel engines for brewery fleet vehicles and generator systems.",
     tags: ["Diesel Mechanic", "Fleet", "Generators"],
     applyUrl: "https://www.diageo.com/en/careers",
+    requirements: ["Diploma in Automotive Mechanics", "3+ years diesel engine experience", "Fleet maintenance skills", "Valid driving license"],
+    benefits: ["Competitive salary", "Medical insurance", "Staff product allowance", "Pension scheme"],
   },
   {
     id: "ug-13",
@@ -754,6 +883,8 @@ export const featuredJobs: Job[] = [
     description: "Oversee pharmaceutical manufacturing quality assurance and regulatory compliance for ARV production.",
     tags: ["Pharmacy", "GMP", "Quality Assurance"],
     applyUrl: "https://www.cipla.co.ug/careers",
+    requirements: ["Bachelor of Pharmacy", "Pharmacy Council registration", "GMP knowledge", "2+ years pharmaceutical experience"],
+    benefits: ["Health insurance", "Transport allowance", "Professional development", "Performance bonus"],
   },
   {
     id: "ug-14",
@@ -769,6 +900,8 @@ export const featuredJobs: Job[] = [
     description: "Train smallholder coffee farmers on best practices, pest management, and post-harvest handling techniques.",
     tags: ["Agriculture", "Coffee", "Extension"],
     applyUrl: "https://www.ucda.go.ug/careers",
+    requirements: ["Degree in Agriculture", "Experience in farmer training", "Knowledge of coffee production", "Valid motorcycle license"],
+    benefits: ["Field allowance", "Transport provided", "Medical cover", "Training opportunities"],
   },
   {
     id: "ug-15",
@@ -784,6 +917,42 @@ export const featuredJobs: Job[] = [
     description: "Deliver food and packages across Kampala using the SafeBoda app. Must own a motorcycle and have a valid permit.",
     tags: ["Delivery", "Motorcycle", "Flexible Hours"],
     applyUrl: "https://safeboda.com/ug/",
+    requirements: ["Own motorcycle", "Valid riding permit", "Smartphone with data", "Knowledge of Kampala routes"],
+    benefits: ["Flexible hours", "Weekly payouts", "Insurance coverage", "Fuel bonuses"],
+  },
+  {
+    id: "ug-16",
+    title: "Legal Counsel – Corporate",
+    company: "Bowmans Uganda",
+    location: "Kampala, Uganda",
+    type: "Full-time",
+    category: "Legal",
+    collar: "white",
+    salary: "UGX 7M – 14M/mo",
+    posted: "3 days ago",
+    logo: "🟣",
+    description: "Provide legal advisory on corporate transactions, mergers, and regulatory compliance across East African markets.",
+    tags: ["Corporate Law", "M&A", "Compliance"],
+    applyUrl: "https://www.bowmanslaw.com/careers/",
+    requirements: ["LLB degree", "Admitted to Uganda Bar", "5+ years corporate law", "M&A transaction experience"],
+    benefits: ["Competitive salary", "Health & life insurance", "Professional membership fees", "International exposure"],
+  },
+  {
+    id: "ug-17",
+    title: "Painter – Commercial",
+    company: "Kansai Plascon Uganda",
+    location: "Kampala, Uganda",
+    type: "Contract",
+    category: "Construction",
+    collar: "blue",
+    salary: "UGX 800K – 1.5M/mo",
+    posted: "2 days ago",
+    logo: "🔵",
+    description: "Apply interior and exterior paint finishes on commercial buildings. Experience with spray equipment preferred.",
+    tags: ["Painting", "Commercial", "Spray Equipment"],
+    applyUrl: "https://www.kansaiplascon.com/careers",
+    requirements: ["3+ years commercial painting", "Spray equipment experience", "Color mixing skills", "Safety awareness"],
+    benefits: ["Competitive day rate", "Materials provided", "Transport allowance", "Repeat project opportunities"],
   },
 
   // === MORE INTERNATIONAL ===
@@ -801,6 +970,8 @@ export const featuredJobs: Job[] = [
     description: "Design seasonal collections for luxury fashion houses under the LVMH umbrella. Fashion degree and portfolio required.",
     tags: ["Fashion Design", "Luxury", "Couture"],
     applyUrl: "https://www.lvmh.com/join-us/",
+    requirements: ["Fashion design degree", "3+ years luxury fashion", "Strong portfolio", "French language preferred"],
+    benefits: ["Employee discounts", "Health insurance", "Fashion week exposure", "Creative workshops"],
   },
   {
     id: "sg-1",
@@ -816,6 +987,8 @@ export const featuredJobs: Job[] = [
     description: "Monitor and respond to security threats, conduct vulnerability assessments, and implement security controls.",
     tags: ["SIEM", "Incident Response", "CISSP"],
     applyUrl: "https://www.dbs.com/careers/",
+    requirements: ["3+ years cybersecurity", "CISSP or CEH certification", "SIEM tool experience", "Incident response skills"],
+    benefits: ["Competitive salary", "Health & dental", "Flexible work", "Training sponsorship"],
   },
   {
     id: "au-1",
@@ -832,111 +1005,56 @@ export const featuredJobs: Job[] = [
     description: "Maintain and repair heavy mining equipment including haul trucks and excavators. FIFO roster: 2 weeks on, 1 week off.",
     tags: ["Mining", "Diesel", "FIFO"],
     applyUrl: "https://www.bhp.com/careers",
-  },
-  {
-    id: "us-8",
-    title: "Dental Hygienist",
-    company: "Aspen Dental",
-    location: "Chicago, IL, USA",
-    type: "Full-time",
-    category: "Healthcare",
-    collar: "white",
-    salary: "$72K – $90K/yr",
-    posted: "3 hours ago",
-    logo: "🟢",
-    description: "Provide preventive dental care including cleanings, X-rays, and patient education. RDH license required.",
-    tags: ["Dental", "RDH", "Preventive Care"],
-    applyUrl: "https://careers.aspendental.com/",
-  },
-  {
-    id: "us-9",
-    title: "Warehouse Associate",
-    company: "Amazon Fulfillment",
-    location: "Houston, TX, USA",
-    type: "Full-time",
-    category: "Manufacturing",
-    collar: "blue",
-    salary: "$17 – $22/hr",
-    posted: "2 hours ago",
-    logo: "🟠",
-    description: "Pick, pack, and ship customer orders in a fast-paced fulfillment center. Shifts available including overnight.",
-    tags: ["Warehouse", "Fulfillment", "Flexible Shifts"],
-    applyUrl: "https://www.amazon.jobs/",
-  },
-  {
-    id: "ke-5",
-    title: "Digital Marketing Specialist",
-    company: "Jumia Kenya",
-    location: "Nairobi, Kenya",
-    type: "Full-time",
-    category: "Marketing",
-    collar: "white",
-    salary: "KES 120K – 220K/mo",
-    posted: "10 hours ago",
-    logo: "🟡",
-    description: "Drive customer acquisition through SEO, SEM, social media, and email marketing for East Africa's largest e-commerce platform.",
-    tags: ["SEO", "Google Ads", "E-commerce"],
-    applyUrl: "https://group.jumia.com/careers",
-  },
-  {
-    id: "ug-16",
-    title: "Legal Counsel – Corporate",
-    company: "Bowmans Uganda",
-    location: "Kampala, Uganda",
-    type: "Full-time",
-    category: "Legal",
-    collar: "white",
-    salary: "UGX 7M – 14M/mo",
-    posted: "3 days ago",
-    logo: "🟣",
-    description: "Provide legal advisory on corporate transactions, mergers, and regulatory compliance across East African markets.",
-    tags: ["Corporate Law", "M&A", "Compliance"],
-    applyUrl: "https://www.bowmanslaw.com/careers/",
-  },
-  {
-    id: "ug-17",
-    title: "Painter – Commercial",
-    company: "Kansai Plascon Uganda",
-    location: "Kampala, Uganda",
-    type: "Contract",
-    category: "Construction",
-    collar: "blue",
-    salary: "UGX 800K – 1.5M/mo",
-    posted: "2 days ago",
-    logo: "🔵",
-    description: "Apply interior and exterior paint finishes on commercial buildings. Experience with spray equipment preferred.",
-    tags: ["Painting", "Commercial", "Spray Equipment"],
-    applyUrl: "https://www.kansaiplascon.com/careers",
-  },
-  {
-    id: "ae-5",
-    title: "Retail Store Manager",
-    company: "Majid Al Futtaim",
-    location: "Dubai Mall, UAE",
-    type: "Full-time",
-    category: "Retail",
-    collar: "white",
-    salary: "AED 12K – 18K/mo",
-    posted: "4 hours ago",
-    logo: "🟡",
-    description: "Manage daily store operations, lead sales team, and achieve revenue targets for a flagship retail outlet.",
-    tags: ["Retail Management", "Sales", "KPIs"],
-    applyUrl: "https://www.majidalfuttaim.com/en/careers",
+    requirements: ["Diesel Fitter trade certificate", "3+ years mining experience", "HR/HC driver's license", "Working at heights ticket"],
+    benefits: ["FIFO flights & camp", "Overtime rates", "Health & dental", "Annual bonus"],
   },
 ];
+
+// Computed values from actual data
+export const getJobStats = () => {
+  const totalJobs = featuredJobs.length;
+  const companies = new Set(featuredJobs.map(j => j.company)).size;
+  const countries = new Set(featuredJobs.map(j => {
+    const parts = j.location.split(", ");
+    return parts[parts.length - 1];
+  })).size;
+
+  return {
+    totalJobs,
+    companies,
+    countries,
+  };
+};
+
+// Compute category counts from actual data
+export const getJobCategoriesWithCounts = () => {
+  const counts: Record<string, number> = {};
+  featuredJobs.forEach(j => {
+    counts[j.category] = (counts[j.category] || 0) + 1;
+  });
+  return jobCategories.map(cat => ({
+    ...cat,
+    count: counts[cat.name] || 0,
+  }));
+};
 
 export const topCompanies = [
-  { name: "Andela Uganda", industry: "Technology", jobs: 145, logo: "🟣" },
-  { name: "Mulago Hospital", industry: "Healthcare", jobs: 89, logo: "🟢" },
-  { name: "Umeme Limited", industry: "Energy", jobs: 67, logo: "🔵" },
-  { name: "Safaricom PLC", industry: "Telecoms", jobs: 52, logo: "🟡" },
-  { name: "Stanbic Bank", industry: "Finance", jobs: 43, logo: "🟠" },
-  { name: "DHL East Africa", industry: "Logistics", jobs: 38, logo: "🔴" },
-];
+  { name: "Andela Uganda", industry: "Technology", logo: "🟣" },
+  { name: "Mulago Hospital", industry: "Healthcare", logo: "🟢" },
+  { name: "Umeme Limited", industry: "Energy", logo: "🔵" },
+  { name: "Safaricom PLC", industry: "Telecoms", logo: "🟡" },
+  { name: "Stanbic Bank", industry: "Finance", logo: "🟠" },
+  { name: "DHL East Africa", industry: "Logistics", logo: "🔴" },
+].map(company => ({
+  ...company,
+  jobs: featuredJobs.filter(j => j.company.toLowerCase().includes(company.name.split(" ")[0].toLowerCase())).length,
+}));
+
+const { totalJobs, companies, countries } = getJobStats();
 
 export const stats = [
-  { label: "Free Job Listings", value: "24,500+", icon: "📋" },
-  { label: "Companies", value: "8,200+", icon: "🏢" },
-  { label: "Countries Covered", value: "50+", icon: "🌍" },
+  { label: "Free Job Listings", value: `${totalJobs}+`, icon: "📋" },
+  { label: "Companies", value: `${companies}+`, icon: "🏢" },
+  { label: "Countries Covered", value: `${countries}+`, icon: "🌍" },
   { label: "Successful Placements", value: "1.5M+", icon: "✅" },
 ];
