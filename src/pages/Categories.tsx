@@ -33,21 +33,31 @@ const Categories = () => {
             {catJobs.length > 0 ? (
               <div className="space-y-3">
                 {catJobs.map((job, i) => (
-                  <motion.div key={job.id} className="bg-card rounded-2xl border border-border p-5 hover:shadow-elevated transition-all" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
-                    <div className="flex items-start gap-4">
-                      <div className="w-11 h-11 rounded-xl bg-secondary flex items-center justify-center text-lg">{job.logo}</div>
-                      <div className="flex-1">
-                        <h3 className="text-base font-semibold text-foreground">{job.title}</h3>
-                        <p className="text-sm text-muted-foreground">{job.company}</p>
-                        <div className="flex items-center gap-3 text-xs text-muted-foreground mt-2">
-                          <span className="flex items-center gap-1"><MapPin size={12} />{job.location}</span>
-                          <span className="flex items-center gap-1"><Clock size={12} />{job.posted}</span>
-                          <span className="flex items-center gap-1"><Briefcase size={12} />{job.type}</span>
+                  <Link key={job.id} to={`/jobs/${job.id}`} className="block">
+                    <motion.div className="bg-card rounded-2xl border border-border p-5 hover:shadow-elevated hover:border-primary/20 transition-all cursor-pointer" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
+                      <div className="flex items-start gap-4">
+                        <div className="w-11 h-11 rounded-xl bg-secondary flex items-center justify-center text-lg">{job.logo}</div>
+                        <div className="flex-1">
+                          <h3 className="text-base font-semibold text-foreground group-hover:text-primary transition-colors">{job.title}</h3>
+                          <p className="text-sm text-muted-foreground">{job.company}</p>
+                          <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground mt-2">
+                            <span className="flex items-center gap-1"><MapPin size={12} />{job.location}</span>
+                            <span className="flex items-center gap-1"><Clock size={12} />{job.posted}</span>
+                            <span className="flex items-center gap-1"><Briefcase size={12} />{job.type}</span>
+                          </div>
+                          <div className="flex flex-wrap gap-1.5 mt-2">
+                            {job.tags.slice(0, 3).map((tag) => (
+                              <span key={tag} className="text-[11px] px-2 py-0.5 rounded-md bg-secondary text-secondary-foreground font-medium">{tag}</span>
+                            ))}
+                          </div>
+                        </div>
+                        <div className="text-right shrink-0">
+                          <span className="text-sm font-bold text-foreground">{job.salary}</span>
+                          <span className="block text-xs text-primary mt-1">View Details →</span>
                         </div>
                       </div>
-                      <span className="text-sm font-bold text-foreground">{job.salary}</span>
-                    </div>
-                  </motion.div>
+                    </motion.div>
+                  </Link>
                 ))}
               </div>
             ) : (
