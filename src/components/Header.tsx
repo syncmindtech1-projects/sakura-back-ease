@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { Menu, X, ChevronDown, Search, Bell, User } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { Menu, X, ChevronDown, Search, Bell, User, Heart, ShoppingBag, Globe } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface MegaMenuItem {
@@ -68,7 +68,14 @@ const navItems: NavItem[] = [
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeMega, setActiveMega] = useState<string | null>(null);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [headerSearch, setHeaderSearch] = useState("");
   const megaTimeout = useRef<ReturnType<typeof setTimeout>>();
+  const navigate = useNavigate();
+
+  // Mock notification counts - these would come from state/context in production
+  const newJobsCount = 12;
+  const savedJobsCount = 3;
 
   const handleMegaEnter = (label: string) => {
     clearTimeout(megaTimeout.current);
@@ -79,19 +86,48 @@ const Header = () => {
     megaTimeout.current = setTimeout(() => setActiveMega(null), 200);
   };
 
+  const handleHeaderSearch = () => {
+    if (headerSearch.trim()) {
+      navigate(`/jobs?q=${encodeURIComponent(headerSearch.trim())}`);
+      setSearchOpen(false);
+      setHeaderSearch("");
+    }
+  };
+
   useEffect(() => () => clearTimeout(megaTimeout.current), []);
 
   return (
     <>
-      {/* Top banner */}
-      <div className="gradient-primary text-primary-foreground text-center text-sm py-2.5 font-medium tracking-wide">
-        🌍 <strong>100% FREE</strong> job browsing — 24,500+ jobs across Uganda, Africa, UAE, Europe & Americas!
+      {/* Top utility bar — Revo-inspired */}
+      <div className="gradient-primary text-primary-foreground">
+        <div className="container mx-auto flex items-center justify-between px-4 md:px-8 py-2 text-xs">
+          <span className="hidden sm:inline font-medium">
+            🌍 <strong>100% FREE</strong> job browsing — {newJobsCount} new jobs posted today across Uganda, Africa, UAE, Europe & Americas!
+          </span>
+          <span className="sm:hidden text-xs font-medium">
+            🌍 {newJobsCount} new jobs posted today!
+          </span>
+          <div className="flex items-center gap-3 md:gap-5">
+            <Link to="/jobs" className="hover:underline font-semibold hidden md:inline">
+              Register
+            </Link>
+            <span className="hidden md:inline text-primary-foreground/40">or</span>
+            <Link to="/jobs" className="hover:underline font-semibold hidden md:inline">
+              Login
+            </Link>
+            <div className="flex items-center gap-1 text-primary-foreground/70">
+              <Globe size={12} />
+              <span>English</span>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <header className="sticky top-0 z-50 glass">
-        <div className="container mx-auto flex items-center justify-between py-3 px-4 md:px-8">
+      {/* Main header */}
+      <header className="sticky top-0 z-50 bg-card border-b border-border shadow-sm">
+        <div className="container mx-auto flex items-center justify-between py-3 px-4 md:px-8 gap-4">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2">
+          <Link to="/" className="flex items-center gap-2 shrink-0">
             <div className="w-9 h-9 rounded-xl gradient-primary flex items-center justify-center text-primary-foreground font-bold text-lg font-display">
               J
             </div>
@@ -152,34 +188,103 @@ const Header = () => {
             ))}
           </nav>
 
-          {/* Right actions */}
-          <div className="hidden lg:flex items-center gap-2">
-            <button className="p-2 rounded-xl hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors">
-              <Search size={20} />
-            </button>
-            <button className="p-2 rounded-xl hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors relative">
+          {/* Right actions — Revo-inspired with notifications */}
+          <div className="hidden lg:flex items-center gap-1">
+            {/* Search */}
+            <div className="relative">
+              <button
+                onClick={() => setSearchOpen(!searchOpen)}
+                className="p-2.5 rounded-xl hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <Search size={20} />
+              </button>
+              <AnimatePresence>
+                {searchOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 8, width: 0 }}
+                    animate={{ opacity: 1, y: 0, width: 300 }}
+                    exit={{ opacity: 0, y: 8, width: 0 }}
+                    className="absolute right-0 top-full mt-2 z-50"
+                  >
+                    <div className="bg-card rounded-xl shadow-elevated border border-border p-2 flex gap-2">
+                      <input
+                        type="text"
+                        placeholder="Search jobs..."
+                        value={headerSearch}
+                        onChange={(e) => setHeaderSearch(e.target.value)}
+                        onKeyDown={(e) => e.key === "Enter" && handleHeaderSearch()}
+                        autoFocus
+                        className="flex-1 bg-secondary rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground outline-none"
+                      />
+                      <button
+                        onClick={handleHeaderSearch}
+                        className="gradient-primary text-primary-foreground px-3 py-2 rounded-lg text-sm font-medium"
+                      >
+                        Go
+                      </button>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            {/* Saved jobs */}
+            <Link
+              to="/jobs"
+              className="p-2.5 rounded-xl hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors relative"
+              title="Saved Jobs"
+            >
+              <Heart size={20} />
+              {savedJobsCount > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] flex items-center justify-center rounded-full gradient-primary text-primary-foreground text-[10px] font-bold px-1">
+                  {savedJobsCount}
+                </span>
+              )}
+            </Link>
+
+            {/* Notifications */}
+            <button className="p-2.5 rounded-xl hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors relative">
               <Bell size={20} />
-              <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-accent"></span>
+              {newJobsCount > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] flex items-center justify-center rounded-full gradient-warm text-highlight-foreground text-[10px] font-bold px-1">
+                  {newJobsCount}
+                </span>
+              )}
             </button>
+
+            {/* Post a Job */}
             <Link
               to="/post-job"
-              className="gradient-primary text-primary-foreground font-semibold text-sm px-5 py-2.5 rounded-xl hover:opacity-90 transition-opacity"
+              className="gradient-primary text-primary-foreground font-semibold text-sm px-5 py-2.5 rounded-xl hover:opacity-90 transition-opacity ml-1"
             >
               Post a Job
             </Link>
-            <button className="p-2 rounded-xl hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors">
+
+            {/* User */}
+            <button className="p-2.5 rounded-xl hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors">
               <User size={20} />
             </button>
           </div>
 
           {/* Mobile toggle */}
-          <button
-            onClick={() => setMenuOpen(!menuOpen)}
-            className="lg:hidden p-2 text-foreground"
-            aria-label="Toggle menu"
-          >
-            {menuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+          <div className="lg:hidden flex items-center gap-2">
+            {/* Mobile notification bell */}
+            <button className="p-2 rounded-xl hover:bg-secondary text-muted-foreground relative">
+              <Bell size={20} />
+              {newJobsCount > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 min-w-[16px] h-[16px] flex items-center justify-center rounded-full gradient-warm text-highlight-foreground text-[9px] font-bold px-0.5">
+                  {newJobsCount}
+                </span>
+              )}
+            </button>
+            <button
+              onClick={() => setMenuOpen(!menuOpen)}
+              className="p-2 text-foreground"
+              aria-label="Toggle menu"
+            >
+              {menuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
         </div>
 
         {/* Mobile menu */}
@@ -191,6 +296,26 @@ const Header = () => {
               exit={{ height: 0, opacity: 0 }}
               className="lg:hidden overflow-hidden bg-card border-t border-border"
             >
+              {/* Mobile search */}
+              <div className="px-4 pt-4">
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    placeholder="Search jobs..."
+                    value={headerSearch}
+                    onChange={(e) => setHeaderSearch(e.target.value)}
+                    onKeyDown={(e) => { if (e.key === "Enter") { handleHeaderSearch(); setMenuOpen(false); } }}
+                    className="flex-1 bg-secondary rounded-xl px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground outline-none"
+                  />
+                  <button
+                    onClick={() => { handleHeaderSearch(); setMenuOpen(false); }}
+                    className="gradient-primary text-primary-foreground px-4 py-2.5 rounded-xl text-sm font-medium"
+                  >
+                    <Search size={16} />
+                  </button>
+                </div>
+              </div>
+
               <nav className="flex flex-col gap-1 px-4 py-4">
                 {navItems.map((item) => (
                   <div key={item.label}>
@@ -204,7 +329,17 @@ const Header = () => {
                     </Link>
                   </div>
                 ))}
-                <div className="border-t border-border mt-2 pt-3">
+                <div className="border-t border-border mt-2 pt-3 space-y-2">
+                  <div className="flex items-center gap-4 px-3 py-2 text-sm text-muted-foreground">
+                    <span className="flex items-center gap-2">
+                      <Heart size={16} /> Saved Jobs
+                      {savedJobsCount > 0 && (
+                        <span className="min-w-[18px] h-[18px] flex items-center justify-center rounded-full gradient-primary text-primary-foreground text-[10px] font-bold px-1">
+                          {savedJobsCount}
+                        </span>
+                      )}
+                    </span>
+                  </div>
                   <Link
                     to="/post-job"
                     onClick={() => setMenuOpen(false)}
