@@ -1009,7 +1009,25 @@ export const featuredJobs: Job[] = [
     benefits: ["FIFO flights & camp", "Overtime rates", "Health & dental", "Annual bonus"],
   },
 
-  // === BRIGHTERMONDAY UGANDA JOBS (Real Scraped Listings) ===
+  // === BRIGHTERMONDAY UGANDA JOBS (Real Scraped Listings — April 2026) ===
+  {
+    id: "bm-ug-0",
+    title: "Technician",
+    company: "CODEMARK Uganda Ltd",
+    location: "Kampala, Uganda",
+    type: "Full-time",
+    category: "Engineering",
+    collar: "blue",
+    salary: "Confidential",
+    posted: "3 days ago",
+    logo: "🔧",
+    featured: true,
+    description: "Responsible for installing, maintaining, and repairing machines by diagnosing faults, performing routine inspections, and ensuring safety compliance, while keeping accurate maintenance records and responding quickly to service requests.",
+    tags: ["Machines", "Maintenance", "Diagnostics"],
+    applyUrl: "https://www.brightermonday.co.ug/listings/technician-jq84x8",
+    requirements: ["Technical diploma/certificate", "2+ years maintenance experience", "Fault diagnosis skills", "Safety compliance knowledge"],
+    benefits: ["Competitive salary", "On-site training", "Safety equipment provided", "Health insurance"],
+  },
   {
     id: "bm-ug-1",
     title: "Field Officer (FO)",
