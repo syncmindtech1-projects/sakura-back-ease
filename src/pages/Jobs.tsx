@@ -18,16 +18,7 @@ const Jobs = () => {
   const [searchQuery, setSearchQuery] = useState(initialQuery);
   const [locationFilter, setLocationFilter] = useState("All Locations");
   const [sortBy, setSortBy] = useState("Most Recent");
-  const [savedJobs, setSavedJobs] = useState<Set<string>>(new Set());
   const [showFilters, setShowFilters] = useState(false);
-
-  const toggleSave = (id: string) => {
-    setSavedJobs((prev) => {
-      const next = new Set(prev);
-      next.has(id) ? next.delete(id) : next.add(id);
-      return next;
-    });
-  };
 
   const filtered = useMemo(() => {
     let jobs = featuredJobs.filter((job) => {

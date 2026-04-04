@@ -78,12 +78,13 @@ const Hero = () => {
           </motion.h1>
 
           <motion.p
-            className="text-lg md:text-xl text-white/60 max-w-2xl mx-auto mb-10"
+            className="text-lg md:text-xl text-white/80 max-w-2xl mx-auto mb-10 drop-shadow-lg"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.6 }}
+            style={{ textShadow: "0 1px 8px rgba(0,0,0,0.7)" }}
           >
-            From software engineering to skilled trades — browse <strong className="text-white">100% free</strong> job listings across Uganda, East Africa, UAE, Europe, USA & Canada. White collar & blue collar, all in one place.
+            From software engineering to skilled trades — browse <strong className="text-white font-bold">100% free</strong> job listings across Uganda, East Africa, UAE, Europe, USA & Canada. All industries, one platform.
           </motion.p>
 
           {/* Search Bar */}

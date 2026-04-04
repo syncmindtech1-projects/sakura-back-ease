@@ -61,9 +61,6 @@ const FeaturedJobs = () => {
                       Remote
                     </span>
                   )}
-                  <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md ${job.collar === 'white' ? 'bg-primary/10 text-primary' : 'bg-highlight/10 text-highlight'}`}>
-                    {job.collar === 'white' ? '👔 White Collar' : '🔧 Blue Collar'}
-                  </span>
                 </div>
 
                 {/* Company & Title */}
