@@ -53,25 +53,26 @@ const Hero = () => {
           </motion.div>
 
           <motion.h1
-            className="text-4xl md:text-6xl lg:text-7xl font-bold font-display text-white leading-[1.1] mb-6"
+            className="text-4xl md:text-6xl lg:text-7xl font-bold font-display leading-[1.1] mb-6"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1, duration: 0.7 }}
+            style={{ textShadow: "0 2px 20px rgba(0,0,0,0.7), 0 0 40px rgba(0,0,0,0.5)" }}
           >
-            Find Your Next{" "}
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-[hsl(250,80%,70%)] to-[hsl(280,70%,65%)]">Dream Career</span>
+            <span className="text-white drop-shadow-lg">Find Your Next</span>{" "}
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-[hsl(250,80%,75%)] to-[hsl(280,70%,70%)] drop-shadow-lg" style={{ WebkitTextStroke: "0.5px rgba(255,255,255,0.1)" }}>Dream Career</span>
             <br />
             <span className="relative inline-block">
-              <span className="bg-clip-text text-transparent bg-gradient-to-r from-[hsl(35,95%,60%)] to-[hsl(25,90%,55%)]  font-extrabold">For Free</span>
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-[hsl(35,95%,65%)] to-[hsl(25,90%,60%)] font-extrabold" style={{ WebkitTextStroke: "0.5px rgba(255,255,255,0.1)" }}>For Free</span>
               <motion.span
-                className="absolute -bottom-1 left-0 w-full h-1 bg-gradient-to-r from-[hsl(250,80%,60%)] to-[hsl(160,70%,45%)] rounded-full"
+                className="absolute -bottom-1 left-0 w-full h-1.5 bg-gradient-to-r from-[hsl(250,80%,60%)] to-[hsl(160,70%,45%)] rounded-full shadow-lg"
                 initial={{ scaleX: 0 }}
                 animate={{ scaleX: 1 }}
                 transition={{ delay: 0.8, duration: 0.6 }}
               />
             </span>
             <br />
-            <span className="text-white/60 text-2xl md:text-4xl lg:text-4xl font-semibold">
+            <span className="text-white/80 text-2xl md:text-4xl lg:text-4xl font-semibold drop-shadow-lg" style={{ textShadow: "0 2px 10px rgba(0,0,0,0.8)" }}>
               All Jobs. Every Industry. One Platform.
             </span>
           </motion.h1>
