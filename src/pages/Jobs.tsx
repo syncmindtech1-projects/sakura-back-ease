@@ -14,10 +14,7 @@ const sortOptions = ["Most Recent", "Salary: High to Low", "Salary: Low to High"
 const Jobs = () => {
   const [searchParams] = useSearchParams();
   const initialQuery = searchParams.get("q") || "";
-  const initialCollar = searchParams.get("collar") === "white" ? "White Collar" : searchParams.get("collar") === "blue" ? "Blue Collar" : "All";
-
   const [typeFilter, setTypeFilter] = useState("All");
-  const [collarFilter, setCollarFilter] = useState(initialCollar);
   const [searchQuery, setSearchQuery] = useState(initialQuery);
   const [locationFilter, setLocationFilter] = useState("All Locations");
   const [sortBy, setSortBy] = useState("Most Recent");
