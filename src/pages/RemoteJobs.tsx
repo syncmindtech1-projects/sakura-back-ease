@@ -2,20 +2,13 @@ import PageLayout from "@/components/PageLayout";
 import AdsBanner from "@/components/AdsBanner";
 import { motion } from "framer-motion";
 import { featuredJobs } from "@/lib/jobData";
-import { MapPin, Clock, Briefcase, Bookmark, Globe, Wifi } from "lucide-react";
-import { useState } from "react";
+import { MapPin, Clock, Briefcase, Bookmark, Globe, Wifi, ExternalLink } from "lucide-react";
+import { Link } from "react-router-dom";
+import { useSavedJobs } from "@/contexts/SavedJobsContext";
 
 const RemoteJobs = () => {
   const remoteJobs = featuredJobs.filter((j) => j.remote);
-  const [savedJobs, setSavedJobs] = useState<Set<string>>(new Set());
-
-  const toggleSave = (id: string) => {
-    setSavedJobs((prev) => {
-      const next = new Set(prev);
-      next.has(id) ? next.delete(id) : next.add(id);
-      return next;
-    });
-  };
+  const { toggleSave, isSaved } = useSavedJobs();
 
   return (
     <PageLayout>
@@ -54,31 +47,34 @@ const RemoteJobs = () => {
           <div className="space-y-3">
             {remoteJobs.map((job, i) => (
               <motion.div key={job.id} className="group bg-card rounded-2xl border border-border p-5 hover:shadow-elevated hover:border-accent/20 transition-all" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-secondary flex items-center justify-center text-xl shrink-0">{job.logo}</div>
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded-md bg-accent/10 text-accent">Remote</span>
-                      <span className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded-md ${job.collar === 'white' ? 'bg-primary/10 text-primary' : 'bg-highlight/10 text-highlight'}`}>
-                        {job.collar === 'white' ? '👔 White' : '🔧 Blue'}
-                      </span>
+                <Link to={`/jobs/${job.id}`} className="block">
+                  <div className="flex items-start gap-4">
+                    <div className="w-12 h-12 rounded-xl bg-secondary flex items-center justify-center text-xl shrink-0">{job.logo}</div>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded-md bg-accent/10 text-accent">Remote</span>
+                        {job.urgent && <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded-md gradient-warm text-highlight-foreground">Urgent</span>}
+                        {job.featured && <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded-md gradient-primary text-primary-foreground">Featured</span>}
+                      </div>
+                      <h3 className="text-base font-semibold text-foreground group-hover:text-accent transition-colors">{job.title}</h3>
+                      <p className="text-sm text-muted-foreground">{job.company}</p>
+                      <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{job.description}</p>
+                      <div className="flex items-center gap-3 text-xs text-muted-foreground mt-2">
+                        <span className="flex items-center gap-1"><Clock size={12} />{job.posted}</span>
+                        <span className="flex items-center gap-1"><Briefcase size={12} />{job.type}</span>
+                      </div>
                     </div>
-                    <h3 className="text-base font-semibold text-foreground group-hover:text-accent transition-colors">{job.title}</h3>
-                    <p className="text-sm text-muted-foreground">{job.company}</p>
-                    <p className="text-xs text-muted-foreground mt-1">{job.description}</p>
-                    <div className="flex items-center gap-3 text-xs text-muted-foreground mt-2">
-                      <span className="flex items-center gap-1"><Clock size={12} />{job.posted}</span>
-                      <span className="flex items-center gap-1"><Briefcase size={12} />{job.type}</span>
+                    <div className="flex flex-col items-end gap-2 shrink-0" onClick={(e) => e.preventDefault()}>
+                      <span className="text-sm font-bold text-foreground">{job.salary}</span>
+                      <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggleSave(job.id); }} className={`p-2 rounded-lg transition-colors ${isSaved(job.id) ? 'bg-accent/10 text-accent' : 'hover:bg-secondary text-muted-foreground'}`}>
+                        <Bookmark size={16} className={isSaved(job.id) ? 'fill-accent' : ''} />
+                      </button>
+                      <a href={job.applyUrl} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="inline-flex items-center gap-1 text-xs font-semibold gradient-accent text-accent-foreground px-4 py-2 rounded-lg hover:opacity-90 transition-opacity active:scale-95">
+                        Apply <ExternalLink size={12} />
+                      </a>
                     </div>
                   </div>
-                  <div className="flex flex-col items-end gap-2 shrink-0">
-                    <span className="text-sm font-bold text-foreground">{job.salary}</span>
-                    <button onClick={() => toggleSave(job.id)} className={`p-2 rounded-lg transition-colors ${savedJobs.has(job.id) ? 'bg-accent/10 text-accent' : 'hover:bg-secondary text-muted-foreground'}`}>
-                      <Bookmark size={16} className={savedJobs.has(job.id) ? 'fill-accent' : ''} />
-                    </button>
-                    <button className="text-xs font-semibold gradient-accent text-accent-foreground px-4 py-2 rounded-lg hover:opacity-90 transition-opacity active:scale-95">Apply</button>
-                  </div>
-                </div>
+                </Link>
               </motion.div>
             ))}
           </div>

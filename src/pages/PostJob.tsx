@@ -13,7 +13,7 @@ const pricingPlans = [
 
 const PostJob = () => {
   const [selectedPlan, setSelectedPlan] = useState("Standard");
-  const [formData, setFormData] = useState({ title: "", company: "", location: "", salary: "", type: "Full-time", collar: "white", description: "" });
+  const [formData, setFormData] = useState({ title: "", company: "", location: "", salary: "", type: "Full-time", category: "Technology", description: "" });
   const { toast } = useToast();
 
   const handlePost = () => {

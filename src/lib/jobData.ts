@@ -5,7 +5,7 @@ export interface Job {
   location: string;
   type: "Full-time" | "Part-time" | "Contract" | "Freelance" | "Internship";
   category: string;
-  collar: "white" | "blue";
+  
   salary: string;
   posted: string;
   logo: string;

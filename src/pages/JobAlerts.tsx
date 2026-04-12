@@ -94,7 +94,7 @@ const JobAlerts = () => {
                     "Customizable by title, location, and type",
                     "Daily or weekly digest — your choice",
                     "Unsubscribe anytime with one click",
-                    "Covers both white and blue collar jobs",
+                    "Covers all industries and job types",
                   ].map((f) => (
                     <div key={f} className="flex items-center gap-2 text-sm text-muted-foreground">
                       <CheckCircle size={16} className="text-accent shrink-0" />
