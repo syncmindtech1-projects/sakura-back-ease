@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { Globe, Shield, Zap, BarChart3, Users, Clock } from "lucide-react";
 
 const features = [
-  { icon: Globe, title: "All Industries", desc: "White collar, blue collar, freelance — every job type in one place" },
+  { icon: Globe, title: "All Industries", desc: "Professional, skilled trades, freelance — every job type in one place" },
   { icon: Zap, title: "Real-time Updates", desc: "Jobs scraped and curated from thousands of sources, updated hourly" },
   { icon: Shield, title: "Verified Employers", desc: "Every company is verified to protect you from scams" },
   { icon: BarChart3, title: "Salary Insights", desc: "Compare salaries across roles, locations, and experience levels" },

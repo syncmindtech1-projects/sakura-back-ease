@@ -13,7 +13,7 @@ const pricingPlans = [
 
 const PostJob = () => {
   const [selectedPlan, setSelectedPlan] = useState("Standard");
-  const [formData, setFormData] = useState({ title: "", company: "", location: "", salary: "", type: "Full-time", collar: "white", description: "" });
+  const [formData, setFormData] = useState({ title: "", company: "", location: "", salary: "", type: "Full-time", category: "Technology", description: "" });
   const { toast } = useToast();
 
   const handlePost = () => {
@@ -22,7 +22,7 @@ const PostJob = () => {
       return;
     }
     toast({ title: "Job posted! 🎉", description: `${formData.title} at ${formData.company} is now live.` });
-    setFormData({ title: "", company: "", location: "", salary: "", type: "Full-time", collar: "white", description: "" });
+    setFormData({ title: "", company: "", location: "", salary: "", type: "Full-time", category: "Technology", description: "" });
   };
 
   return (
@@ -113,10 +113,9 @@ const PostJob = () => {
                   </select>
                 </div>
                 <div>
-                  <label className="text-sm font-medium text-foreground mb-1.5 block">Collar Type</label>
-                  <select value={formData.collar} onChange={(e) => setFormData({ ...formData, collar: e.target.value })} className="w-full px-4 py-3 rounded-xl bg-secondary border border-border text-sm text-foreground outline-none focus:border-primary">
-                    <option value="white">White Collar</option>
-                    <option value="blue">Blue Collar</option>
+                  <label className="text-sm font-medium text-foreground mb-1.5 block">Category</label>
+                  <select value={formData.category} onChange={(e) => setFormData({ ...formData, category: e.target.value })} className="w-full px-4 py-3 rounded-xl bg-secondary border border-border text-sm text-foreground outline-none focus:border-primary">
+                    {["Technology", "Healthcare", "Finance", "Construction", "Education", "Marketing", "Manufacturing", "Transportation", "Hospitality", "Retail", "Engineering", "Legal"].map((c) => <option key={c}>{c}</option>)}
                   </select>
                 </div>
               </div>

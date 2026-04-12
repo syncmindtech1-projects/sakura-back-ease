@@ -12,7 +12,7 @@ const testimonials = [
   {
     name: "Marcus Johnson",
     role: "Licensed Electrician",
-    text: "As a blue-collar worker, most job sites ignore us. JobSphere actually has a dedicated section for skilled trades. Got hired in 3 days!",
+    text: "As a skilled tradesperson, most job sites ignore us. JobSphere actually has listings for skilled trades. Got hired in 3 days!",
     rating: 5,
     avatar: "MJ",
   },
