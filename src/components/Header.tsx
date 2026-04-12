@@ -3,22 +3,19 @@ import { Link, useNavigate } from "react-router-dom";
 import { Menu, X, ChevronDown, Search, Bell, User, Heart, Globe } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSavedJobs } from "@/contexts/SavedJobsContext";
+import MegaMenuJobs from "@/components/MegaMenuJobs";
+import { getJobStats } from "@/lib/jobData";
 
 interface MegaMenuItem { label: string; href: string; desc: string; icon: string; }
-interface NavItem { label: string; href: string; mega?: MegaMenuItem[]; }
+interface NavItem { label: string; href: string; mega?: MegaMenuItem[]; megaType?: string; }
+
+const { totalJobs } = getJobStats();
 
 const navItems: NavItem[] = [
   {
     label: "Find Jobs",
     href: "/jobs",
-    mega: [
-      { label: "Browse All Jobs", href: "/jobs", desc: "Explore thousands of openings", icon: "🔍" },
-      { label: "Remote Jobs", href: "/remote-jobs", desc: "Work from anywhere", icon: "🏠" },
-      { label: "Part-time Jobs", href: "/jobs?type=part-time", desc: "Flexible hours", icon: "⏰" },
-      { label: "Internships", href: "/jobs?type=internship", desc: "Start your career", icon: "🎓" },
-      { label: "Full-time Jobs", href: "/jobs?type=full-time", desc: "Stable careers", icon: "💼" },
-      { label: "Contract Jobs", href: "/jobs?type=contract", desc: "Project-based roles", icon: "📋" },
-    ],
+    megaType: "jobs",
   },
   {
     label: "Categories",
@@ -65,7 +62,7 @@ const Header = () => {
   const navigate = useNavigate();
   const { savedCount } = useSavedJobs();
 
-  const newJobsCount = 12;
+  const newJobsCount = Math.min(totalJobs, 24);
 
   const handleMegaEnter = (label: string) => { clearTimeout(megaTimeout.current); setActiveMega(label); };
   const handleMegaLeave = () => { megaTimeout.current = setTimeout(() => setActiveMega(null), 200); };
@@ -106,12 +103,17 @@ const Header = () => {
 
           <nav className="hidden lg:flex items-center gap-1">
             {navItems.map((item) => (
-              <div key={item.label} className="relative" onMouseEnter={() => item.mega && handleMegaEnter(item.label)} onMouseLeave={handleMegaLeave}>
+              <div key={item.label} className="relative" onMouseEnter={() => (item.mega || item.megaType) && handleMegaEnter(item.label)} onMouseLeave={handleMegaLeave}>
                 <Link to={item.href} className="flex items-center gap-1 px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors rounded-lg hover:bg-secondary">
                   {item.label}
-                  {item.mega && <ChevronDown size={14} className={`transition-transform ${activeMega === item.label ? 'rotate-180' : ''}`} />}
+                  {(item.mega || item.megaType) && <ChevronDown size={14} className={`transition-transform ${activeMega === item.label ? 'rotate-180' : ''}`} />}
                 </Link>
                 <AnimatePresence>
+                  {item.megaType === "jobs" && activeMega === item.label && (
+                    <div onMouseEnter={() => handleMegaEnter(item.label)} onMouseLeave={handleMegaLeave}>
+                      <MegaMenuJobs onClose={() => setActiveMega(null)} />
+                    </div>
+                  )}
                   {item.mega && activeMega === item.label && (
                     <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 8 }} transition={{ duration: 0.2 }} className="absolute top-full left-1/2 -translate-x-1/2 pt-2 z-50" onMouseEnter={() => handleMegaEnter(item.label)} onMouseLeave={handleMegaLeave}>
                       <div className="bg-card rounded-2xl shadow-elevated border border-border p-4 min-w-[420px] grid grid-cols-2 gap-1">
@@ -192,7 +194,7 @@ const Header = () => {
                   <div key={item.label}>
                     <Link to={item.href} onClick={() => setMenuOpen(false)} className="flex items-center justify-between text-sm font-medium text-muted-foreground hover:text-foreground transition-colors p-3 rounded-xl hover:bg-secondary">
                       {item.label}
-                      {item.mega && <ChevronDown size={14} />}
+                      {(item.mega || item.megaType) && <ChevronDown size={14} />}
                     </Link>
                   </div>
                 ))}
