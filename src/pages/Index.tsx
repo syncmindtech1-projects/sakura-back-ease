@@ -12,6 +12,7 @@ import Newsletter from "@/components/Newsletter";
 import CTASection from "@/components/CTASection";
 import Footer from "@/components/Footer";
 import AdsBanner from "@/components/AdsBanner";
+import VideoShowcase from "@/components/VideoShowcase";
 
 const Index = () => {
   return (
@@ -21,6 +22,7 @@ const Index = () => {
       <Stats />
       <FeaturedJobs />
       <AdsBanner variant="banner" adIndex={0} />
+      <VideoShowcase />
       <JobCategories />
       <AdsBanner variant="banner" adIndex={3} />
       <Features />
