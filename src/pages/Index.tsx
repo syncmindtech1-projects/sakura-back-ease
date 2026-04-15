@@ -13,6 +13,7 @@ import CTASection from "@/components/CTASection";
 import Footer from "@/components/Footer";
 import AdsBanner from "@/components/AdsBanner";
 import VideoShowcase from "@/components/VideoShowcase";
+import VideoAdSection from "@/components/VideoAdSection";
 
 const Index = () => {
   return (
@@ -24,12 +25,12 @@ const Index = () => {
       <AdsBanner variant="banner" adIndex={0} />
       <VideoShowcase />
       <JobCategories />
-      <AdsBanner variant="banner" adIndex={3} />
+      <VideoAdSection adIndex={0} />
       <Features />
       <AdsBanner variant="banner" adIndex={1} />
       <HowItWorks />
       <Audience />
-      <AdsBanner variant="banner" adIndex={4} />
+      <VideoAdSection adIndex={1} />
       <TopCompanies />
       <AdsBanner variant="banner" adIndex={2} />
       <Testimonials />
