@@ -1,11 +1,13 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
+import audienceProfessional from "@/assets/audience-professional.jpg";
+import audienceTrades from "@/assets/audience-trades.jpg";
 
 const jobTypes = [
   {
     title: "Professional Jobs",
-    emoji: "💼",
+    image: audienceProfessional,
     desc: "Office-based, managerial, and corporate careers",
     examples: ["Software Engineers", "Accountants", "Lawyers", "Product Managers", "Marketing Directors"],
     color: "primary",
@@ -13,7 +15,7 @@ const jobTypes = [
   },
   {
     title: "Skilled Trades & Services",
-    emoji: "🔧",
+    image: audienceTrades,
     desc: "Hands-on, technical, and trade-based work",
     examples: ["Electricians", "Plumbers", "Welders", "HVAC Technicians", "CDL Drivers"],
     color: "highlight",
@@ -48,31 +50,39 @@ const Audience = () => {
           {jobTypes.map((type, i) => (
             <motion.div
               key={type.title}
-              className="group relative rounded-3xl border border-border bg-card p-8 hover:shadow-elevated transition-all overflow-hidden"
+              className="group relative rounded-3xl border border-border bg-card overflow-hidden hover:shadow-elevated transition-all"
               initial={{ opacity: 0, x: i === 0 ? -30 : 30 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: i * 0.15 }}
             >
-              <div className="absolute top-0 right-0 text-[120px] opacity-5 -translate-y-4 translate-x-4">
-                {type.emoji}
+              <div className="h-48 overflow-hidden">
+                <img
+                  src={type.image}
+                  alt={type.title}
+                  loading="lazy"
+                  width={640}
+                  height={192}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
               </div>
-              <span className="text-5xl mb-4 block">{type.emoji}</span>
-              <h3 className="text-2xl font-bold font-display text-foreground mb-2">{type.title}</h3>
-              <p className="text-sm text-muted-foreground mb-4">{type.desc}</p>
-              <div className="flex flex-wrap gap-2 mb-6">
-                {type.examples.map((ex) => (
-                  <span key={ex} className="text-xs px-3 py-1 rounded-full bg-secondary text-secondary-foreground font-medium">
-                    {ex}
-                  </span>
-                ))}
+              <div className="p-8">
+                <h3 className="text-2xl font-bold font-display text-foreground mb-2">{type.title}</h3>
+                <p className="text-sm text-muted-foreground mb-4">{type.desc}</p>
+                <div className="flex flex-wrap gap-2 mb-6">
+                  {type.examples.map((ex) => (
+                    <span key={ex} className="text-xs px-3 py-1 rounded-full bg-secondary text-secondary-foreground font-medium">
+                      {ex}
+                    </span>
+                  ))}
+                </div>
+                <Link
+                  to={type.href}
+                  className="inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline"
+                >
+                  Explore Jobs <ArrowRight size={14} />
+                </Link>
               </div>
-              <Link
-                to={type.href}
-                className="inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline"
-              >
-                Explore Jobs <ArrowRight size={14} />
-              </Link>
             </motion.div>
           ))}
         </div>

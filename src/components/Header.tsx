@@ -103,18 +103,66 @@ const Header = () => {
 
   return (
     <>
-      {/* Top bar */}
-      <div className="gradient-primary text-primary-foreground">
-        <div className="container mx-auto flex items-center justify-between px-4 md:px-8 py-2 text-xs">
-          <span className="hidden sm:inline font-medium">
-            🌍 <strong>100% FREE</strong> job browsing — {newJobsCount} new jobs today!
-          </span>
-          <span className="sm:hidden text-xs font-medium">🌍 {newJobsCount} new jobs today!</span>
-          <div className="flex items-center gap-3 md:gap-5">
-            <Link to="/jobs" className="hover:underline font-semibold hidden md:inline">Register</Link>
-            <span className="hidden md:inline text-primary-foreground/40">|</span>
-            <Link to="/jobs" className="hover:underline font-semibold hidden md:inline">Login</Link>
-            <div className="flex items-center gap-1 text-primary-foreground/70"><Globe size={12} /><span>EN</span></div>
+      {/* Top bar — Premium animated banner */}
+      <div className="relative overflow-hidden gradient-primary text-primary-foreground">
+        {/* Animated background particles */}
+        <motion.div
+          className="absolute inset-0 opacity-20"
+          style={{
+            backgroundImage: `radial-gradient(circle at 20% 50%, rgba(255,255,255,0.3) 0%, transparent 50%),
+                              radial-gradient(circle at 80% 50%, rgba(255,255,255,0.2) 0%, transparent 50%)`,
+          }}
+          animate={{ opacity: [0.15, 0.3, 0.15] }}
+          transition={{ duration: 4, repeat: Infinity }}
+        />
+
+        {/* Sliding shine effect */}
+        <motion.div
+          className="absolute inset-0 w-[200%]"
+          style={{
+            background: `linear-gradient(90deg, transparent 0%, transparent 40%, rgba(255,255,255,0.1) 50%, transparent 60%, transparent 100%)`,
+          }}
+          animate={{ x: ["-100%", "100%"] }}
+          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", repeatDelay: 2 }}
+        />
+
+        <div className="relative z-10 container mx-auto px-4 md:px-8 py-3 md:py-4">
+          {/* Marquee row */}
+          <div className="overflow-hidden mb-1">
+            <motion.div
+              className="flex gap-10 whitespace-nowrap"
+              animate={{ x: ["0%", "-50%"] }}
+              transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+            >
+              {[...Array(4)].map((_, j) => (
+                <span key={j} className="text-primary-foreground/20 text-lg md:text-2xl font-black font-display uppercase tracking-[0.3em] select-none">
+                  JOBSPHERE • HIRE • CAREERS • APPLY • DREAM JOB • JOBSPHERE • HIRE • CAREERS •&nbsp;
+                </span>
+              ))}
+            </motion.div>
+          </div>
+
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <motion.div
+                className="w-2 h-2 rounded-full bg-accent"
+                animate={{ scale: [1, 1.5, 1], opacity: [1, 0.5, 1] }}
+                transition={{ duration: 1.5, repeat: Infinity }}
+              />
+              <span className="hidden sm:inline font-semibold text-sm">
+                🌍 <strong className="text-accent">100% FREE</strong> job browsing — <motion.strong
+                  className="text-accent"
+                  animate={{ opacity: [1, 0.6, 1] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                >{newJobsCount} new jobs</motion.strong> posted today!
+              </span>
+              <span className="sm:hidden text-xs font-semibold">🌍 {newJobsCount} new jobs today!</span>
+            </div>
+            <div className="flex items-center gap-3 md:gap-5">
+              <Link to="/jobs" className="hover:underline font-bold hidden md:inline text-sm bg-white/10 px-3 py-1 rounded-full hover:bg-white/20 transition-colors">Register</Link>
+              <Link to="/jobs" className="hover:underline font-bold hidden md:inline text-sm">Login</Link>
+              <div className="flex items-center gap-1 text-primary-foreground/70 text-sm"><Globe size={13} /><span>EN</span></div>
+            </div>
           </div>
         </div>
       </div>

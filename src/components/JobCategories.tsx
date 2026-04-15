@@ -2,6 +2,25 @@ import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { getJobCategoriesWithCounts } from "@/lib/jobData";
+import catTech from "@/assets/cat-technology.jpg";
+import catHealth from "@/assets/cat-healthcare.jpg";
+import catFinance from "@/assets/cat-finance.jpg";
+import catConstruction from "@/assets/cat-construction.jpg";
+import catEducation from "@/assets/cat-education.jpg";
+import catMarketing from "@/assets/cat-marketing.jpg";
+import catManufacturing from "@/assets/cat-manufacturing.jpg";
+import catHospitality from "@/assets/cat-hospitality.jpg";
+
+const categoryImages: Record<string, string> = {
+  Technology: catTech,
+  Healthcare: catHealth,
+  Finance: catFinance,
+  Construction: catConstruction,
+  Education: catEducation,
+  Marketing: catMarketing,
+  Manufacturing: catManufacturing,
+  Hospitality: catHospitality,
+};
 
 const jobCategories = getJobCategoriesWithCounts();
 
@@ -39,12 +58,23 @@ const JobCategories = () => {
             >
               <Link
                 to={`/categories/${cat.name.toLowerCase()}`}
-                className="group flex flex-col items-center text-center p-6 rounded-2xl border border-border bg-card hover:shadow-elevated hover:border-primary/20 transition-all duration-300"
+                className="group flex flex-col items-center text-center rounded-2xl border border-border bg-card hover:shadow-elevated hover:border-primary/20 transition-all duration-300 overflow-hidden"
               >
-                <span className="text-4xl mb-3">{cat.icon}</span>
-                <h3 className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors">{cat.name}</h3>
-                <p className="text-xs text-muted-foreground mt-1">{cat.count.toLocaleString()} jobs</p>
-                <ArrowRight size={14} className="text-muted-foreground group-hover:text-primary mt-2 group-hover:translate-x-1 transition-all" />
+                <div className="w-full h-24 overflow-hidden">
+                  <img
+                    src={categoryImages[cat.name] || catTech}
+                    alt={cat.name}
+                    loading="lazy"
+                    width={200}
+                    height={96}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  />
+                </div>
+                <div className="p-4">
+                  <h3 className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors">{cat.name}</h3>
+                  <p className="text-xs text-muted-foreground mt-1">{cat.count.toLocaleString()} jobs</p>
+                  <ArrowRight size={14} className="text-muted-foreground group-hover:text-primary mt-2 group-hover:translate-x-1 transition-all mx-auto" />
+                </div>
               </Link>
             </motion.div>
           ))}
