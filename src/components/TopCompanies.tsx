@@ -2,6 +2,17 @@ import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { topCompanies } from "@/lib/jobData";
+import compFeatured from "@/assets/comp-featured.jpg";
+import compStartups from "@/assets/comp-startups.jpg";
+
+const companyImages: Record<string, string> = {
+  "Andela Uganda": compFeatured,
+  "Mulago Hospital": "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=56&h=56&fit=crop",
+  "Umeme Limited": "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=56&h=56&fit=crop",
+  "Safaricom PLC": "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=56&h=56&fit=crop",
+  "Stanbic Bank": "https://images.unsplash.com/photo-1541354329998-f4d9a9f9297f?w=56&h=56&fit=crop",
+  "DHL East Africa": compStartups,
+};
 
 const TopCompanies = () => {
   return (
@@ -42,9 +53,14 @@ const TopCompanies = () => {
               transition={{ delay: i * 0.08 }}
             >
               <div className="flex items-center gap-4 mb-4">
-                <div className="w-14 h-14 rounded-2xl bg-secondary flex items-center justify-center text-2xl">
-                  {company.logo}
-                </div>
+                <img
+                  src={companyImages[company.name] || compFeatured}
+                  alt={company.name}
+                  loading="lazy"
+                  width={56}
+                  height={56}
+                  className="w-14 h-14 rounded-2xl object-cover"
+                />
                 <div>
                   <h3 className="text-base font-semibold text-foreground group-hover:text-primary transition-colors">{company.name}</h3>
                   <p className="text-xs text-muted-foreground">{company.industry}</p>
