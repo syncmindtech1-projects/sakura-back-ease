@@ -1,11 +1,14 @@
 import { motion } from "framer-motion";
-import { UserPlus, Search, FileCheck, Briefcase } from "lucide-react";
+import stepSignup from "@/assets/step-signup.jpg";
+import stepSearch from "@/assets/step-search.jpg";
+import stepApply from "@/assets/step-apply.jpg";
+import stepHired from "@/assets/step-hired.jpg";
 
 const steps = [
-  { icon: UserPlus, title: "Create Account", desc: "Sign up for free in under 60 seconds" },
-  { icon: Search, title: "Search Jobs", desc: "Browse by category, location, or keyword" },
-  { icon: FileCheck, title: "Apply Easily", desc: "One-click apply with your saved profile" },
-  { icon: Briefcase, title: "Get Hired", desc: "Land your dream job and start your career" },
+  { image: stepSignup, title: "Create Account", desc: "Sign up for free in under 60 seconds" },
+  { image: stepSearch, title: "Search Jobs", desc: "Browse by category, location, or keyword" },
+  { image: stepApply, title: "Apply Easily", desc: "One-click apply with your saved profile" },
+  { image: stepHired, title: "Get Hired", desc: "Land your dream job and start your career" },
 ];
 
 const HowItWorks = () => {
@@ -41,13 +44,12 @@ const HowItWorks = () => {
               viewport={{ once: true }}
               transition={{ delay: i * 0.12 }}
             >
-              {/* Connector line */}
               {i < steps.length - 1 && (
                 <div className="hidden lg:block absolute top-10 left-[60%] w-[80%] h-[2px] bg-border" />
               )}
-              <div className="relative mx-auto w-20 h-20 rounded-2xl gradient-primary flex items-center justify-center mb-4 shadow-glow">
-                <step.icon size={32} className="text-primary-foreground" />
-                <span className="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-accent text-accent-foreground text-xs font-bold flex items-center justify-center">
+              <div className="relative mx-auto w-20 h-20 rounded-2xl overflow-hidden mb-4 shadow-glow">
+                <img src={step.image} alt={step.title} loading="lazy" width={80} height={80} className="w-full h-full object-cover" />
+                <span className="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-accent text-accent-foreground text-xs font-bold flex items-center justify-center z-10">
                   {i + 1}
                 </span>
               </div>

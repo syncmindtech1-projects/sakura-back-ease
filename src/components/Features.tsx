@@ -1,13 +1,18 @@
 import { motion } from "framer-motion";
-import { Globe, Shield, Zap, BarChart3, Users, Clock } from "lucide-react";
+import featGlobe from "@/assets/feat-globe.jpg";
+import featRealtime from "@/assets/feat-realtime.jpg";
+import featVerified from "@/assets/feat-verified.jpg";
+import featSalary from "@/assets/feat-salary.jpg";
+import featCommunity from "@/assets/feat-community.jpg";
+import featApply from "@/assets/feat-apply.jpg";
 
 const features = [
-  { icon: Globe, title: "All Industries", desc: "Professional, skilled trades, freelance — every job type in one place" },
-  { icon: Zap, title: "Real-time Updates", desc: "Jobs scraped and curated from thousands of sources, updated hourly" },
-  { icon: Shield, title: "Verified Employers", desc: "Every company is verified to protect you from scams" },
-  { icon: BarChart3, title: "Salary Insights", desc: "Compare salaries across roles, locations, and experience levels" },
-  { icon: Users, title: "Community Driven", desc: "Read real reviews and insights from employees" },
-  { icon: Clock, title: "One-Click Apply", desc: "Save your profile once and apply to jobs instantly" },
+  { image: featGlobe, title: "All Industries", desc: "Professional, skilled trades, freelance — every job type in one place" },
+  { image: featRealtime, title: "Real-time Updates", desc: "Jobs scraped and curated from thousands of sources, updated hourly" },
+  { image: featVerified, title: "Verified Employers", desc: "Every company is verified to protect you from scams" },
+  { image: featSalary, title: "Salary Insights", desc: "Compare salaries across roles, locations, and experience levels" },
+  { image: featCommunity, title: "Community Driven", desc: "Read real reviews and insights from employees" },
+  { image: featApply, title: "One-Click Apply", desc: "Save your profile once and apply to jobs instantly" },
 ];
 
 const Features = () => {
@@ -43,8 +48,8 @@ const Features = () => {
               viewport={{ once: true }}
               transition={{ delay: i * 0.08 }}
             >
-              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors">
-                <feat.icon size={24} className="text-primary" />
+              <div className="w-16 h-16 rounded-xl overflow-hidden mb-4 group-hover:scale-105 transition-transform">
+                <img src={feat.image} alt={feat.title} loading="lazy" width={64} height={64} className="w-full h-full object-cover" />
               </div>
               <h3 className="text-lg font-semibold font-display text-foreground mb-2">{feat.title}</h3>
               <p className="text-sm text-muted-foreground leading-relaxed">{feat.desc}</p>
