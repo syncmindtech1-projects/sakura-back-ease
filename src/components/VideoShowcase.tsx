@@ -1,6 +1,7 @@
 import { motion, useInView } from "framer-motion";
 import { useRef, useState } from "react";
 import { Search, Heart, Send, FileText, ChevronRight } from "lucide-react";
+import heroBg from "@/assets/hero-bg.jpg";
 
 const demos = [
   {
