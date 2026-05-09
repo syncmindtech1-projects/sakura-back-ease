@@ -74,11 +74,8 @@ const JobDetail = () => {
               </div>
             </div>
             <div className="flex flex-row md:flex-col gap-3 shrink-0">
-              <a href={job.applyUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 gradient-primary text-primary-foreground font-semibold text-sm px-6 py-3 rounded-xl hover:opacity-90 transition-opacity active:scale-95">
-                Apply Now <ExternalLink size={16} />
-              </a>
               <button onClick={handleSave} className={`inline-flex items-center gap-2 font-medium text-sm px-4 py-3 rounded-xl transition-colors ${isSaved(job.id) ? 'bg-primary/10 text-primary' : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'}`}>
-                <Bookmark size={16} className={isSaved(job.id) ? 'fill-primary' : ''} /> {isSaved(job.id) ? 'Saved' : 'Save'}
+                <Bookmark size={16} className={isSaved(job.id) ? 'fill-primary' : ''} /> {isSaved(job.id) ? 'Saved' : 'Save Job'}
               </button>
               <button onClick={handleShare} className="inline-flex items-center gap-2 bg-secondary text-secondary-foreground font-medium text-sm px-4 py-3 rounded-xl hover:bg-secondary/80 transition-colors">
                 <Share2 size={16} /> Share
