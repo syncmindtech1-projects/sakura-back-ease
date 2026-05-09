@@ -48,16 +48,6 @@ const Footer = () => {
             <p className="text-sm text-background/60 leading-relaxed">
               Uganda's #1 free job platform curating opportunities across Africa, UAE, Europe & Americas — all industries, all roles. 100% free to browse.
             </p>
-            <div className="flex gap-3 mt-4">
-              {["𝕏", "in", "f", "📸"].map((icon, i) => (
-                <button
-                  key={i}
-                  className="w-9 h-9 rounded-xl bg-background/10 flex items-center justify-center text-background/60 hover:bg-background/20 hover:text-background transition-colors text-sm font-bold"
-                >
-                  {icon}
-                </button>
-              ))}
-            </div>
           </div>
 
           {/* Links */}

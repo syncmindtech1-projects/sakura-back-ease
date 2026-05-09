@@ -21,7 +21,6 @@ const { totalJobs } = getJobStats();
 const navItems: NavItem[] = [
   { label: "Find Jobs", href: "/jobs", megaType: "jobs" },
   { label: "Categories", href: "/categories", megaType: "categories" },
-  { label: "Companies", href: "/companies", megaType: "companies" },
   { label: "Resources", href: "/career-advice", megaType: "resources" },
   { label: "Job Alerts", href: "/job-alerts" },
   { label: "About Us", href: "/about" },
@@ -43,11 +42,6 @@ const mobileSubMenus: Record<string, { label: string; href: string; icon: string
     { label: "Finance", href: "/categories/finance", icon: "💰" },
     { label: "Education", href: "/categories/education", icon: "📚" },
     { label: "All Categories", href: "/categories", icon: "📂" },
-  ],
-  Companies: [
-    { label: "Top Companies", href: "/companies", icon: "🏢" },
-    { label: "Startups", href: "/companies?type=startup", icon: "🚀" },
-    { label: "Company Reviews", href: "/reviews", icon: "⭐" },
   ],
   Resources: [
     { label: "Career Advice", href: "/career-advice", icon: "📖" },
