@@ -44,8 +44,14 @@ const VideoShowcase = () => {
   const inView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section ref={ref} className="py-16 md:py-24 bg-secondary/30">
-      <div className="container mx-auto px-4 md:px-8">
+    <section ref={ref} className="relative py-16 md:py-24 overflow-hidden">
+      <div
+        className="absolute inset-0 bg-cover bg-center opacity-[0.08]"
+        style={{ backgroundImage: `url(${heroBg})` }}
+        aria-hidden
+      />
+      <div className="absolute inset-0 bg-gradient-to-br from-secondary/60 via-background/80 to-primary/5" aria-hidden />
+      <div className="relative container mx-auto px-4 md:px-8">
         <motion.div className="text-center mb-12" initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}}>
           <span className="text-sm font-semibold text-primary uppercase tracking-wider">See It In Action</span>
           <h2 className="text-3xl md:text-4xl font-bold font-display text-foreground mt-2">
