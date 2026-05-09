@@ -1,12 +1,9 @@
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
-import FeaturedJobs from "@/components/FeaturedJobs";
 import JobCategories from "@/components/JobCategories";
 import Features from "@/components/Features";
-import HowItWorks from "@/components/HowItWorks";
 import Audience from "@/components/Audience";
 import Stats from "@/components/Stats";
-import TopCompanies from "@/components/TopCompanies";
 import Testimonials from "@/components/Testimonials";
 import Newsletter from "@/components/Newsletter";
 import CTASection from "@/components/CTASection";
@@ -21,17 +18,14 @@ const Index = () => {
       <Header />
       <Hero />
       <Stats />
-      <FeaturedJobs />
       <AdsBanner variant="banner" adIndex={0} />
       <VideoShowcase />
       <JobCategories />
       <VideoAdSection adIndex={0} />
       <Features />
       <AdsBanner variant="banner" adIndex={1} />
-      <HowItWorks />
       <Audience />
       <VideoAdSection adIndex={1} />
-      <TopCompanies />
       <AdsBanner variant="banner" adIndex={2} />
       <Testimonials />
       <Newsletter />
