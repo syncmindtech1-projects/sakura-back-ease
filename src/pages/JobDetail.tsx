@@ -2,7 +2,7 @@ import PageLayout from "@/components/PageLayout";
 import { useParams, Link } from "react-router-dom";
 import { featuredJobs } from "@/lib/jobData";
 import { motion } from "framer-motion";
-import { MapPin, Clock, Briefcase, Bookmark, ExternalLink, ArrowLeft, Share2, Building2, DollarSign, Tag } from "lucide-react";
+import { MapPin, Clock, Briefcase, Bookmark, ArrowLeft, Share2, Building2, DollarSign, Tag } from "lucide-react";
 import AdsBanner from "@/components/AdsBanner";
 import { useSavedJobs } from "@/contexts/SavedJobsContext";
 import { useToast } from "@/hooks/use-toast";
