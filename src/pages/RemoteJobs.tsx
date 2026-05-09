@@ -2,7 +2,7 @@ import PageLayout from "@/components/PageLayout";
 import AdsBanner from "@/components/AdsBanner";
 import { motion } from "framer-motion";
 import { featuredJobs } from "@/lib/jobData";
-import { MapPin, Clock, Briefcase, Bookmark, Globe, Wifi, ExternalLink } from "lucide-react";
+import { MapPin, Clock, Briefcase, Bookmark, Globe, Wifi } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useSavedJobs } from "@/contexts/SavedJobsContext";
 
