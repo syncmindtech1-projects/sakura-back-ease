@@ -21,7 +21,6 @@ const { totalJobs } = getJobStats();
 const navItems: NavItem[] = [
   { label: "Find Jobs", href: "/jobs", megaType: "jobs" },
   { label: "Categories", href: "/categories", megaType: "categories" },
-  { label: "Companies", href: "/companies", megaType: "companies" },
   { label: "Resources", href: "/career-advice", megaType: "resources" },
   { label: "Job Alerts", href: "/job-alerts" },
   { label: "About Us", href: "/about" },
