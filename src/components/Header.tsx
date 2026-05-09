@@ -104,7 +104,7 @@ const Header = () => {
   return (
     <>
       {/* Top bar — Premium animated banner */}
-      <div className="relative overflow-hidden gradient-primary text-primary-foreground">
+      <div className="relative overflow-hidden text-white" style={{ background: "linear-gradient(90deg, #F97316 0%, #FB923C 50%, #F59E0B 100%)" }}>
         {/* Animated background particles */}
         <motion.div
           className="absolute inset-0 opacity-20"
