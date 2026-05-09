@@ -2,7 +2,7 @@ import PageLayout from "@/components/PageLayout";
 import AdsBanner from "@/components/AdsBanner";
 import { motion } from "framer-motion";
 import { featuredJobs } from "@/lib/jobData";
-import { MapPin, Clock, Briefcase, Bookmark, Globe, Wifi, ExternalLink } from "lucide-react";
+import { MapPin, Clock, Briefcase, Bookmark, Globe, Wifi } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useSavedJobs } from "@/contexts/SavedJobsContext";
 
@@ -69,9 +69,9 @@ const RemoteJobs = () => {
                       <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggleSave(job.id); }} className={`p-2 rounded-lg transition-colors ${isSaved(job.id) ? 'bg-accent/10 text-accent' : 'hover:bg-secondary text-muted-foreground'}`}>
                         <Bookmark size={16} className={isSaved(job.id) ? 'fill-accent' : ''} />
                       </button>
-                      <a href={job.applyUrl} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="inline-flex items-center gap-1 text-xs font-semibold gradient-accent text-accent-foreground px-4 py-2 rounded-lg hover:opacity-90 transition-opacity active:scale-95">
-                        Apply <ExternalLink size={12} />
-                      </a>
+                      <Link to={`/jobs/${job.id}`} onClick={(e) => e.stopPropagation()} className="inline-flex items-center gap-1 text-xs font-semibold gradient-accent text-accent-foreground px-4 py-2 rounded-lg hover:opacity-90 transition-opacity active:scale-95">
+                        View Details
+                      </Link>
                     </div>
                   </div>
                 </Link>

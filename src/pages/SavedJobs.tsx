@@ -1,6 +1,6 @@
 import PageLayout from "@/components/PageLayout";
 import { motion } from "framer-motion";
-import { MapPin, Clock, Briefcase, Bookmark, Trash2, ExternalLink } from "lucide-react";
+import { MapPin, Clock, Briefcase, Bookmark, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { featuredJobs } from "@/lib/jobData";
 import { useSavedJobs } from "@/contexts/SavedJobsContext";
@@ -61,14 +61,12 @@ const SavedJobs = () => {
                     </Link>
                     <div className="flex items-center gap-2 shrink-0">
                       <span className="text-sm font-bold text-foreground">{job.salary}</span>
-                      <a
-                        href={job.applyUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                      <Link
+                        to={`/jobs/${job.id}`}
                         className="inline-flex items-center gap-1 text-xs font-semibold gradient-primary text-primary-foreground px-4 py-2 rounded-lg hover:opacity-90 transition-opacity"
                       >
-                        Apply <ExternalLink size={12} />
-                      </a>
+                        View Details
+                      </Link>
                       <button
                         onClick={() => toggleSave(job.id)}
                         className="p-2 rounded-lg bg-destructive/10 text-destructive hover:bg-destructive/20 transition-colors"
