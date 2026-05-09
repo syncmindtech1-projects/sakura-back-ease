@@ -43,11 +43,6 @@ const mobileSubMenus: Record<string, { label: string; href: string; icon: string
     { label: "Education", href: "/categories/education", icon: "📚" },
     { label: "All Categories", href: "/categories", icon: "📂" },
   ],
-  Companies: [
-    { label: "Top Companies", href: "/companies", icon: "🏢" },
-    { label: "Startups", href: "/companies?type=startup", icon: "🚀" },
-    { label: "Company Reviews", href: "/reviews", icon: "⭐" },
-  ],
   Resources: [
     { label: "Career Advice", href: "/career-advice", icon: "📖" },
     { label: "Resume Builder", href: "/resume-builder", icon: "📝" },
