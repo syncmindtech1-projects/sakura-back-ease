@@ -1,6 +1,6 @@
 import PageLayout from "@/components/PageLayout";
 import { motion } from "framer-motion";
-import { MapPin, Clock, Briefcase, Bookmark, Trash2, ExternalLink } from "lucide-react";
+import { MapPin, Clock, Briefcase, Bookmark, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { featuredJobs } from "@/lib/jobData";
 import { useSavedJobs } from "@/contexts/SavedJobsContext";
