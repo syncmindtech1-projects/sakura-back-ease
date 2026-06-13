@@ -12,8 +12,8 @@ const tools = [
   { label: "Resume Builder", desc: "Create a standout resume in minutes", href: "/resume-builder", image: resResume, tag: "New" },
   { label: "Salary Guide", desc: "Know your worth — real salary data", href: "/salary-guide", image: resSalary },
   { label: "Interview Prep", desc: "Ace your next interview", href: "/interview-prep", image: resInterview },
-  { label: "Skills Assessment", desc: "Test your skills & get recommendations", href: "/career-advice", image: resSkills },
-  { label: "Learning Paths", desc: "Curated courses for in-demand careers", href: "/career-advice", image: resLearning },
+  { label: "Skills Assessment", desc: "Test your skills & get recommendations", href: "/skills-assessment", image: resSkills },
+  { label: "Learning Paths", desc: "Curated courses for in-demand careers", href: "/learning-paths", image: resLearning },
 ];
 
 interface Props { onClose: () => void; }
