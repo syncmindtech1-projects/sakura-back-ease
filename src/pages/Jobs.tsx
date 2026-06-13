@@ -8,7 +8,7 @@ import { useSearchParams, Link } from "react-router-dom";
 import { useSavedJobs } from "@/contexts/SavedJobsContext";
 
 const jobTypes = ["All", "Full-time", "Part-time", "Contract", "Freelance", "Internship"];
-const locationFilters = ["All Locations", "Uganda", "Kenya", "Tanzania", "Rwanda", "Nigeria", "South Africa", "UAE", "UK", "USA", "Canada", "Remote"];
+const locationFilters = ["All Locations", "Uganda", "Kenya", "Tanzania", "Rwanda", "South Sudan", "Ethiopia", "Ghana", "Remote"];
 const sortOptions = ["Most Recent", "Salary: High to Low", "Salary: Low to High"];
 
 const Jobs = () => {
