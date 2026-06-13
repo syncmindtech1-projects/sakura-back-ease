@@ -18,6 +18,8 @@ import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Reviews from "./pages/Reviews";
 import InterviewPrep from "./pages/InterviewPrep";
+import SkillsAssessment from "./pages/SkillsAssessment";
+import LearningPaths from "./pages/LearningPaths";
 import PostJob from "./pages/PostJob";
 import SavedJobs from "./pages/SavedJobs";
 import NotFound from "./pages/NotFound";
@@ -47,6 +49,8 @@ const App = () => (
             <Route path="/contact" element={<Contact />} />
             <Route path="/reviews" element={<Reviews />} />
             <Route path="/interview-prep" element={<InterviewPrep />} />
+            <Route path="/skills-assessment" element={<SkillsAssessment />} />
+            <Route path="/learning-paths" element={<LearningPaths />} />
             <Route path="/post-job" element={<PostJob />} />
             <Route path="/saved-jobs" element={<SavedJobs />} />
             <Route path="*" element={<NotFound />} />

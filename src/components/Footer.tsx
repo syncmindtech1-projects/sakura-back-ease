@@ -46,7 +46,7 @@ const Footer = () => {
               </span>
             </Link>
             <p className="text-sm text-background/60 leading-relaxed">
-              Uganda's #1 free job platform curating opportunities across Africa, UAE, Europe & Americas — all industries, all roles. 100% free to browse.
+              Uganda's #1 free job platform curating opportunities across East Africa — Uganda, Kenya, Tanzania, Rwanda, South Sudan, Ethiopia & Ghana. 100% free to browse.
             </p>
           </div>
 

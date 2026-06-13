@@ -69,7 +69,7 @@ const Hero = () => {
 
             <motion.p className="text-base md:text-lg text-muted-foreground max-w-lg mx-auto lg:mx-0 mb-8 leading-relaxed"
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-              Browse <strong className="text-foreground">100% free</strong> listings across Uganda, East Africa, UAE, Europe & Americas. Every industry, one platform.
+              Browse <strong className="text-foreground">100% free</strong> listings across Uganda, Kenya, Tanzania, Rwanda, South Sudan, Ethiopia & Ghana. Every industry, one platform.
             </motion.p>
 
             {/* Search Bar */}
