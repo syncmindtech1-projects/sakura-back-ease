@@ -26,7 +26,7 @@ const InterviewPrep = () => {
 
   return (
     <PageLayout>
-      <section className="bg-gradient-to-br from-[hsl(250,30%,96%)] to-[hsl(210,35%,97%)] py-10 md:py-14">
+      <section className="bg-gradient-to-br from-[hsl(45,40%,96%)] to-[hsl(160,25%,95%)] py-10 md:py-14">
         <div className="container mx-auto px-4 md:px-8">
           <motion.h1 className="text-3xl md:text-5xl font-bold font-display text-foreground mb-2" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
             🎯 Interview Prep
