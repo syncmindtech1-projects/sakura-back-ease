@@ -45,7 +45,7 @@ const Jobs = () => {
 
   return (
     <PageLayout>
-      <section className="bg-gradient-to-br from-[hsl(210,40%,96%)] via-[hsl(200,35%,97%)] to-[hsl(45,30%,96%)] py-10 md:py-14">
+      <section className="bg-gradient-to-br from-[hsl(45,40%,96%)] via-[hsl(160,25%,95%)] to-[hsl(45,40%,96%)] py-10 md:py-14">
         <div className="container mx-auto px-4 md:px-8">
           <motion.h1 className="text-3xl md:text-5xl font-bold font-display text-foreground mb-2" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
             Browse All Jobs

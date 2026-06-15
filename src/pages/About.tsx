@@ -20,7 +20,7 @@ const milestones = [
 
 const About = () => (
   <PageLayout>
-    <section className="bg-gradient-to-br from-[hsl(210,40%,96%)] to-[hsl(200,35%,97%)] py-12 md:py-20">
+    <section className="bg-gradient-to-br from-[hsl(45,40%,96%)] to-[hsl(160,25%,95%)] py-12 md:py-20">
       <div className="container mx-auto px-4 md:px-8">
         <div className="max-w-3xl">
           <motion.h1 className="text-3xl md:text-5xl font-bold font-display text-foreground mb-4" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>

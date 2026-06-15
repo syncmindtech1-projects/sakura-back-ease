@@ -12,7 +12,7 @@ const RemoteJobs = () => {
 
   return (
     <PageLayout>
-      <section className="bg-gradient-to-br from-[hsl(160,30%,95%)] to-[hsl(200,35%,97%)] py-10 md:py-14">
+      <section className="bg-gradient-to-br from-[hsl(160,30%,95%)] to-[hsl(160,25%,95%)] py-10 md:py-14">
         <div className="container mx-auto px-4 md:px-8">
           <motion.div className="flex items-center gap-3 mb-4" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
             <div className="w-12 h-12 rounded-2xl bg-accent/10 flex items-center justify-center">
