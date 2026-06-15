@@ -33,7 +33,7 @@ const demos = [
     title: "AI Resume Builder",
     desc: "Create a professional resume in minutes with our intelligent builder",
     icon: FileText,
-    color: "hsl(280, 70%, 55%)",
+    color: "hsl(var(--accent))",
     steps: ["Choose a professional template", "AI fills in your details", "Download and share instantly"],
   },
 ];
