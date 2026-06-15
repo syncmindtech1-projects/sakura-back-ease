@@ -21,18 +21,18 @@ export interface Job {
 }
 
 export const jobCategories = [
-  { name: "Technology", icon: "💻", color: "primary" },
-  { name: "Healthcare", icon: "🏥", color: "accent" },
-  { name: "Finance", icon: "💰", color: "highlight" },
-  { name: "Construction", icon: "🏗️", color: "primary" },
-  { name: "Education", icon: "📚", color: "accent" },
-  { name: "Marketing", icon: "📢", color: "highlight" },
-  { name: "Manufacturing", icon: "🏭", color: "primary" },
-  { name: "Transportation", icon: "🚛", color: "accent" },
-  { name: "Hospitality", icon: "🏨", color: "highlight" },
-  { name: "Retail", icon: "🛒", color: "primary" },
-  { name: "Engineering", icon: "⚙️", color: "accent" },
-  { name: "Legal", icon: "⚖️", color: "highlight" },
+  { name: "Technology", icon: "💻", color: "primary", description: "Software, data, cloud and IT roles across East Africa.", roles: ["Software Engineer", "Data Analyst", "DevOps", "Product Manager"] },
+  { name: "Healthcare", icon: "🏥", color: "accent", description: "Clinical, public health and medical support positions.", roles: ["Nurse", "Medical Officer", "Lab Technician", "Pharmacist"] },
+  { name: "Finance", icon: "💰", color: "highlight", description: "Banking, accounting, audit and fintech opportunities.", roles: ["Accountant", "Banker", "Auditor", "Loan Officer"] },
+  { name: "Construction", icon: "🏗️", color: "primary", description: "Site, civil and project roles powering infrastructure.", roles: ["Site Engineer", "Foreman", "Surveyor", "Project Manager"] },
+  { name: "Education", icon: "📚", color: "accent", description: "Teaching, training and academic administration jobs.", roles: ["Teacher", "Lecturer", "Tutor", "Education Officer"] },
+  { name: "Marketing", icon: "📢", color: "highlight", description: "Brand, digital, content and growth marketing roles.", roles: ["Digital Marketer", "Brand Manager", "Content Writer", "SEO Specialist"] },
+  { name: "Manufacturing", icon: "🏭", color: "primary", description: "Production, quality and plant operations careers.", roles: ["Production Supervisor", "QA Officer", "Machine Operator", "Plant Manager"] },
+  { name: "Transportation", icon: "🚛", color: "accent", description: "Logistics, fleet, driving and supply-chain positions.", roles: ["Driver", "Logistics Officer", "Dispatcher", "Fleet Manager"] },
+  { name: "Hospitality", icon: "🏨", color: "highlight", description: "Hotels, restaurants, tourism and guest services.", roles: ["Chef", "Front Office", "Tour Guide", "Hotel Manager"] },
+  { name: "Retail", icon: "🛒", color: "primary", description: "Sales, merchandising and store operations roles.", roles: ["Sales Associate", "Store Manager", "Cashier", "Merchandiser"] },
+  { name: "Engineering", icon: "⚙️", color: "accent", description: "Mechanical, electrical and civil engineering openings.", roles: ["Mechanical Engineer", "Electrical Engineer", "Civil Engineer", "Maintenance"] },
+  { name: "Legal", icon: "⚖️", color: "highlight", description: "Advocacy, compliance and corporate legal positions.", roles: ["Advocate", "Legal Officer", "Paralegal", "Compliance"] },
 ];
 
 export const featuredJobs: Job[] = [
