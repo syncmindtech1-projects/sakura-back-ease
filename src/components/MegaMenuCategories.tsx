@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { getJobCategoriesWithCounts } from "@/lib/jobData";
 import catTech from "@/assets/cat-technology.jpg";
 import catHealth from "@/assets/cat-healthcare.jpg";
 import catConstruction from "@/assets/cat-construction.jpg";
@@ -9,16 +10,34 @@ import catManufacturing from "@/assets/cat-manufacturing.jpg";
 import catMarketing from "@/assets/cat-marketing.jpg";
 import catHospitality from "@/assets/cat-hospitality.jpg";
 
-const categories = [
-  { name: "Technology", count: "2.4K+", href: "/categories/technology", image: catTech, color: "#6366f1" },
-  { name: "Healthcare", count: "1.8K+", href: "/categories/healthcare", image: catHealth, color: "#10B981" },
-  { name: "Construction", count: "950+", href: "/categories/construction", image: catConstruction, color: "#F59E0B" },
-  { name: "Finance", count: "1.2K+", href: "/categories/finance", image: catFinance, color: "#8B5CF6" },
-  { name: "Education", count: "780+", href: "/categories/education", image: catEducation, color: "#EC4899" },
-  { name: "Manufacturing", count: "620+", href: "/categories/manufacturing", image: catManufacturing, color: "#3B82F6" },
-  { name: "Marketing", count: "540+", href: "/categories/marketing", image: catMarketing, color: "#F97316" },
-  { name: "Hospitality", count: "430+", href: "/categories/hospitality", image: catHospitality, color: "#14B8A6" },
-];
+const imageMap: Record<string, string> = {
+  Technology: catTech,
+  Healthcare: catHealth,
+  Construction: catConstruction,
+  Finance: catFinance,
+  Education: catEducation,
+  Manufacturing: catManufacturing,
+  Marketing: catMarketing,
+  Hospitality: catHospitality,
+  Transportation: catManufacturing,
+  Retail: catMarketing,
+  Engineering: catConstruction,
+  Legal: catFinance,
+};
+
+const colorMap: Record<string, string> = {
+  Technology: "#6366f1", Healthcare: "#10B981", Construction: "#F59E0B", Finance: "#8B5CF6",
+  Education: "#EC4899", Manufacturing: "#3B82F6", Marketing: "#F97316", Hospitality: "#14B8A6",
+  Transportation: "#0EA5E9", Retail: "#EF4444", Engineering: "#22C55E", Legal: "#A855F7",
+};
+
+const categories = getJobCategoriesWithCounts().map((c) => ({
+  name: c.name,
+  count: `${c.count}+`,
+  href: `/categories/${c.name.toLowerCase()}`,
+  image: imageMap[c.name] || catTech,
+  color: colorMap[c.name] || "#6366f1",
+}));
 
 interface Props { onClose: () => void; }
 
