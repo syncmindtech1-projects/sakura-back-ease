@@ -47,7 +47,7 @@ const JobCategories = () => {
           </motion.h2>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {jobCategories.map((cat, i) => (
             <motion.div
               key={cat.name}
@@ -58,22 +58,33 @@ const JobCategories = () => {
             >
               <Link
                 to={`/categories/${cat.name.toLowerCase()}`}
-                className="group flex flex-col items-center text-center rounded-2xl border border-border bg-card hover:shadow-elevated hover:border-primary/20 transition-all duration-300 overflow-hidden"
+                className="group flex flex-col rounded-2xl border border-border bg-card hover:shadow-elevated hover:border-primary/20 transition-all duration-300 overflow-hidden h-full"
               >
-                <div className="w-full h-24 overflow-hidden">
+                <div className="w-full h-28 overflow-hidden relative">
                   <img
                     src={categoryImages[cat.name] || catTech}
                     alt={cat.name}
                     loading="lazy"
-                    width={200}
-                    height={96}
+                    width={400}
+                    height={112}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                   />
+                  <span className="absolute top-2 right-2 text-[10px] font-bold px-2 py-0.5 rounded-full bg-card/90 text-primary backdrop-blur">
+                    {cat.count.toLocaleString()} jobs
+                  </span>
                 </div>
-                <div className="p-4">
-                  <h3 className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors">{cat.name}</h3>
-                  <p className="text-xs text-muted-foreground mt-1">{cat.count.toLocaleString()} jobs</p>
-                  <ArrowRight size={14} className="text-muted-foreground group-hover:text-primary mt-2 group-hover:translate-x-1 transition-all mx-auto" />
+                <div className="p-4 flex flex-col flex-1">
+                  <h3 className="text-sm font-bold text-foreground group-hover:text-primary transition-colors">{cat.name}</h3>
+                  <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{(cat as any).description}</p>
+                  <div className="flex flex-wrap gap-1 mt-3">
+                    {((cat as any).roles || []).slice(0, 3).map((r: string) => (
+                      <span key={r} className="text-[10px] px-1.5 py-0.5 rounded-md bg-secondary text-secondary-foreground font-medium">{r}</span>
+                    ))}
+                  </div>
+                  <div className="flex items-center justify-between mt-3 pt-3 border-t border-border">
+                    <span className="text-[11px] font-semibold text-primary">Browse jobs</span>
+                    <ArrowRight size={14} className="text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" />
+                  </div>
                 </div>
               </Link>
             </motion.div>

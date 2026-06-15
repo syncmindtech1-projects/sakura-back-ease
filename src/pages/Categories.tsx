@@ -106,14 +106,24 @@ const Categories = () => {
 
       <section className="py-8 md:py-12">
         <div className="container mx-auto px-4 md:px-8">
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {filteredCategories.map((cat, i) => (
               <motion.div key={cat.name} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.04 }}>
-                <Link to={`/categories/${cat.name.toLowerCase()}`} className="group flex flex-col items-center text-center p-8 rounded-2xl border border-border bg-card hover:shadow-elevated hover:border-primary/20 transition-all">
-                  <span className="text-5xl mb-4">{cat.icon}</span>
-                  <h3 className="text-base font-semibold text-foreground group-hover:text-primary transition-colors">{cat.name}</h3>
-                  <p className="text-sm text-muted-foreground mt-1">{cat.count.toLocaleString()} jobs</p>
-                  <ArrowRight size={16} className="text-muted-foreground group-hover:text-primary mt-3 group-hover:translate-x-1 transition-all" />
+                <Link to={`/categories/${cat.name.toLowerCase()}`} className="group flex flex-col h-full p-6 rounded-2xl border border-border bg-card hover:shadow-elevated hover:border-primary/20 transition-all">
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-4xl">{cat.icon}</span>
+                    <span className="text-xs font-bold px-2 py-1 rounded-full bg-primary/10 text-primary">{cat.count.toLocaleString()} jobs</span>
+                  </div>
+                  <h3 className="text-lg font-bold text-foreground group-hover:text-primary transition-colors">{cat.name}</h3>
+                  <p className="text-sm text-muted-foreground mt-1 flex-1">{(cat as any).description}</p>
+                  <div className="flex flex-wrap gap-1.5 mt-3">
+                    {((cat as any).roles || []).slice(0, 4).map((r: string) => (
+                      <span key={r} className="text-[11px] px-2 py-0.5 rounded-md bg-secondary text-secondary-foreground font-medium">{r}</span>
+                    ))}
+                  </div>
+                  <span className="inline-flex items-center gap-1 mt-4 text-sm font-semibold text-primary">
+                    Browse jobs <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                  </span>
                 </Link>
               </motion.div>
             ))}
