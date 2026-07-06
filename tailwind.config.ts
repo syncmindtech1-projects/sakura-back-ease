@@ -15,10 +15,11 @@ export default {
     extend: {
       fontFamily: {
         sans: ["Inter", "system-ui", "sans-serif"],
-        display: ["Plus Jakarta Sans", "Inter", "system-ui", "sans-serif"],
+        display: ["Fraunces", "Times New Roman", "Georgia", "serif"],
+        serif: ["Fraunces", "Times New Roman", "Georgia", "serif"],
       },
       fontSize: {
-        "display": ["2.5rem", { lineHeight: "1.1", letterSpacing: "-0.03em", fontWeight: "700" }],
+        "display": ["3rem", { lineHeight: "1.05", letterSpacing: "-0.035em", fontWeight: "500" }],
       },
       colors: {
         border: "hsl(var(--border))",
