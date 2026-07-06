@@ -1,5 +1,4 @@
-import { motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { getJobCategoriesWithCounts } from "@/lib/jobData";
 import catTech from "@/assets/cat-technology.jpg";
@@ -26,70 +25,55 @@ const jobCategories = getJobCategoriesWithCounts();
 
 const JobCategories = () => {
   return (
-    <section className="py-16 md:py-24 bg-card">
+    <section className="py-16 md:py-24 border-t border-border bg-background">
       <div className="container mx-auto px-4 md:px-8">
-        <div className="text-center mb-12">
-          <motion.span
-            className="text-sm font-semibold text-accent uppercase tracking-wider"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-          >
-            Browse by Industry
-          </motion.span>
-          <motion.h2
-            className="text-3xl md:text-4xl font-bold font-display text-foreground mt-2"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            Popular Job Categories
-          </motion.h2>
-        </div>
+        <header className="mb-10 pb-6 border-b border-border flex items-end justify-between">
+          <div>
+            <span className="eyebrow">The Index</span>
+            <h2 className="serif text-3xl md:text-5xl mt-3 text-foreground">Browse by industry</h2>
+          </div>
+          <p className="hidden md:block text-sm text-muted-foreground max-w-xs">
+            Roles are grouped by discipline, then ranked by recency and hiring velocity.
+          </p>
+        </header>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <ol className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 border-t border-l border-border">
           {jobCategories.map((cat, i) => (
-            <motion.div
-              key={cat.name}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.05 }}
-            >
+            <li key={cat.name}>
               <Link
                 to={`/categories/${cat.name.toLowerCase()}`}
-                className="group flex flex-col rounded-2xl border border-border bg-card hover:shadow-elevated hover:border-primary/20 transition-all duration-300 overflow-hidden h-full"
+                className="group flex flex-col h-full border-r border-b border-border bg-card hover:bg-secondary/40 transition-colors"
               >
-                <div className="w-full h-28 overflow-hidden relative">
+                <div className="relative aspect-[16/10] overflow-hidden border-b border-border">
                   <img
                     src={categoryImages[cat.name] || catTech}
-                    alt={cat.name}
+                    alt=""
                     loading="lazy"
-                    width={400}
-                    height={112}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    width={480}
+                    height={300}
+                    className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
                   />
-                  <span className="absolute top-2 right-2 text-[10px] font-bold px-2 py-0.5 rounded-full bg-card/90 text-primary backdrop-blur">
-                    {cat.count.toLocaleString()} jobs
+                  <span className="absolute top-3 left-3 eyebrow bg-background/85 px-2 py-1 backdrop-blur-sm">
+                    №{String(i + 1).padStart(2, '0')}
                   </span>
                 </div>
-                <div className="p-4 flex flex-col flex-1">
-                  <h3 className="text-sm font-bold text-foreground group-hover:text-primary transition-colors">{cat.name}</h3>
-                  <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{(cat as any).description}</p>
-                  <div className="flex flex-wrap gap-1 mt-3">
-                    {((cat as any).roles || []).slice(0, 3).map((r: string) => (
-                      <span key={r} className="text-[10px] px-1.5 py-0.5 rounded-md bg-secondary text-secondary-foreground font-medium">{r}</span>
-                    ))}
+                <div className="p-5 flex flex-col flex-1">
+                  <div className="flex items-baseline justify-between gap-2">
+                    <h3 className="serif text-xl text-foreground group-hover:text-primary transition-colors">{cat.name}</h3>
+                    <span className="text-xs text-muted-foreground num shrink-0">{cat.count.toLocaleString()} roles</span>
                   </div>
-                  <div className="flex items-center justify-between mt-3 pt-3 border-t border-border">
-                    <span className="text-[11px] font-semibold text-primary">Browse jobs</span>
-                    <ArrowRight size={14} className="text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" />
+                  <p className="text-sm text-muted-foreground mt-2 line-clamp-2 leading-relaxed">{(cat as any).description}</p>
+                  <div className="mt-4 pt-4 border-t border-border flex items-center justify-between">
+                    <span className="text-xs text-muted-foreground truncate">
+                      {((cat as any).roles || []).slice(0, 2).join(' · ')}
+                    </span>
+                    <ArrowUpRight size={14} className="text-muted-foreground group-hover:text-foreground group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-all shrink-0" />
                   </div>
                 </div>
               </Link>
-            </motion.div>
+            </li>
           ))}
-        </div>
+        </ol>
       </div>
     </section>
   );

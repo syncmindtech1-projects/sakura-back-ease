@@ -1,5 +1,4 @@
-import { motion } from "framer-motion";
-import { MapPin, Clock, Bookmark, ArrowRight } from "lucide-react";
+import { MapPin, Clock, Bookmark, ArrowUpRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { featuredJobs } from "@/lib/jobData";
 import { useSavedJobs } from "@/contexts/SavedJobsContext";
@@ -8,77 +7,64 @@ const FeaturedJobs = () => {
   const { toggleSave, isSaved } = useSavedJobs();
 
   return (
-    <section className="py-16 md:py-24">
+    <section className="py-16 md:py-24 border-t border-border">
       <div className="container mx-auto px-4 md:px-8">
-        <div className="flex items-end justify-between mb-10">
+        <header className="flex items-end justify-between mb-10 pb-6 border-b border-border">
           <div>
-            <motion.span className="text-sm font-semibold text-primary uppercase tracking-wider" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
-              Latest Openings
-            </motion.span>
-            <motion.h2 className="text-3xl md:text-4xl font-bold font-display text-foreground mt-2" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-              Featured Jobs
-            </motion.h2>
+            <span className="eyebrow">Currently Hiring</span>
+            <h2 className="serif text-3xl md:text-5xl mt-3 text-foreground">Featured openings</h2>
           </div>
-          <Link to="/jobs" className="hidden md:flex items-center gap-2 text-sm font-semibold text-primary hover:underline">
-            View all jobs <ArrowRight size={16} />
+          <Link to="/jobs" className="hidden md:inline-flex items-center gap-1.5 text-sm font-medium text-foreground border-b border-foreground pb-0.5 hover:text-primary hover:border-primary transition-colors">
+            View all jobs <ArrowUpRight size={14} />
           </Link>
-        </div>
+        </header>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {featuredJobs.slice(0, 9).map((job, i) => (
-            <Link key={job.id} to={`/jobs/${job.id}`} className="block">
-              <motion.div
-                className="group bg-card rounded-2xl border border-border p-5 hover:shadow-elevated hover:border-primary/20 transition-all duration-300 cursor-pointer relative h-full"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.05 }}
+        <ul className="divide-y divide-border border-b border-border">
+          {featuredJobs.slice(0, 9).map((job) => (
+            <li key={job.id}>
+              <Link
+                to={`/jobs/${job.id}`}
+                className="group grid grid-cols-[auto_1fr_auto] md:grid-cols-[auto_1fr_auto_auto_auto] items-center gap-4 md:gap-6 py-5 hover:bg-secondary/40 transition-colors -mx-4 md:-mx-6 px-4 md:px-6"
               >
-                <div className="flex items-center gap-2 mb-3 flex-wrap">
-                  {job.featured && <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md gradient-primary text-primary-foreground">Featured</span>}
-                  {job.urgent && <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md gradient-warm text-highlight-foreground">Urgent</span>}
-                  {job.remote && <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-accent/10 text-accent">Remote</span>}
+                <div className="w-11 h-11 flex items-center justify-center text-lg border border-border bg-card shrink-0">
+                  {job.logo}
                 </div>
 
-                <div className="flex items-start gap-3 mb-3">
-                  <div className="w-11 h-11 rounded-xl bg-secondary flex items-center justify-center text-xl shrink-0">{job.logo}</div>
-                  <div className="min-w-0">
-                    <h3 className="text-base font-semibold text-foreground group-hover:text-primary transition-colors truncate">{job.title}</h3>
-                    <p className="text-sm text-muted-foreground">{job.company}</p>
+                <div className="min-w-0">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <h3 className="serif text-lg md:text-xl text-foreground group-hover:text-primary transition-colors truncate">{job.title}</h3>
+                    {job.featured && <span className="eyebrow text-primary">Featured</span>}
+                    {job.urgent && <span className="eyebrow" style={{ color: 'hsl(var(--warning))' }}>Urgent</span>}
+                  </div>
+                  <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground">
+                    <span>{job.company}</span>
+                    <span className="inline-flex items-center gap-1"><MapPin size={12} />{job.location}</span>
+                    <span className="inline-flex items-center gap-1"><Clock size={12} />{job.posted}</span>
+                    {job.remote && <span>Remote</span>}
                   </div>
                 </div>
 
-                <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground mb-3">
-                  <span className="flex items-center gap-1"><MapPin size={12} />{job.location}</span>
-                  <span className="flex items-center gap-1"><Clock size={12} />{job.posted}</span>
-                </div>
+                <div className="hidden md:block text-sm text-muted-foreground min-w-[110px]">{job.type}</div>
+                <div className="hidden md:block text-sm font-medium text-foreground num min-w-[140px] text-right">{job.salary}</div>
 
-                <div className="flex flex-wrap gap-1.5 mb-4">
-                  {job.tags.map((tag) => (
-                    <span key={tag} className="text-[11px] px-2 py-0.5 rounded-md bg-secondary text-secondary-foreground font-medium">{tag}</span>
-                  ))}
+                <div className="flex items-center gap-3 justify-self-end">
+                  <button
+                    onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggleSave(job.id); }}
+                    className={`p-1.5 transition-colors ${isSaved(job.id) ? 'text-primary' : 'text-muted-foreground hover:text-foreground'}`}
+                    aria-label={isSaved(job.id) ? 'Unsave' : 'Save'}
+                  >
+                    <Bookmark size={16} className={isSaved(job.id) ? 'fill-primary' : ''} />
+                  </button>
+                  <ArrowUpRight size={16} className="text-muted-foreground group-hover:text-foreground transition-colors" />
                 </div>
-
-                <div className="flex items-center justify-between pt-3 border-t border-border">
-                  <span className="text-sm font-bold text-foreground">{job.salary}</span>
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggleSave(job.id); }}
-                      className={`p-1.5 rounded-lg transition-colors ${isSaved(job.id) ? 'bg-primary/10 text-primary' : 'hover:bg-secondary text-muted-foreground hover:text-foreground'}`}
-                    >
-                      <Bookmark size={16} className={isSaved(job.id) ? 'fill-primary' : ''} />
-                    </button>
-                    <span className="text-xs font-medium bg-secondary text-secondary-foreground px-3 py-1.5 rounded-lg">{job.type}</span>
-                  </div>
-                </div>
-              </motion.div>
-            </Link>
+              </Link>
+            </li>
           ))}
-        </div>
+        </ul>
 
         <div className="text-center mt-8 md:hidden">
-          <Link to="/jobs" className="inline-flex items-center gap-2 text-sm font-semibold text-primary">
-            View all jobs <ArrowRight size={16} />
+          <Link to="/jobs" className="inline-flex items-center gap-2 text-sm font-medium text-foreground border-b border-foreground pb-0.5">
+            View all jobs <ArrowUpRight size={14} />
           </Link>
         </div>
       </div>
