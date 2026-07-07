@@ -14,7 +14,63 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      scraped_jobs: {
+        Row: {
+          apply_url: string
+          category: string | null
+          company: string | null
+          created_at: string
+          description: string | null
+          id: string
+          job_type: string | null
+          location: string | null
+          posted_at: string | null
+          region: string | null
+          remote: boolean | null
+          salary: string | null
+          scraped_at: string
+          source_name: string
+          source_url: string | null
+          title: string
+        }
+        Insert: {
+          apply_url: string
+          category?: string | null
+          company?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          job_type?: string | null
+          location?: string | null
+          posted_at?: string | null
+          region?: string | null
+          remote?: boolean | null
+          salary?: string | null
+          scraped_at?: string
+          source_name: string
+          source_url?: string | null
+          title: string
+        }
+        Update: {
+          apply_url?: string
+          category?: string | null
+          company?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          job_type?: string | null
+          location?: string | null
+          posted_at?: string | null
+          region?: string | null
+          remote?: boolean | null
+          salary?: string | null
+          scraped_at?: string
+          source_name?: string
+          source_url?: string | null
+          title?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
