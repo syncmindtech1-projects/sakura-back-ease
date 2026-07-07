@@ -11,12 +11,14 @@ import Footer from "@/components/Footer";
 import AdsBanner from "@/components/AdsBanner";
 import VideoShowcase from "@/components/VideoShowcase";
 import VideoAdSection from "@/components/VideoAdSection";
+import LiveJobs from "@/components/LiveJobs";
 
 const Index = () => {
   return (
     <div className="min-h-screen">
       <Header />
       <Hero />
+      <LiveJobs limit={9} />
       <Stats />
       <AdsBanner variant="banner" adIndex={0} />
       <VideoShowcase />
