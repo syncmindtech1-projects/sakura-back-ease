@@ -143,12 +143,23 @@ const PostJob = () => {
                   </select>
                 </div>
               </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="text-sm font-medium text-foreground mb-1.5 block">Contact Email *</label>
+                  <input type="email" placeholder="hiring@yourcompany.com" value={formData.contact_email} onChange={(e) => setFormData({ ...formData, contact_email: e.target.value })} className="w-full px-4 py-3 rounded-xl bg-secondary border border-border text-sm text-foreground placeholder:text-muted-foreground outline-none focus:border-primary transition-colors" />
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-foreground mb-1.5 block">Apply URL (optional)</label>
+                  <input type="url" placeholder="https://…" value={formData.apply_url} onChange={(e) => setFormData({ ...formData, apply_url: e.target.value })} className="w-full px-4 py-3 rounded-xl bg-secondary border border-border text-sm text-foreground placeholder:text-muted-foreground outline-none focus:border-primary transition-colors" />
+                </div>
+              </div>
               <div>
                 <label className="text-sm font-medium text-foreground mb-1.5 block">Job Description *</label>
                 <textarea placeholder="Describe the role, responsibilities, requirements..." rows={6} value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} className="w-full px-4 py-3 rounded-xl bg-secondary border border-border text-sm text-foreground placeholder:text-muted-foreground outline-none focus:border-primary resize-none transition-colors" />
               </div>
-              <button onClick={handlePost} className="gradient-primary text-primary-foreground font-semibold px-8 py-3.5 rounded-xl hover:opacity-90 transition-opacity w-full inline-flex items-center gap-2 justify-center active:scale-[0.97]">
-                <Briefcase size={18} /> Post Job — {pricingPlans.find((p) => p.name === selectedPlan)?.price}
+              <p className="text-xs text-muted-foreground">Submissions are sent to our admin team at <strong>syncmindtech1@gmail.com</strong> for review. You'll be contacted at the email above once approved.</p>
+              <button onClick={handlePost} disabled={submitting} className="gradient-primary text-primary-foreground font-semibold px-8 py-3.5 rounded-xl hover:opacity-90 transition-opacity w-full inline-flex items-center gap-2 justify-center active:scale-[0.97] disabled:opacity-60">
+                <Briefcase size={18} /> {submitting ? "Submitting…" : `Submit for Review — ${pricingPlans.find((p) => p.name === selectedPlan)?.price}`}
               </button>
             </div>
           </motion.div>
