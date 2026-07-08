@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Briefcase, CheckCircle, Users, Zap, Eye, Star } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 const pricingPlans = [
   { name: "Basic", price: "$49", desc: "Single job post, 30-day listing", features: ["1 job post", "30-day visibility", "Basic analytics", "Email support"] },
