@@ -12,6 +12,7 @@ import AdsBanner from "@/components/AdsBanner";
 import VideoShowcase from "@/components/VideoShowcase";
 import VideoAdSection from "@/components/VideoAdSection";
 import LiveJobs from "@/components/LiveJobs";
+import SiteChatbot from "@/components/SiteChatbot";
 
 const Index = () => {
   return (
