@@ -14,16 +14,39 @@ const pricingPlans = [
 
 const PostJob = () => {
   const [selectedPlan, setSelectedPlan] = useState("Standard");
-  const [formData, setFormData] = useState({ title: "", company: "", location: "", salary: "", type: "Full-time", category: "Technology", description: "" });
+  const [submitting, setSubmitting] = useState(false);
+  const [formData, setFormData] = useState({ title: "", company: "", contact_email: "", location: "", salary: "", apply_url: "", type: "Full-time", category: "Technology", description: "" });
   const { toast } = useToast();
 
-  const handlePost = () => {
-    if (!formData.title || !formData.company || !formData.description) {
-      toast({ title: "Missing fields", description: "Please fill in all required fields.", variant: "destructive" });
+  const handlePost = async () => {
+    if (!formData.title || !formData.company || !formData.contact_email || !formData.description) {
+      toast({ title: "Missing fields", description: "Please fill in title, company, contact email, and description.", variant: "destructive" });
       return;
     }
-    toast({ title: "Job posted! 🎉", description: `${formData.title} at ${formData.company} is now live.` });
-    setFormData({ title: "", company: "", location: "", salary: "", type: "Full-time", category: "Technology", description: "" });
+    setSubmitting(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("submit-job", {
+        body: {
+          title: formData.title,
+          company: formData.company,
+          contact_email: formData.contact_email,
+          location: formData.location,
+          salary: formData.salary,
+          apply_url: formData.apply_url,
+          job_type: formData.type,
+          category: formData.category,
+          description: formData.description,
+          plan: selectedPlan,
+        },
+      });
+      if (error) throw error;
+      toast({ title: "Submitted for review 🎉", description: `Thanks! Our admin team (syncmindtech1@gmail.com) will review "${formData.title}" and publish it shortly.` });
+      setFormData({ title: "", company: "", contact_email: "", location: "", salary: "", apply_url: "", type: "Full-time", category: "Technology", description: "" });
+    } catch (e: any) {
+      toast({ title: "Submission failed", description: e?.message ?? "Please try again.", variant: "destructive" });
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
