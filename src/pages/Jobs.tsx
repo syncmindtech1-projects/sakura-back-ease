@@ -51,7 +51,7 @@ const Jobs = () => {
             Browse All Jobs
           </motion.h1>
           <p className="text-primary-foreground/80 mb-6">Discover opportunities across every industry</p>
-          <motion.div className="bg-card rounded-2xl shadow-card p-2 flex flex-col md:flex-row gap-2 max-w-3xl" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
+          <motion.div className="bg-card text-foreground rounded-2xl shadow-card p-2 flex flex-col md:flex-row gap-2 max-w-3xl" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
             <div className="flex-1 flex items-center gap-3 px-4 py-3 rounded-xl bg-secondary/50">
               <Search size={18} className="text-muted-foreground" />
               <input type="text" placeholder="Search job title, company, or keyword..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="bg-transparent w-full text-sm text-foreground placeholder:text-muted-foreground outline-none" />
