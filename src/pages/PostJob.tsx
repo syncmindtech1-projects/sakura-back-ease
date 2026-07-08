@@ -51,20 +51,20 @@ const PostJob = () => {
 
   return (
     <PageLayout>
-      <section className="bg-gradient-to-br from-[hsl(45,40%,96%)] to-[hsl(160,25%,95%)] py-10 md:py-14">
+      <section className="bg-primary text-primary-foreground py-10 md:py-14">
         <div className="container mx-auto px-4 md:px-8">
-          <motion.h1 className="text-3xl md:text-5xl font-bold font-display text-foreground mb-2" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+          <motion.h1 className="text-3xl md:text-5xl font-bold font-display mb-2" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
             Post a Job
           </motion.h1>
-          <p className="text-lg text-muted-foreground">Reach 3.2M+ qualified candidates across every industry</p>
+          <p className="text-lg text-primary-foreground/80">Reach 3.2M+ qualified candidates across every industry</p>
           <div className="flex flex-wrap gap-4 mt-6">
             {[
               { icon: Users, label: "3.2M+ job seekers" },
-              { icon: Zap, label: "Go live in minutes" },
+              { icon: Zap, label: "Reviewed by admin within 24h" },
               { icon: Eye, label: "Maximum exposure" },
             ].map((item) => (
-              <div key={item.label} className="flex items-center gap-2 text-sm text-muted-foreground">
-                <item.icon size={16} className="text-primary" />
+              <div key={item.label} className="flex items-center gap-2 text-sm text-primary-foreground/90">
+                <item.icon size={16} />
                 {item.label}
               </div>
             ))}
