@@ -45,12 +45,12 @@ const Jobs = () => {
 
   return (
     <PageLayout>
-      <section className="bg-gradient-to-br from-[hsl(45,40%,96%)] via-[hsl(160,25%,95%)] to-[hsl(45,40%,96%)] py-10 md:py-14">
+      <section className="bg-primary text-primary-foreground py-10 md:py-14">
         <div className="container mx-auto px-4 md:px-8">
-          <motion.h1 className="text-3xl md:text-5xl font-bold font-display text-foreground mb-2" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+          <motion.h1 className="text-3xl md:text-5xl font-bold font-display mb-2" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
             Browse All Jobs
           </motion.h1>
-          <p className="text-muted-foreground mb-6">Discover opportunities across every industry</p>
+          <p className="text-primary-foreground/80 mb-6">Discover opportunities across every industry</p>
           <motion.div className="bg-card rounded-2xl shadow-card p-2 flex flex-col md:flex-row gap-2 max-w-3xl" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
             <div className="flex-1 flex items-center gap-3 px-4 py-3 rounded-xl bg-secondary/50">
               <Search size={18} className="text-muted-foreground" />
