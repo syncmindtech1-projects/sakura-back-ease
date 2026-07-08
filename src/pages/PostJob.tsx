@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Briefcase, CheckCircle, Users, Zap, Eye, Star } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 const pricingPlans = [
   { name: "Basic", price: "$49", desc: "Single job post, 30-day listing", features: ["1 job post", "30-day visibility", "Basic analytics", "Email support"] },
@@ -13,34 +14,57 @@ const pricingPlans = [
 
 const PostJob = () => {
   const [selectedPlan, setSelectedPlan] = useState("Standard");
-  const [formData, setFormData] = useState({ title: "", company: "", location: "", salary: "", type: "Full-time", category: "Technology", description: "" });
+  const [submitting, setSubmitting] = useState(false);
+  const [formData, setFormData] = useState({ title: "", company: "", contact_email: "", location: "", salary: "", apply_url: "", type: "Full-time", category: "Technology", description: "" });
   const { toast } = useToast();
 
-  const handlePost = () => {
-    if (!formData.title || !formData.company || !formData.description) {
-      toast({ title: "Missing fields", description: "Please fill in all required fields.", variant: "destructive" });
+  const handlePost = async () => {
+    if (!formData.title || !formData.company || !formData.contact_email || !formData.description) {
+      toast({ title: "Missing fields", description: "Please fill in title, company, contact email, and description.", variant: "destructive" });
       return;
     }
-    toast({ title: "Job posted! 🎉", description: `${formData.title} at ${formData.company} is now live.` });
-    setFormData({ title: "", company: "", location: "", salary: "", type: "Full-time", category: "Technology", description: "" });
+    setSubmitting(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("submit-job", {
+        body: {
+          title: formData.title,
+          company: formData.company,
+          contact_email: formData.contact_email,
+          location: formData.location,
+          salary: formData.salary,
+          apply_url: formData.apply_url,
+          job_type: formData.type,
+          category: formData.category,
+          description: formData.description,
+          plan: selectedPlan,
+        },
+      });
+      if (error) throw error;
+      toast({ title: "Submitted for review 🎉", description: `Thanks! Our admin team (syncmindtech1@gmail.com) will review "${formData.title}" and publish it shortly.` });
+      setFormData({ title: "", company: "", contact_email: "", location: "", salary: "", apply_url: "", type: "Full-time", category: "Technology", description: "" });
+    } catch (e: any) {
+      toast({ title: "Submission failed", description: e?.message ?? "Please try again.", variant: "destructive" });
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
     <PageLayout>
-      <section className="bg-gradient-to-br from-[hsl(45,40%,96%)] to-[hsl(160,25%,95%)] py-10 md:py-14">
+      <section className="bg-primary text-primary-foreground py-10 md:py-14">
         <div className="container mx-auto px-4 md:px-8">
-          <motion.h1 className="text-3xl md:text-5xl font-bold font-display text-foreground mb-2" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+          <motion.h1 className="text-3xl md:text-5xl font-bold font-display mb-2" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
             Post a Job
           </motion.h1>
-          <p className="text-lg text-muted-foreground">Reach 3.2M+ qualified candidates across every industry</p>
+          <p className="text-lg text-primary-foreground/80">Reach 3.2M+ qualified candidates across every industry</p>
           <div className="flex flex-wrap gap-4 mt-6">
             {[
               { icon: Users, label: "3.2M+ job seekers" },
-              { icon: Zap, label: "Go live in minutes" },
+              { icon: Zap, label: "Reviewed by admin within 24h" },
               { icon: Eye, label: "Maximum exposure" },
             ].map((item) => (
-              <div key={item.label} className="flex items-center gap-2 text-sm text-muted-foreground">
-                <item.icon size={16} className="text-primary" />
+              <div key={item.label} className="flex items-center gap-2 text-sm text-primary-foreground/90">
+                <item.icon size={16} />
                 {item.label}
               </div>
             ))}
@@ -119,12 +143,23 @@ const PostJob = () => {
                   </select>
                 </div>
               </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="text-sm font-medium text-foreground mb-1.5 block">Contact Email *</label>
+                  <input type="email" placeholder="hiring@yourcompany.com" value={formData.contact_email} onChange={(e) => setFormData({ ...formData, contact_email: e.target.value })} className="w-full px-4 py-3 rounded-xl bg-secondary border border-border text-sm text-foreground placeholder:text-muted-foreground outline-none focus:border-primary transition-colors" />
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-foreground mb-1.5 block">Apply URL (optional)</label>
+                  <input type="url" placeholder="https://…" value={formData.apply_url} onChange={(e) => setFormData({ ...formData, apply_url: e.target.value })} className="w-full px-4 py-3 rounded-xl bg-secondary border border-border text-sm text-foreground placeholder:text-muted-foreground outline-none focus:border-primary transition-colors" />
+                </div>
+              </div>
               <div>
                 <label className="text-sm font-medium text-foreground mb-1.5 block">Job Description *</label>
                 <textarea placeholder="Describe the role, responsibilities, requirements..." rows={6} value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} className="w-full px-4 py-3 rounded-xl bg-secondary border border-border text-sm text-foreground placeholder:text-muted-foreground outline-none focus:border-primary resize-none transition-colors" />
               </div>
-              <button onClick={handlePost} className="gradient-primary text-primary-foreground font-semibold px-8 py-3.5 rounded-xl hover:opacity-90 transition-opacity w-full inline-flex items-center gap-2 justify-center active:scale-[0.97]">
-                <Briefcase size={18} /> Post Job — {pricingPlans.find((p) => p.name === selectedPlan)?.price}
+              <p className="text-xs text-muted-foreground">Submissions are sent to our admin team at <strong>syncmindtech1@gmail.com</strong> for review. You'll be contacted at the email above once approved.</p>
+              <button onClick={handlePost} disabled={submitting} className="gradient-primary text-primary-foreground font-semibold px-8 py-3.5 rounded-xl hover:opacity-90 transition-opacity w-full inline-flex items-center gap-2 justify-center active:scale-[0.97] disabled:opacity-60">
+                <Briefcase size={18} /> {submitting ? "Submitting…" : `Submit for Review — ${pricingPlans.find((p) => p.name === selectedPlan)?.price}`}
               </button>
             </div>
           </motion.div>

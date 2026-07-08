@@ -1,5 +1,6 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import SiteChatbot from "@/components/SiteChatbot";
 import { ReactNode } from "react";
 
 const PageLayout = ({ children }: { children: ReactNode }) => (
@@ -7,6 +8,7 @@ const PageLayout = ({ children }: { children: ReactNode }) => (
     <Header />
     <main className="flex-1">{children}</main>
     <Footer />
+    <SiteChatbot />
   </div>
 );
 
