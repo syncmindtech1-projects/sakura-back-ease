@@ -14,6 +14,54 @@ export type Database = {
   }
   public: {
     Tables: {
+      job_submissions: {
+        Row: {
+          apply_url: string | null
+          category: string | null
+          company: string
+          contact_email: string
+          created_at: string
+          description: string
+          id: string
+          job_type: string | null
+          location: string | null
+          plan: string | null
+          salary: string | null
+          status: string
+          title: string
+        }
+        Insert: {
+          apply_url?: string | null
+          category?: string | null
+          company: string
+          contact_email: string
+          created_at?: string
+          description: string
+          id?: string
+          job_type?: string | null
+          location?: string | null
+          plan?: string | null
+          salary?: string | null
+          status?: string
+          title: string
+        }
+        Update: {
+          apply_url?: string | null
+          category?: string | null
+          company?: string
+          contact_email?: string
+          created_at?: string
+          description?: string
+          id?: string
+          job_type?: string | null
+          location?: string | null
+          plan?: string | null
+          salary?: string | null
+          status?: string
+          title?: string
+        }
+        Relationships: []
+      }
       scraped_jobs: {
         Row: {
           apply_url: string
