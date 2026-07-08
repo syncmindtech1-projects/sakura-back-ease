@@ -139,9 +139,18 @@ const Jobs = () => {
                           >
                             <Bookmark size={16} className={isSaved(job.id) ? 'fill-primary' : ''} />
                           </button>
-                          <Link to={`/jobs/${job.id}`} onClick={(e) => e.stopPropagation()} className="inline-flex items-center gap-1 text-xs font-semibold gradient-primary text-primary-foreground px-4 py-2 rounded-lg hover:opacity-90 transition-opacity active:scale-95">
-                            View Details
+                          <Link to={`/jobs/${job.id}`} onClick={(e) => e.stopPropagation()} className="inline-flex items-center gap-1 text-xs font-semibold border border-border text-foreground px-3 py-2 rounded-lg hover:bg-secondary transition-colors">
+                            Details
                           </Link>
+                          <a
+                            href={job.applyUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            className="inline-flex items-center gap-1.5 text-xs font-semibold gradient-primary text-primary-foreground px-4 py-2 rounded-lg hover:opacity-90 transition-opacity active:scale-95"
+                          >
+                            Apply <ExternalLink size={12} />
+                          </a>
                         </div>
                       </div>
                     </Link>
