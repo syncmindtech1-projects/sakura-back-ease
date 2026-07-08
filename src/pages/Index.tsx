@@ -34,6 +34,7 @@ const Index = () => {
       <Newsletter />
       <CTASection />
       <Footer />
+      <SiteChatbot />
     </div>
   );
 };
