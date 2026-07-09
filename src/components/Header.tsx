@@ -416,10 +416,20 @@ const Header = () => {
                 <Link to="/saved-jobs" onClick={() => setMenuOpen(false)} className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl bg-secondary text-foreground font-medium text-sm">
                   <Heart size={16} /> Saved ({savedCount})
                 </Link>
-                <Link to="/saved-jobs" onClick={() => setMenuOpen(false)} className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl bg-secondary text-foreground font-medium text-sm">
-                  <Bell size={16} /> Alerts ({savedCount})
+                <Link to={user ? "/notifications" : "/auth"} onClick={() => setMenuOpen(false)} className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl bg-secondary text-foreground font-medium text-sm">
+                  <Bell size={16} /> Alerts{unreadCount > 0 ? ` (${unreadCount})` : ""}
                 </Link>
               </div>
+              {user ? (
+                <button onClick={() => { setMenuOpen(false); signOut(); }} className="w-full block text-center bg-secondary text-foreground font-semibold text-sm py-3 rounded-xl">
+                  Signed in as {displayName} — Sign out
+                </button>
+              ) : (
+                <div className="flex gap-2">
+                  <Link to="/auth" onClick={() => setMenuOpen(false)} className="flex-1 text-center bg-secondary text-foreground font-semibold text-sm py-3 rounded-xl">Login</Link>
+                  <Link to="/auth?mode=register" onClick={() => setMenuOpen(false)} className="flex-1 text-center bg-primary text-primary-foreground font-semibold text-sm py-3 rounded-xl">Register</Link>
+                </div>
+              )}
               <Link to="/post-job" onClick={() => setMenuOpen(false)} className="block text-center gradient-primary text-primary-foreground font-semibold text-sm py-3.5 rounded-xl">
                 Post a Job — It's Free
               </Link>
