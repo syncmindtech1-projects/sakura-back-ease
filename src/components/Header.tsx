@@ -174,9 +174,22 @@ const Header = () => {
               </span>
               <span className="sm:hidden text-xs font-semibold">🌍 {newJobsCount} new jobs today!</span>
             </div>
-            <div className="flex items-center gap-3 md:gap-5">
-              <Link to="/jobs" className="hover:underline font-bold hidden md:inline text-sm bg-white/10 px-3 py-1 rounded-full hover:bg-white/20 transition-colors">Register</Link>
-              <Link to="/jobs" className="hover:underline font-bold hidden md:inline text-sm">Login</Link>
+            <div className="flex items-center gap-3 md:gap-4">
+              {user ? (
+                <>
+                  <span className="hidden md:inline text-sm font-semibold">
+                    👋 Hi, <span className="text-accent">{displayName}</span>
+                  </span>
+                  <button onClick={() => signOut()} className="hidden md:inline-flex items-center gap-1 hover:underline font-bold text-sm bg-white/10 px-3 py-1 rounded-full hover:bg-white/20 transition-colors">
+                    <LogOut size={12} /> Logout
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link to="/auth?mode=register" className="hover:underline font-bold hidden md:inline text-sm bg-white/10 px-3 py-1 rounded-full hover:bg-white/20 transition-colors">Register</Link>
+                  <Link to="/auth" className="hover:underline font-bold hidden md:inline text-sm">Login</Link>
+                </>
+              )}
               <div className="flex items-center gap-1 text-primary-foreground/70 text-sm"><Globe size={13} /><span>EN</span></div>
             </div>
           </div>
