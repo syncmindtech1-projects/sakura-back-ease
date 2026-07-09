@@ -259,12 +259,34 @@ const Header = () => {
               )}
             </Link>
 
-            <Link to="/saved-jobs" className="p-2.5 rounded-xl hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors relative">
+            <Link to={user ? "/notifications" : "/auth"} className="p-2.5 rounded-xl hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors relative" title="Notifications">
               <Bell size={20} />
-              {savedCount > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] flex items-center justify-center rounded-full gradient-warm text-primary-foreground text-[10px] font-bold px-1">{savedCount}</span>
+              {unreadCount > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] flex items-center justify-center rounded-full gradient-warm text-primary-foreground text-[10px] font-bold px-1">{unreadCount}</span>
               )}
             </Link>
+
+            {user ? (
+              <div className="relative">
+                <button onClick={() => setUserMenuOpen(!userMenuOpen)} className="flex items-center gap-2 ml-1 pl-2 pr-3 py-1.5 rounded-xl hover:bg-secondary transition-colors">
+                  <div className="w-7 h-7 rounded-full gradient-primary flex items-center justify-center text-primary-foreground text-xs font-bold">{displayName[0]?.toUpperCase()}</div>
+                  <span className="text-sm font-semibold text-foreground max-w-[120px] truncate">{displayName}</span>
+                  <ChevronDown size={14} className="text-muted-foreground" />
+                </button>
+                <AnimatePresence>
+                  {userMenuOpen && (
+                    <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 6 }} className="absolute right-0 top-full mt-2 w-56 bg-card rounded-xl shadow-elevated border border-border p-2 z-50">
+                      <Link to="/saved-jobs" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-2 px-3 py-2 text-sm text-foreground rounded-lg hover:bg-secondary"><Heart size={14} /> Saved Jobs</Link>
+                      <Link to="/notifications" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-2 px-3 py-2 text-sm text-foreground rounded-lg hover:bg-secondary"><Bell size={14} /> Notifications</Link>
+                      <Link to="/post-job" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-2 px-3 py-2 text-sm text-foreground rounded-lg hover:bg-secondary"><UserIcon size={14} /> Post a Job</Link>
+                      <button onClick={() => { setUserMenuOpen(false); signOut(); }} className="w-full flex items-center gap-2 px-3 py-2 text-sm text-destructive rounded-lg hover:bg-destructive/10"><LogOut size={14} /> Sign out</button>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            ) : (
+              <Link to="/auth" className="text-sm font-semibold text-foreground hover:text-primary px-3 py-2">Login</Link>
+            )}
 
             <Link to="/post-job" className="gradient-primary text-primary-foreground font-semibold text-sm px-5 py-2.5 rounded-xl hover:opacity-90 transition-opacity ml-1">Post a Job</Link>
           </div>
@@ -277,10 +299,10 @@ const Header = () => {
                 <span className="absolute -top-0.5 -right-0.5 min-w-[16px] h-[16px] flex items-center justify-center rounded-full gradient-primary text-primary-foreground text-[9px] font-bold px-0.5">{savedCount}</span>
               )}
             </Link>
-            <Link to="/saved-jobs" className="p-2 rounded-xl hover:bg-secondary text-muted-foreground relative">
+            <Link to={user ? "/notifications" : "/auth"} className="p-2 rounded-xl hover:bg-secondary text-muted-foreground relative">
               <Bell size={20} />
-              {savedCount > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 min-w-[16px] h-[16px] flex items-center justify-center rounded-full gradient-warm text-primary-foreground text-[9px] font-bold px-0.5">{savedCount}</span>
+              {unreadCount > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 min-w-[16px] h-[16px] flex items-center justify-center rounded-full gradient-warm text-primary-foreground text-[9px] font-bold px-0.5">{unreadCount}</span>
               )}
             </Link>
             <button onClick={() => setMenuOpen(!menuOpen)} className="p-2 text-foreground" aria-label="Toggle menu">
