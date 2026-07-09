@@ -2,7 +2,7 @@ import PageLayout from "@/components/PageLayout";
 import { useParams, Link } from "react-router-dom";
 import { featuredJobs } from "@/lib/jobData";
 import { motion } from "framer-motion";
-import { MapPin, Clock, Briefcase, Bookmark, ArrowLeft, Share2, Building2, DollarSign, Tag } from "lucide-react";
+import { MapPin, Clock, Briefcase, Bookmark, ArrowLeft, Share2, Building2, DollarSign, Tag, ExternalLink } from "lucide-react";
 import AdsBanner from "@/components/AdsBanner";
 import { useSavedJobs } from "@/contexts/SavedJobsContext";
 import { useToast } from "@/hooks/use-toast";
@@ -74,6 +74,11 @@ const JobDetail = () => {
               </div>
             </div>
             <div className="flex flex-row md:flex-col gap-3 shrink-0">
+              {job.applyUrl && (
+                <a href={job.applyUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 gradient-primary text-primary-foreground font-semibold text-sm px-4 py-3 rounded-xl hover:opacity-90 transition-opacity">
+                  <ExternalLink size={16} /> Apply Now
+                </a>
+              )}
               <button onClick={handleSave} className={`inline-flex items-center gap-2 font-medium text-sm px-4 py-3 rounded-xl transition-colors ${isSaved(job.id) ? 'bg-primary/10 text-primary' : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'}`}>
                 <Bookmark size={16} className={isSaved(job.id) ? 'fill-primary' : ''} /> {isSaved(job.id) ? 'Saved' : 'Save Job'}
               </button>
@@ -131,9 +136,14 @@ const JobDetail = () => {
 
               <motion.div className="bg-gradient-to-r from-[hsl(var(--primary)/0.1)] to-[hsl(var(--accent)/0.1)] rounded-2xl border border-primary/20 p-8 text-center" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
                 <h3 className="text-xl font-bold text-foreground mb-2">Interested in this position?</h3>
-                <p className="text-sm text-muted-foreground mb-4">Save this job to your shortlist or browse more openings</p>
+                <p className="text-sm text-muted-foreground mb-4">Apply directly on the employer's site, save it for later, or explore more roles.</p>
                 <div className="flex flex-wrap items-center justify-center gap-3">
-                  <button onClick={handleSave} className={`inline-flex items-center gap-2 font-semibold px-6 py-3 rounded-xl transition-colors ${isSaved(job.id) ? 'bg-primary/10 text-primary' : 'gradient-primary text-primary-foreground hover:opacity-90'}`}>
+                  {job.applyUrl && (
+                    <a href={job.applyUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 gradient-primary text-primary-foreground font-semibold px-6 py-3 rounded-xl hover:opacity-90 transition-opacity">
+                      <ExternalLink size={16} /> Apply Now
+                    </a>
+                  )}
+                  <button onClick={handleSave} className={`inline-flex items-center gap-2 font-semibold px-6 py-3 rounded-xl transition-colors ${isSaved(job.id) ? 'bg-primary/10 text-primary' : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'}`}>
                     <Bookmark size={16} className={isSaved(job.id) ? 'fill-primary' : ''} /> {isSaved(job.id) ? 'Saved' : 'Save Job'}
                   </button>
                   <Link to="/jobs" className="inline-flex items-center gap-2 bg-secondary text-secondary-foreground font-semibold px-6 py-3 rounded-xl hover:bg-secondary/80 transition-colors">
