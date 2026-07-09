@@ -1,8 +1,10 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Menu, X, ChevronDown, ChevronRight, Search, Bell, Heart, Globe } from "lucide-react";
+import { Menu, X, ChevronDown, ChevronRight, Search, Bell, Heart, Globe, LogOut, User as UserIcon } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSavedJobs } from "@/contexts/SavedJobsContext";
+import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
 import MegaMenuJobs from "@/components/MegaMenuJobs";
 import MegaMenuCategories from "@/components/MegaMenuCategories";
 import MegaMenuCompanies from "@/components/MegaMenuCompanies";
@@ -46,8 +48,9 @@ const mobileSubMenus: Record<string, { label: string; href: string; icon: string
   Resources: [
     { label: "Career Advice", href: "/career-advice", icon: "📖" },
     { label: "Resume Builder", href: "/resume-builder", icon: "📝" },
-    { label: "Salary Guide", href: "/salary-guide", icon: "💵" },
     { label: "Interview Prep", href: "/interview-prep", icon: "🎯" },
+    { label: "Skills Assessment", href: "/skills-assessment", icon: "🧠" },
+    { label: "Learning Paths", href: "/learning-paths", icon: "🎓" },
   ],
 };
 
@@ -60,6 +63,25 @@ const Header = () => {
   const megaTimeout = useRef<ReturnType<typeof setTimeout>>();
   const navigate = useNavigate();
   const { savedCount } = useSavedJobs();
+  const { user, profile, signOut } = useAuth();
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const displayName = profile?.full_name || user?.email?.split("@")[0] || "";
+
+  useEffect(() => {
+    if (!user) { setUnreadCount(0); return; }
+    let cancelled = false;
+    const load = async () => {
+      const { count } = await supabase.from("notifications").select("id", { count: "exact", head: true }).eq("user_id", user.id).eq("read", false);
+      if (!cancelled) setUnreadCount(count ?? 0);
+    };
+    load();
+    const ch = supabase.channel("nav-notifs")
+      .on("postgres_changes", { event: "INSERT", schema: "public", table: "notifications", filter: `user_id=eq.${user.id}` },
+        () => setUnreadCount((c) => c + 1))
+      .subscribe();
+    return () => { cancelled = true; supabase.removeChannel(ch); };
+  }, [user]);
 
   const newJobsCount = Math.min(totalJobs, 24);
 
@@ -152,9 +174,22 @@ const Header = () => {
               </span>
               <span className="sm:hidden text-xs font-semibold">🌍 {newJobsCount} new jobs today!</span>
             </div>
-            <div className="flex items-center gap-3 md:gap-5">
-              <Link to="/jobs" className="hover:underline font-bold hidden md:inline text-sm bg-white/10 px-3 py-1 rounded-full hover:bg-white/20 transition-colors">Register</Link>
-              <Link to="/jobs" className="hover:underline font-bold hidden md:inline text-sm">Login</Link>
+            <div className="flex items-center gap-3 md:gap-4">
+              {user ? (
+                <>
+                  <span className="hidden md:inline text-sm font-semibold">
+                    👋 Hi, <span className="text-accent">{displayName}</span>
+                  </span>
+                  <button onClick={() => signOut()} className="hidden md:inline-flex items-center gap-1 hover:underline font-bold text-sm bg-white/10 px-3 py-1 rounded-full hover:bg-white/20 transition-colors">
+                    <LogOut size={12} /> Logout
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link to="/auth?mode=register" className="hover:underline font-bold hidden md:inline text-sm bg-white/10 px-3 py-1 rounded-full hover:bg-white/20 transition-colors">Register</Link>
+                  <Link to="/auth" className="hover:underline font-bold hidden md:inline text-sm">Login</Link>
+                </>
+              )}
               <div className="flex items-center gap-1 text-primary-foreground/70 text-sm"><Globe size={13} /><span>EN</span></div>
             </div>
           </div>
@@ -224,12 +259,34 @@ const Header = () => {
               )}
             </Link>
 
-            <Link to="/saved-jobs" className="p-2.5 rounded-xl hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors relative">
+            <Link to={user ? "/notifications" : "/auth"} className="p-2.5 rounded-xl hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors relative" title="Notifications">
               <Bell size={20} />
-              {savedCount > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] flex items-center justify-center rounded-full gradient-warm text-primary-foreground text-[10px] font-bold px-1">{savedCount}</span>
+              {unreadCount > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] flex items-center justify-center rounded-full gradient-warm text-primary-foreground text-[10px] font-bold px-1">{unreadCount}</span>
               )}
             </Link>
+
+            {user ? (
+              <div className="relative">
+                <button onClick={() => setUserMenuOpen(!userMenuOpen)} className="flex items-center gap-2 ml-1 pl-2 pr-3 py-1.5 rounded-xl hover:bg-secondary transition-colors">
+                  <div className="w-7 h-7 rounded-full gradient-primary flex items-center justify-center text-primary-foreground text-xs font-bold">{displayName[0]?.toUpperCase()}</div>
+                  <span className="text-sm font-semibold text-foreground max-w-[120px] truncate">{displayName}</span>
+                  <ChevronDown size={14} className="text-muted-foreground" />
+                </button>
+                <AnimatePresence>
+                  {userMenuOpen && (
+                    <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 6 }} className="absolute right-0 top-full mt-2 w-56 bg-card rounded-xl shadow-elevated border border-border p-2 z-50">
+                      <Link to="/saved-jobs" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-2 px-3 py-2 text-sm text-foreground rounded-lg hover:bg-secondary"><Heart size={14} /> Saved Jobs</Link>
+                      <Link to="/notifications" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-2 px-3 py-2 text-sm text-foreground rounded-lg hover:bg-secondary"><Bell size={14} /> Notifications</Link>
+                      <Link to="/post-job" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-2 px-3 py-2 text-sm text-foreground rounded-lg hover:bg-secondary"><UserIcon size={14} /> Post a Job</Link>
+                      <button onClick={() => { setUserMenuOpen(false); signOut(); }} className="w-full flex items-center gap-2 px-3 py-2 text-sm text-destructive rounded-lg hover:bg-destructive/10"><LogOut size={14} /> Sign out</button>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            ) : (
+              <Link to="/auth" className="text-sm font-semibold text-foreground hover:text-primary px-3 py-2">Login</Link>
+            )}
 
             <Link to="/post-job" className="gradient-primary text-primary-foreground font-semibold text-sm px-5 py-2.5 rounded-xl hover:opacity-90 transition-opacity ml-1">Post a Job</Link>
           </div>
@@ -242,10 +299,10 @@ const Header = () => {
                 <span className="absolute -top-0.5 -right-0.5 min-w-[16px] h-[16px] flex items-center justify-center rounded-full gradient-primary text-primary-foreground text-[9px] font-bold px-0.5">{savedCount}</span>
               )}
             </Link>
-            <Link to="/saved-jobs" className="p-2 rounded-xl hover:bg-secondary text-muted-foreground relative">
+            <Link to={user ? "/notifications" : "/auth"} className="p-2 rounded-xl hover:bg-secondary text-muted-foreground relative">
               <Bell size={20} />
-              {savedCount > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 min-w-[16px] h-[16px] flex items-center justify-center rounded-full gradient-warm text-primary-foreground text-[9px] font-bold px-0.5">{savedCount}</span>
+              {unreadCount > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 min-w-[16px] h-[16px] flex items-center justify-center rounded-full gradient-warm text-primary-foreground text-[9px] font-bold px-0.5">{unreadCount}</span>
               )}
             </Link>
             <button onClick={() => setMenuOpen(!menuOpen)} className="p-2 text-foreground" aria-label="Toggle menu">
@@ -359,10 +416,20 @@ const Header = () => {
                 <Link to="/saved-jobs" onClick={() => setMenuOpen(false)} className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl bg-secondary text-foreground font-medium text-sm">
                   <Heart size={16} /> Saved ({savedCount})
                 </Link>
-                <Link to="/saved-jobs" onClick={() => setMenuOpen(false)} className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl bg-secondary text-foreground font-medium text-sm">
-                  <Bell size={16} /> Alerts ({savedCount})
+                <Link to={user ? "/notifications" : "/auth"} onClick={() => setMenuOpen(false)} className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl bg-secondary text-foreground font-medium text-sm">
+                  <Bell size={16} /> Alerts{unreadCount > 0 ? ` (${unreadCount})` : ""}
                 </Link>
               </div>
+              {user ? (
+                <button onClick={() => { setMenuOpen(false); signOut(); }} className="w-full block text-center bg-secondary text-foreground font-semibold text-sm py-3 rounded-xl">
+                  Signed in as {displayName} — Sign out
+                </button>
+              ) : (
+                <div className="flex gap-2">
+                  <Link to="/auth" onClick={() => setMenuOpen(false)} className="flex-1 text-center bg-secondary text-foreground font-semibold text-sm py-3 rounded-xl">Login</Link>
+                  <Link to="/auth?mode=register" onClick={() => setMenuOpen(false)} className="flex-1 text-center bg-primary text-primary-foreground font-semibold text-sm py-3 rounded-xl">Register</Link>
+                </div>
+              )}
               <Link to="/post-job" onClick={() => setMenuOpen(false)} className="block text-center gradient-primary text-primary-foreground font-semibold text-sm py-3.5 rounded-xl">
                 Post a Job — It's Free
               </Link>
