@@ -62,6 +62,111 @@ export type Database = {
         }
         Relationships: []
       }
+      notifications: {
+        Row: {
+          body: string | null
+          created_at: string
+          id: string
+          link: string | null
+          read: boolean
+          title: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          link?: string | null
+          read?: boolean
+          title: string
+          type?: string
+          user_id: string
+        }
+        Update: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          link?: string | null
+          read?: boolean
+          title?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      posted_jobs: {
+        Row: {
+          apply_url: string | null
+          category: string | null
+          company: string
+          contact_email: string
+          created_at: string
+          description: string
+          id: string
+          job_type: string | null
+          location: string | null
+          posted_by: string | null
+          salary: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          apply_url?: string | null
+          category?: string | null
+          company: string
+          contact_email: string
+          created_at?: string
+          description: string
+          id?: string
+          job_type?: string | null
+          location?: string | null
+          posted_by?: string | null
+          salary?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          apply_url?: string | null
+          category?: string | null
+          company?: string
+          contact_email?: string
+          created_at?: string
+          description?: string
+          id?: string
+          job_type?: string | null
+          location?: string | null
+          posted_by?: string | null
+          salary?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          full_name: string | null
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          full_name?: string | null
+          id: string
+          updated_at?: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          full_name?: string | null
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       scraped_jobs: {
         Row: {
           apply_url: string
