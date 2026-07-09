@@ -63,6 +63,25 @@ const Header = () => {
   const megaTimeout = useRef<ReturnType<typeof setTimeout>>();
   const navigate = useNavigate();
   const { savedCount } = useSavedJobs();
+  const { user, profile, signOut } = useAuth();
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const displayName = profile?.full_name || user?.email?.split("@")[0] || "";
+
+  useEffect(() => {
+    if (!user) { setUnreadCount(0); return; }
+    let cancelled = false;
+    const load = async () => {
+      const { count } = await supabase.from("notifications").select("id", { count: "exact", head: true }).eq("user_id", user.id).eq("read", false);
+      if (!cancelled) setUnreadCount(count ?? 0);
+    };
+    load();
+    const ch = supabase.channel("nav-notifs")
+      .on("postgres_changes", { event: "INSERT", schema: "public", table: "notifications", filter: `user_id=eq.${user.id}` },
+        () => setUnreadCount((c) => c + 1))
+      .subscribe();
+    return () => { cancelled = true; supabase.removeChannel(ch); };
+  }, [user]);
 
   const newJobsCount = Math.min(totalJobs, 24);
 
