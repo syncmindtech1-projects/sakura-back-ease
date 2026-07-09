@@ -1,8 +1,10 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Menu, X, ChevronDown, ChevronRight, Search, Bell, Heart, Globe } from "lucide-react";
+import { Menu, X, ChevronDown, ChevronRight, Search, Bell, Heart, Globe, LogOut, User as UserIcon } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSavedJobs } from "@/contexts/SavedJobsContext";
+import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
 import MegaMenuJobs from "@/components/MegaMenuJobs";
 import MegaMenuCategories from "@/components/MegaMenuCategories";
 import MegaMenuCompanies from "@/components/MegaMenuCompanies";
@@ -46,8 +48,9 @@ const mobileSubMenus: Record<string, { label: string; href: string; icon: string
   Resources: [
     { label: "Career Advice", href: "/career-advice", icon: "📖" },
     { label: "Resume Builder", href: "/resume-builder", icon: "📝" },
-    { label: "Salary Guide", href: "/salary-guide", icon: "💵" },
     { label: "Interview Prep", href: "/interview-prep", icon: "🎯" },
+    { label: "Skills Assessment", href: "/skills-assessment", icon: "🧠" },
+    { label: "Learning Paths", href: "/learning-paths", icon: "🎓" },
   ],
 };
 
