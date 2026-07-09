@@ -4,13 +4,13 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { SavedJobsProvider } from "@/contexts/SavedJobsContext";
+import { AuthProvider } from "@/hooks/useAuth";
 import Index from "./pages/Index";
 import Jobs from "./pages/Jobs";
 import JobDetail from "./pages/JobDetail";
 import Categories from "./pages/Categories";
 import Companies from "./pages/Companies";
 import RemoteJobs from "./pages/RemoteJobs";
-import SalaryGuide from "./pages/SalaryGuide";
 import CareerAdvice from "./pages/CareerAdvice";
 import ResumeBuilder from "./pages/ResumeBuilder";
 import JobAlerts from "./pages/JobAlerts";
@@ -22,6 +22,8 @@ import SkillsAssessment from "./pages/SkillsAssessment";
 import LearningPaths from "./pages/LearningPaths";
 import PostJob from "./pages/PostJob";
 import SavedJobs from "./pages/SavedJobs";
+import Auth from "./pages/Auth";
+import Notifications from "./pages/Notifications";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -29,34 +31,37 @@ const queryClient = new QueryClient();
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <SavedJobsProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/jobs" element={<Jobs />} />
-            <Route path="/jobs/:id" element={<JobDetail />} />
-            <Route path="/categories" element={<Categories />} />
-            <Route path="/categories/:category" element={<Categories />} />
-            <Route path="/companies" element={<Companies />} />
-            <Route path="/remote-jobs" element={<RemoteJobs />} />
-            <Route path="/salary-guide" element={<SalaryGuide />} />
-            <Route path="/career-advice" element={<CareerAdvice />} />
-            <Route path="/resume-builder" element={<ResumeBuilder />} />
-            <Route path="/job-alerts" element={<JobAlerts />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/reviews" element={<Reviews />} />
-            <Route path="/interview-prep" element={<InterviewPrep />} />
-            <Route path="/skills-assessment" element={<SkillsAssessment />} />
-            <Route path="/learning-paths" element={<LearningPaths />} />
-            <Route path="/post-job" element={<PostJob />} />
-            <Route path="/saved-jobs" element={<SavedJobs />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </SavedJobsProvider>
+      <BrowserRouter>
+        <AuthProvider>
+          <SavedJobsProvider>
+            <Toaster />
+            <Sonner />
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/jobs" element={<Jobs />} />
+              <Route path="/jobs/:id" element={<JobDetail />} />
+              <Route path="/categories" element={<Categories />} />
+              <Route path="/categories/:category" element={<Categories />} />
+              <Route path="/companies" element={<Companies />} />
+              <Route path="/remote-jobs" element={<RemoteJobs />} />
+              <Route path="/career-advice" element={<CareerAdvice />} />
+              <Route path="/resume-builder" element={<ResumeBuilder />} />
+              <Route path="/job-alerts" element={<JobAlerts />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/reviews" element={<Reviews />} />
+              <Route path="/interview-prep" element={<InterviewPrep />} />
+              <Route path="/skills-assessment" element={<SkillsAssessment />} />
+              <Route path="/learning-paths" element={<LearningPaths />} />
+              <Route path="/post-job" element={<PostJob />} />
+              <Route path="/saved-jobs" element={<SavedJobs />} />
+              <Route path="/auth" element={<Auth />} />
+              <Route path="/notifications" element={<Notifications />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </SavedJobsProvider>
+        </AuthProvider>
+      </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
 );

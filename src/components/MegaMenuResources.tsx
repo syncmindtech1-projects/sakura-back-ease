@@ -2,7 +2,6 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import resCareer from "@/assets/res-career.jpg";
 import resResume from "@/assets/res-resume.jpg";
-import resSalary from "@/assets/res-salary.jpg";
 import resInterview from "@/assets/res-interview.jpg";
 import resSkills from "@/assets/res-skills.jpg";
 import resLearning from "@/assets/res-learning.jpg";
@@ -10,7 +9,6 @@ import resLearning from "@/assets/res-learning.jpg";
 const tools = [
   { label: "Career Advice", desc: "Expert tips & industry insights", href: "/career-advice", image: resCareer, tag: "Popular" },
   { label: "Resume Builder", desc: "Create a standout resume in minutes", href: "/resume-builder", image: resResume, tag: "New" },
-  { label: "Salary Guide", desc: "Know your worth — real salary data", href: "/salary-guide", image: resSalary },
   { label: "Interview Prep", desc: "Ace your next interview", href: "/interview-prep", image: resInterview },
   { label: "Skills Assessment", desc: "Test your skills & get recommendations", href: "/skills-assessment", image: resSkills },
   { label: "Learning Paths", desc: "Curated courses for in-demand careers", href: "/learning-paths", image: resLearning },
@@ -33,6 +31,7 @@ const MegaMenuResources = ({ onClose }: Props) => (
       </div>
 
       <div className="p-4 grid grid-cols-3 gap-3">
+
         {tools.map((tool, i) => (
           <motion.div key={tool.label} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.04 }}>
             <Link to={tool.href} onClick={onClose}
