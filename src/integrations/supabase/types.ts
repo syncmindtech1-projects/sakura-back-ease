@@ -14,6 +14,51 @@ export type Database = {
   }
   public: {
     Tables: {
+      ad_submissions: {
+        Row: {
+          ad_type: string | null
+          advertiser_name: string
+          budget: string | null
+          company: string | null
+          contact_email: string
+          created_at: string
+          id: string
+          message: string
+          phone: string | null
+          source: string | null
+          target_url: string | null
+          video_url: string | null
+        }
+        Insert: {
+          ad_type?: string | null
+          advertiser_name: string
+          budget?: string | null
+          company?: string | null
+          contact_email: string
+          created_at?: string
+          id?: string
+          message: string
+          phone?: string | null
+          source?: string | null
+          target_url?: string | null
+          video_url?: string | null
+        }
+        Update: {
+          ad_type?: string | null
+          advertiser_name?: string
+          budget?: string | null
+          company?: string | null
+          contact_email?: string
+          created_at?: string
+          id?: string
+          message?: string
+          phone?: string | null
+          source?: string | null
+          target_url?: string | null
+          video_url?: string | null
+        }
+        Relationships: []
+      }
       job_submissions: {
         Row: {
           apply_url: string | null
