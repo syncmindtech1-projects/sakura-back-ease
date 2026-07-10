@@ -2,12 +2,42 @@ import PageLayout from "@/components/PageLayout";
 import { motion } from "framer-motion";
 import { MapPin, Clock, Briefcase, Bookmark, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { featuredJobs } from "@/lib/jobData";
+import { featuredJobs, Job } from "@/lib/jobData";
 import { useSavedJobs } from "@/contexts/SavedJobsContext";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 const SavedJobs = () => {
   const { savedJobs, toggleSave } = useSavedJobs();
-  const saved = featuredJobs.filter((j) => savedJobs.has(j.id));
+  const [postedSaved, setPostedSaved] = useState<Job[]>([]);
+
+  useEffect(() => {
+    const postedIds = [...savedJobs].filter((id) => id.startsWith("posted-")).map((id) => id.replace(/^posted-/, ""));
+    if (postedIds.length === 0) { setPostedSaved([]); return; }
+    supabase.from("posted_jobs").select("*").in("id", postedIds).then(({ data }) => {
+      if (!data) return;
+      setPostedSaved(data.map((p: any) => ({
+        id: `posted-${p.id}`,
+        title: p.title,
+        company: p.company,
+        location: p.location ?? "—",
+        salary: p.salary ?? "Not disclosed",
+        type: p.job_type ?? "Full-time",
+        posted: new Date(p.created_at).toLocaleDateString(),
+        category: p.category ?? "General",
+        description: p.description,
+        tags: [p.category ?? "General"].filter(Boolean),
+        applyUrl: p.apply_url ?? `mailto:${p.contact_email}`,
+        logo: "💼",
+        remote: /remote/i.test(p.location ?? ""),
+        urgent: false,
+        featured: true,
+      })));
+    });
+  }, [savedJobs]);
+
+  const saved = [...postedSaved, ...featuredJobs.filter((j) => savedJobs.has(j.id))];
+
 
   return (
     <PageLayout>

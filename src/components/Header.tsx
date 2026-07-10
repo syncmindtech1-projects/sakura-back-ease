@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Menu, X, ChevronDown, ChevronRight, Search, Bell, Heart, Globe, LogOut, User as UserIcon } from "lucide-react";
+import { Menu, X, ChevronDown, ChevronRight, Search, Bell, Heart, LogOut, User as UserIcon } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSavedJobs } from "@/contexts/SavedJobsContext";
 import { useAuth } from "@/hooks/useAuth";
@@ -9,7 +9,9 @@ import MegaMenuJobs from "@/components/MegaMenuJobs";
 import MegaMenuCategories from "@/components/MegaMenuCategories";
 import MegaMenuCompanies from "@/components/MegaMenuCompanies";
 import MegaMenuResources from "@/components/MegaMenuResources";
+import PremiumBanner from "@/components/PremiumBanner";
 import { getJobStats } from "@/lib/jobData";
+
 
 interface NavItem {
   label: string;
@@ -119,82 +121,8 @@ const Header = () => {
 
   return (
     <>
-      {/* Top bar — Premium animated banner */}
-      <div className="relative overflow-hidden text-white" style={{ background: "linear-gradient(90deg, #F97316 0%, #FB923C 50%, #F59E0B 100%)" }}>
-        {/* Animated background particles */}
-        <motion.div
-          className="absolute inset-0 opacity-20"
-          style={{
-            backgroundImage: `radial-gradient(circle at 20% 50%, rgba(255,255,255,0.3) 0%, transparent 50%),
-                              radial-gradient(circle at 80% 50%, rgba(255,255,255,0.2) 0%, transparent 50%)`,
-          }}
-          animate={{ opacity: [0.15, 0.3, 0.15] }}
-          transition={{ duration: 4, repeat: Infinity }}
-        />
+      <PremiumBanner user={user} displayName={displayName} newJobsCount={newJobsCount} onLogout={signOut} />
 
-        {/* Sliding shine effect */}
-        <motion.div
-          className="absolute inset-0 w-[200%]"
-          style={{
-            background: `linear-gradient(90deg, transparent 0%, transparent 40%, rgba(255,255,255,0.1) 50%, transparent 60%, transparent 100%)`,
-          }}
-          animate={{ x: ["-100%", "100%"] }}
-          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", repeatDelay: 2 }}
-        />
-
-        <div className="relative z-10 container mx-auto px-4 md:px-8 py-3 md:py-4">
-          {/* Marquee row */}
-          <div className="overflow-hidden mb-1">
-            <motion.div
-              className="flex gap-10 whitespace-nowrap"
-              animate={{ x: ["0%", "-50%"] }}
-              transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-            >
-              {[...Array(4)].map((_, j) => (
-                <span key={j} className="text-primary-foreground/20 text-lg md:text-2xl font-black font-display uppercase tracking-[0.3em] select-none">
-                  JOBSPHERE • HIRE • CAREERS • APPLY • DREAM JOB • JOBSPHERE • HIRE • CAREERS •&nbsp;
-                </span>
-              ))}
-            </motion.div>
-          </div>
-
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <motion.div
-                className="w-2 h-2 rounded-full bg-accent"
-                animate={{ scale: [1, 1.5, 1], opacity: [1, 0.5, 1] }}
-                transition={{ duration: 1.5, repeat: Infinity }}
-              />
-              <span className="hidden sm:inline font-semibold text-sm">
-                🌍 <strong className="text-accent">100% FREE</strong> job browsing — <motion.strong
-                  className="text-accent"
-                  animate={{ opacity: [1, 0.6, 1] }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                >{newJobsCount} new jobs</motion.strong> posted today!
-              </span>
-              <span className="sm:hidden text-xs font-semibold">🌍 {newJobsCount} new jobs today!</span>
-            </div>
-            <div className="flex items-center gap-3 md:gap-4">
-              {user ? (
-                <>
-                  <span className="hidden md:inline text-sm font-semibold">
-                    👋 Hi, <span className="text-accent">{displayName}</span>
-                  </span>
-                  <button onClick={() => signOut()} className="hidden md:inline-flex items-center gap-1 hover:underline font-bold text-sm bg-white/10 px-3 py-1 rounded-full hover:bg-white/20 transition-colors">
-                    <LogOut size={12} /> Logout
-                  </button>
-                </>
-              ) : (
-                <>
-                  <Link to="/auth?mode=register" className="hover:underline font-bold hidden md:inline text-sm bg-white/10 px-3 py-1 rounded-full hover:bg-white/20 transition-colors">Register</Link>
-                  <Link to="/auth" className="hover:underline font-bold hidden md:inline text-sm">Login</Link>
-                </>
-              )}
-              <div className="flex items-center gap-1 text-primary-foreground/70 text-sm"><Globe size={13} /><span>EN</span></div>
-            </div>
-          </div>
-        </div>
-      </div>
 
       {/* Main header */}
       <header className="sticky top-0 z-50 bg-card/95 backdrop-blur-xl border-b border-border shadow-sm">
