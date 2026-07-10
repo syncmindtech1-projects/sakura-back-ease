@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import type { User } from "@supabase/supabase-js";
 import { BadgeCheck, Globe2, LogOut } from "lucide-react";
 
@@ -9,38 +8,22 @@ interface PremiumBannerProps {
   onLogout: () => void;
 }
 
-// Premium, luxurious dark-green sticky announcement banner (72px)
-// Slides out on scroll down, slides in on scroll up
+// Premium, luxurious dark-green announcement banner (72px).
+// Banner is non-sticky: scrolls away on scroll-down, reappears on scroll-up
+// while the main navbar (in Header.tsx) remains sticky at top:0.
 const PremiumBanner = ({ user, displayName, newJobsCount, onLogout }: PremiumBannerProps) => {
-  const [hidden, setHidden] = useState(false);
-
-  useEffect(() => {
-    let lastY = window.scrollY;
-    const onScroll = () => {
-      const y = window.scrollY;
-      const delta = y - lastY;
-      if (y < 10) setHidden(false);
-      else if (delta > 6) setHidden(true);
-      else if (delta < -6) setHidden(false);
-      lastY = y;
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
   return (
     <div
-      className="sticky top-0 z-[60] w-full text-white will-change-transform"
+      className="relative w-full text-white overflow-hidden"
       style={{
         height: 72,
         background:
           "linear-gradient(90deg, #062C1D 0%, #0A3B29 50%, #062C1D 100%)",
         borderBottom: "1px solid rgba(255,255,255,0.08)",
         boxShadow: "0 8px 30px rgba(0,0,0,0.18)",
-        transform: hidden ? "translateY(-100%)" : "translateY(0)",
-        transition: "transform 300ms ease-in-out",
       }}
     >
+
       {/* Radial glow */}
       <div
         aria-hidden
