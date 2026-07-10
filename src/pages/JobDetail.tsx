@@ -2,16 +2,66 @@ import PageLayout from "@/components/PageLayout";
 import { useParams, Link } from "react-router-dom";
 import { featuredJobs } from "@/lib/jobData";
 import { motion } from "framer-motion";
-import { MapPin, Clock, Briefcase, Bookmark, ArrowLeft, Share2, Building2, DollarSign, Tag, ExternalLink } from "lucide-react";
+import { MapPin, Clock, Briefcase, Bookmark, ArrowLeft, Share2, Building2, DollarSign, Tag, ExternalLink, Loader2 } from "lucide-react";
 import AdsBanner from "@/components/AdsBanner";
 import { useSavedJobs } from "@/contexts/SavedJobsContext";
 import { useToast } from "@/hooks/use-toast";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+
+interface PostedJob {
+  id: string;
+  title: string;
+  company: string;
+  location: string | null;
+  salary: string | null;
+  job_type: string | null;
+  category: string | null;
+  description: string;
+  apply_url: string | null;
+  contact_email: string;
+  created_at: string;
+}
 
 const JobDetail = () => {
-  const { id } = useParams();
-  const job = featuredJobs.find((j) => j.id === id);
+  const { id: rawId } = useParams();
+  const id = rawId ?? "";
+  const isPosted = id.startsWith("posted-");
+  const staticJob = !isPosted ? featuredJobs.find((j) => j.id === id) : undefined;
   const { toggleSave, isSaved } = useSavedJobs();
   const { toast } = useToast();
+
+  const [postedJob, setPostedJob] = useState<PostedJob | null>(null);
+  const [loading, setLoading] = useState(isPosted);
+
+  useEffect(() => {
+    if (!isPosted) return;
+    const uuid = id.replace(/^posted-/, "");
+    setLoading(true);
+    supabase.from("posted_jobs").select("*").eq("id", uuid).maybeSingle()
+      .then(({ data }) => { setPostedJob(data as PostedJob | null); setLoading(false); });
+  }, [id, isPosted]);
+
+  // Adapt posted job to shape used by rest of the page
+  const job = staticJob ?? (postedJob ? {
+    id,
+    title: postedJob.title,
+    company: postedJob.company,
+    location: postedJob.location ?? "—",
+    salary: postedJob.salary ?? "Not disclosed",
+    type: postedJob.job_type ?? "Full-time",
+    posted: new Date(postedJob.created_at).toLocaleDateString(),
+    category: postedJob.category ?? "General",
+    description: postedJob.description,
+    tags: [postedJob.category ?? "General"].filter(Boolean) as string[],
+    applyUrl: postedJob.apply_url ?? `mailto:${postedJob.contact_email}`,
+    logo: "💼",
+    remote: /remote/i.test(postedJob.location ?? ""),
+    urgent: false,
+    featured: true,
+    requirements: [] as string[],
+    benefits: [] as string[],
+  } : undefined);
 
   const handleShare = async () => {
     const url = window.location.href;
@@ -32,6 +82,16 @@ const JobDetail = () => {
     });
   };
 
+  if (loading) {
+    return (
+      <PageLayout>
+        <div className="container mx-auto px-4 py-20 text-center text-muted-foreground">
+          <Loader2 className="animate-spin inline mr-2" size={18} /> Loading job…
+        </div>
+      </PageLayout>
+    );
+  }
+
   if (!job) {
     return (
       <PageLayout>
@@ -48,6 +108,7 @@ const JobDetail = () => {
   const similarJobs = featuredJobs
     .filter((j) => j.id !== job.id && j.category === job.category)
     .slice(0, 4);
+
 
   return (
     <PageLayout>
