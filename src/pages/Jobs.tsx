@@ -2,10 +2,11 @@ import PageLayout from "@/components/PageLayout";
 import AdsBanner from "@/components/AdsBanner";
 import { motion } from "framer-motion";
 import { MapPin, Clock, Bookmark, Search, Briefcase, SlidersHorizontal, ExternalLink } from "lucide-react";
-import { featuredJobs } from "@/lib/jobData";
-import { useState, useMemo } from "react";
+import { featuredJobs, Job } from "@/lib/jobData";
+import { useEffect, useState, useMemo } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import { useSavedJobs } from "@/contexts/SavedJobsContext";
+import { supabase } from "@/integrations/supabase/client";
 
 const jobTypes = ["All", "Full-time", "Part-time", "Contract", "Freelance", "Internship"];
 const locationFilters = ["All Locations", "Uganda", "Kenya", "Tanzania", "Rwanda", "South Sudan", "Ethiopia", "Ghana", "Remote"];
@@ -19,10 +20,38 @@ const Jobs = () => {
   const [locationFilter, setLocationFilter] = useState("All Locations");
   const [sortBy, setSortBy] = useState("Most Recent");
   const [showFilters, setShowFilters] = useState(false);
+  const [postedJobs, setPostedJobs] = useState<Job[]>([]);
   const { toggleSave, isSaved } = useSavedJobs();
 
+  useEffect(() => {
+    supabase.from("posted_jobs").select("*").order("created_at", { ascending: false }).limit(200)
+      .then(({ data }) => {
+        if (!data) return;
+        const mapped: Job[] = data.map((p: any) => ({
+          id: `posted-${p.id}`,
+          title: p.title,
+          company: p.company,
+          location: p.location ?? "—",
+          salary: p.salary ?? "Not disclosed",
+          type: p.job_type ?? "Full-time",
+          posted: new Date(p.created_at).toLocaleDateString(),
+          category: p.category ?? "General",
+          description: p.description,
+          tags: [p.category ?? "General"].filter(Boolean),
+          applyUrl: p.apply_url ?? `mailto:${p.contact_email}`,
+          logo: "💼",
+          remote: /remote/i.test(p.location ?? ""),
+          urgent: false,
+          featured: true,
+        }));
+        setPostedJobs(mapped);
+      });
+  }, []);
+
+  const allJobs = useMemo(() => [...postedJobs, ...featuredJobs], [postedJobs]);
+
   const filtered = useMemo(() => {
-    let jobs = featuredJobs.filter((job) => {
+    let jobs = allJobs.filter((job) => {
       if (typeFilter !== "All" && job.type !== typeFilter) return false;
       if (locationFilter !== "All Locations") {
         if (locationFilter === "Remote") { if (!job.remote) return false; }
@@ -36,12 +65,13 @@ const Jobs = () => {
     });
 
     if (sortBy === "Salary: High to Low") {
-      jobs = [...jobs].sort((a, b) => parseInt(b.salary.replace(/\D/g, "")) - parseInt(a.salary.replace(/\D/g, "")));
+      jobs = [...jobs].sort((a, b) => parseInt(b.salary.replace(/\D/g, "") || "0") - parseInt(a.salary.replace(/\D/g, "") || "0"));
     } else if (sortBy === "Salary: Low to High") {
-      jobs = [...jobs].sort((a, b) => parseInt(a.salary.replace(/\D/g, "")) - parseInt(b.salary.replace(/\D/g, "")));
+      jobs = [...jobs].sort((a, b) => parseInt(a.salary.replace(/\D/g, "") || "0") - parseInt(b.salary.replace(/\D/g, "") || "0"));
     }
     return jobs;
-  }, [typeFilter, searchQuery, locationFilter, sortBy]);
+  }, [allJobs, typeFilter, searchQuery, locationFilter, sortBy]);
+
 
   return (
     <PageLayout>
