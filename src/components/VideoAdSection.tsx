@@ -1,7 +1,8 @@
 import { motion } from "framer-motion";
 import { ExternalLink, X, Play, Megaphone } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AdvertiseModal from "./AdvertiseModal";
+import { supabase } from "@/integrations/supabase/client";
 
 interface VideoAd {
   id: string;
@@ -11,9 +12,11 @@ interface VideoAd {
   link: string;
   thumbnail: string;
   gradient: string;
+  videoUrl?: string | null;
+  blurb?: string | null;
 }
 
-const videoAds: VideoAd[] = [
+const defaults: VideoAd[] = [
   {
     id: "v1",
     title: "Your ad could be playing here",
@@ -38,10 +41,38 @@ interface VideoAdSectionProps {
   adIndex?: number;
 }
 
+const toEmbed = (url: string) => {
+  const yt = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([\w-]{11})/);
+  if (yt) return `https://www.youtube.com/embed/${yt[1]}`;
+  const vim = url.match(/vimeo\.com\/(\d+)/);
+  if (vim) return `https://player.vimeo.com/video/${vim[1]}`;
+  return url;
+};
+
 const VideoAdSection = ({ adIndex = 0 }: VideoAdSectionProps) => {
   const [dismissed, setDismissed] = useState(false);
   const [formOpen, setFormOpen] = useState(false);
-  const ad = videoAds[adIndex % videoAds.length];
+  const [playing, setPlaying] = useState(false);
+  const slotKey = `video-${adIndex}`;
+  const [ad, setAd] = useState<VideoAd>(defaults[adIndex % defaults.length]);
+  const filled = !!ad.videoUrl;
+
+  useEffect(() => {
+    supabase.from("site_ads").select("*").eq("slot_key", slotKey).eq("active", true).maybeSingle()
+      .then(({ data }) => {
+        if (data) setAd((prev) => ({
+          ...prev,
+          id: data.id,
+          title: data.title,
+          sponsor: data.sponsor ?? "Sponsored",
+          cta: data.cta_label ?? "Learn more",
+          link: data.cta_link ?? "#",
+          thumbnail: data.image_url ?? prev.thumbnail,
+          videoUrl: data.video_url,
+          blurb: data.blurb,
+        }));
+      });
+  }, [slotKey]);
 
   if (dismissed) return null;
 
@@ -65,51 +96,79 @@ const VideoAdSection = ({ adIndex = 0 }: VideoAdSectionProps) => {
           </button>
 
           <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-0">
-            {/* Empty video slot — clicking opens form */}
-            <button
-              type="button"
-              onClick={() => setFormOpen(true)}
-              className="relative aspect-video md:aspect-auto md:min-h-[300px] overflow-hidden text-left group"
-              aria-label="Advertise your video here"
-            >
-              <img src={ad.thumbnail} alt="Ad slot" loading="lazy" className="w-full h-full object-cover opacity-40" />
-              <div className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center gap-3 group-hover:bg-black/60 transition-colors">
-                <motion.div
-                  className="w-16 h-16 rounded-full bg-white/95 flex items-center justify-center shadow-lg"
-                  whileHover={{ scale: 1.1 }}
-                  animate={{ scale: [1, 1.05, 1] }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                >
-                  <Play size={24} className="text-foreground ml-1" fill="currentColor" />
-                </motion.div>
-                <span className="text-white text-xs font-semibold uppercase tracking-widest">Click to place your video ad</span>
+            {filled ? (
+              <div className="relative aspect-video md:aspect-auto md:min-h-[300px] bg-black">
+                {playing ? (
+                  <iframe
+                    src={toEmbed(ad.videoUrl!)}
+                    className="absolute inset-0 w-full h-full"
+                    allow="autoplay; encrypted-media; picture-in-picture"
+                    allowFullScreen
+                    title={ad.title}
+                  />
+                ) : (
+                  <button type="button" onClick={() => setPlaying(true)} className="absolute inset-0 group">
+                    <img src={ad.thumbnail} alt={ad.title} className="w-full h-full object-cover" />
+                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center group-hover:bg-black/30">
+                      <div className="w-16 h-16 rounded-full bg-white/95 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                        <Play size={26} className="text-foreground ml-1" fill="currentColor" />
+                      </div>
+                    </div>
+                  </button>
+                )}
               </div>
-            </button>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setFormOpen(true)}
+                className="relative aspect-video md:aspect-auto md:min-h-[300px] overflow-hidden text-left group"
+                aria-label="Advertise your video here"
+              >
+                <img src={ad.thumbnail} alt="Ad slot" loading="lazy" className="w-full h-full object-cover opacity-40" />
+                <div className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center gap-3 group-hover:bg-black/60 transition-colors">
+                  <motion.div
+                    className="w-16 h-16 rounded-full bg-white/95 flex items-center justify-center shadow-lg"
+                    whileHover={{ scale: 1.1 }}
+                    animate={{ scale: [1, 1.05, 1] }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                  >
+                    <Play size={24} className="text-foreground ml-1" fill="currentColor" />
+                  </motion.div>
+                  <span className="text-white text-xs font-semibold uppercase tracking-widest">Click to place your video ad</span>
+                </div>
+              </button>
+            )}
 
-            {/* Content */}
             <div className="p-8 md:p-10 flex flex-col justify-center">
               <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/70 bg-white/10 px-3 py-1 rounded-full border border-white/20 w-fit inline-flex items-center gap-1.5">
-                <Megaphone size={11} /> Ad slot · {ad.sponsor}
+                <Megaphone size={11} /> {filled ? "Sponsored" : "Ad slot"} · {ad.sponsor}
               </span>
               <h3 className="text-2xl md:text-3xl font-bold font-display text-white mt-4 leading-tight">
                 {ad.title}
               </h3>
               <p className="text-white/70 text-sm mt-3">
-                Submit your video link and campaign details — our team will get your ad live within 24 hours.
+                {ad.blurb || (filled
+                  ? "Learn more about this offer from our sponsor."
+                  : "Submit your video link and campaign details — our team will get your ad live within 24 hours.")}
               </p>
               <div className="flex flex-wrap gap-3 mt-6">
-                <button
-                  onClick={() => setFormOpen(true)}
+                <a
+                  href={filled ? ad.link : "#"}
+                  onClick={filled ? undefined : (e) => { e.preventDefault(); setFormOpen(true); }}
+                  target={filled ? "_blank" : undefined}
+                  rel={filled ? "noopener noreferrer sponsored" : undefined}
                   className="bg-white text-foreground font-bold text-sm px-6 py-3 rounded-xl hover:scale-105 transition-all inline-flex items-center gap-2 shadow-lg"
                 >
                   {ad.cta} <ExternalLink size={14} />
-                </button>
-                <button
-                  onClick={() => setFormOpen(true)}
-                  className="border border-white/40 text-white font-semibold text-sm px-6 py-3 rounded-xl hover:bg-white/10 transition-colors inline-flex items-center gap-2"
-                >
-                  Advertise here
-                </button>
+                </a>
+                {!filled && (
+                  <button
+                    onClick={() => setFormOpen(true)}
+                    className="border border-white/40 text-white font-semibold text-sm px-6 py-3 rounded-xl hover:bg-white/10 transition-colors inline-flex items-center gap-2"
+                  >
+                    Advertise here
+                  </button>
+                )}
               </div>
             </div>
           </div>

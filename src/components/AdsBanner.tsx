@@ -1,5 +1,6 @@
 import { ExternalLink, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 interface Ad {
   id: string;
@@ -35,7 +36,24 @@ const Meta = ({ sponsor }: { sponsor: string }) => (
 
 const AdsBanner = ({ variant = "inline", adIndex = 0 }: AdsBannerProps) => {
   const [dismissed, setDismissed] = useState(false);
-  const ad = ads[adIndex % ads.length];
+  const slotKey = `banner-${adIndex}`;
+  const fallback = ads[adIndex % ads.length];
+  const [ad, setAd] = useState<Ad>(fallback);
+
+  useEffect(() => {
+    supabase.from("site_ads").select("*").eq("slot_key", slotKey).eq("active", true).maybeSingle()
+      .then(({ data }) => {
+        if (data) setAd({
+          id: data.id,
+          title: data.title,
+          blurb: data.blurb ?? "",
+          sponsor: data.sponsor ?? "Sponsored",
+          cta: data.cta_label ?? "Learn more",
+          link: data.cta_link ?? "#",
+        });
+      });
+  }, [slotKey]);
+
   if (dismissed) return null;
 
   if (variant === "banner") {

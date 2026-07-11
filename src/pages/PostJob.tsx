@@ -34,8 +34,8 @@ const PostJob = () => {
     }
     setSubmitting(true);
     try {
-      const { error } = await supabase.from("posted_jobs").insert({
-        posted_by: user.id,
+      // Jobs are submitted for admin approval (SyncMind Tech team) before going live.
+      const { error } = await supabase.from("job_submissions").insert({
         title: formData.title,
         company: formData.company,
         contact_email: formData.contact_email,
@@ -45,19 +45,20 @@ const PostJob = () => {
         job_type: formData.type,
         category: formData.category,
         description: formData.description,
+        plan: selectedPlan,
+        status: "pending",
       });
       if (error) throw error;
 
-      // Best-effort admin email + audit trail
+      // Notify the SyncMind Tech team by email
       supabase.functions.invoke("submit-job", {
-        body: {
-          ...formData,
-          job_type: formData.type,
-          plan: selectedPlan,
-        },
-      }).catch(() => { /* email is optional; DB insert already succeeded */ });
+        body: { ...formData, job_type: formData.type, plan: selectedPlan },
+      }).catch(() => {});
 
-      toast({ title: "Job published 🎉", description: `"${formData.title}" is now live. All registered users are being notified.` });
+      toast({
+        title: "Submitted for review ✅",
+        description: `"${formData.title}" has been sent to the SyncMind Tech team. It will go live once approved (usually within a few hours).`,
+      });
       setFormData({ title: "", company: "", contact_email: "", location: "", salary: "", apply_url: "", type: "Full-time", category: "Technology", description: "" });
     } catch (e: any) {
       toast({ title: "Publish failed", description: e?.message ?? "Please try again.", variant: "destructive" });

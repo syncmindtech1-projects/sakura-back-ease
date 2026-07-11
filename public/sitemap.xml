@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://sakura-back-ease.lovable.app/</loc><priority>1.0</priority><changefreq>daily</changefreq></url>
-  <url><loc>https://sakura-back-ease.lovable.app/jobs</loc><priority>0.9</priority><changefreq>hourly</changefreq></url>
-  <url><loc>https://sakura-back-ease.lovable.app/categories</loc><priority>0.8</priority><changefreq>weekly</changefreq></url>
-  <url><loc>https://sakura-back-ease.lovable.app/companies</loc><priority>0.8</priority><changefreq>weekly</changefreq></url>
-  <url><loc>https://sakura-back-ease.lovable.app/remote-jobs</loc><priority>0.8</priority><changefreq>daily</changefreq></url>
-  <url><loc>https://sakura-back-ease.lovable.app/salary-guide</loc><priority>0.7</priority><changefreq>monthly</changefreq></url>
-  <url><loc>https://sakura-back-ease.lovable.app/resume-builder</loc><priority>0.7</priority><changefreq>monthly</changefreq></url>
-  <url><loc>https://sakura-back-ease.lovable.app/career-advice</loc><priority>0.7</priority><changefreq>weekly</changefreq></url>
-  <url><loc>https://sakura-back-ease.lovable.app/interview-prep</loc><priority>0.7</priority><changefreq>monthly</changefreq></url>
-  <url><loc>https://sakura-back-ease.lovable.app/reviews</loc><priority>0.6</priority><changefreq>weekly</changefreq></url>
-  <url><loc>https://sakura-back-ease.lovable.app/post-job</loc><priority>0.7</priority><changefreq>monthly</changefreq></url>
-  <url><loc>https://sakura-back-ease.lovable.app/job-alerts</loc><priority>0.6</priority><changefreq>monthly</changefreq></url>
-  <url><loc>https://sakura-back-ease.lovable.app/about</loc><priority>0.5</priority><changefreq>monthly</changefreq></url>
-  <url><loc>https://sakura-back-ease.lovable.app/contact</loc><priority>0.5</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://sakura-back-ease.lovable.app/</loc><changefreq>daily</changefreq><priority>1.0</priority></url>
+  <url><loc>https://sakura-back-ease.lovable.app/jobs</loc><changefreq>hourly</changefreq><priority>0.95</priority></url>
+  <url><loc>https://sakura-back-ease.lovable.app/categories</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://sakura-back-ease.lovable.app/remote-jobs</loc><changefreq>daily</changefreq><priority>0.85</priority></url>
+  <url><loc>https://sakura-back-ease.lovable.app/post-job</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://sakura-back-ease.lovable.app/career-advice</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://sakura-back-ease.lovable.app/resume-builder</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://sakura-back-ease.lovable.app/interview-prep</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://sakura-back-ease.lovable.app/skills-assessment</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://sakura-back-ease.lovable.app/learning-paths</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://sakura-back-ease.lovable.app/job-alerts</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://sakura-back-ease.lovable.app/companies</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://sakura-back-ease.lovable.app/reviews</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://sakura-back-ease.lovable.app/about</loc><changefreq>monthly</changefreq><priority>0.4</priority></url>
+  <url><loc>https://sakura-back-ease.lovable.app/contact</loc><changefreq>monthly</changefreq><priority>0.4</priority></url>
+  <url><loc>https://sakura-back-ease.lovable.app/auth</loc><changefreq>monthly</changefreq><priority>0.3</priority></url>
 </urlset>

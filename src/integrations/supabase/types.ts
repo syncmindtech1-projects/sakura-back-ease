@@ -269,6 +269,54 @@ export type Database = {
         }
         Relationships: []
       }
+      site_ads: {
+        Row: {
+          active: boolean
+          ad_kind: string
+          blurb: string | null
+          created_at: string
+          cta_label: string | null
+          cta_link: string | null
+          id: string
+          image_url: string | null
+          slot_key: string
+          sponsor: string | null
+          title: string
+          updated_at: string
+          video_url: string | null
+        }
+        Insert: {
+          active?: boolean
+          ad_kind?: string
+          blurb?: string | null
+          created_at?: string
+          cta_label?: string | null
+          cta_link?: string | null
+          id?: string
+          image_url?: string | null
+          slot_key: string
+          sponsor?: string | null
+          title: string
+          updated_at?: string
+          video_url?: string | null
+        }
+        Update: {
+          active?: boolean
+          ad_kind?: string
+          blurb?: string | null
+          created_at?: string
+          cta_label?: string | null
+          cta_link?: string | null
+          id?: string
+          image_url?: string | null
+          slot_key?: string
+          sponsor?: string | null
+          title?: string
+          updated_at?: string
+          video_url?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

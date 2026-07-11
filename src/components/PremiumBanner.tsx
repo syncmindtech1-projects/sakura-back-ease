@@ -16,7 +16,9 @@ const PremiumBanner = ({ user, displayName, newJobsCount, onLogout }: PremiumBan
     <div
       className="relative w-full text-white overflow-hidden"
       style={{
-        height: 72,
+        minHeight: 96,
+        paddingTop: 14,
+        paddingBottom: 14,
         background:
           "linear-gradient(90deg, #062C1D 0%, #0A3B29 50%, #062C1D 100%)",
         borderBottom: "1px solid rgba(255,255,255,0.08)",
@@ -44,7 +46,7 @@ const PremiumBanner = ({ user, displayName, newJobsCount, onLogout }: PremiumBan
       />
 
       <div
-        className="relative h-full flex items-center gap-6 mx-auto"
+        className="relative flex items-center gap-6 mx-auto min-h-[68px]"
         style={{
           maxWidth: 1440,
           paddingLeft: "clamp(16px, 3vw, 32px)",
@@ -104,8 +106,7 @@ const PremiumBanner = ({ user, displayName, newJobsCount, onLogout }: PremiumBan
               color: "#fff",
             }}
           >
-            If You Don't Try More,<br />
-            When Will You Know You are <span style={{ color: "#7FE38A" }}>Capable?</span>
+            Real jobs. <span style={{ color: "#7FE38A" }}>Real futures.</span>
           </p>
         </div>
 
