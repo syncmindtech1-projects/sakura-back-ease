@@ -34,8 +34,6 @@ Deno.serve(async (req) => {
       case 'create_job': {
         const { data, error } = await supabase.from('posted_jobs').insert(payload).select().single()
         if (error) throw error
-        // notify users
-        await supabase.rpc('notify_users_new_job', {}).catch(() => {})
         return json({ data })
       }
       case 'update_job': {
