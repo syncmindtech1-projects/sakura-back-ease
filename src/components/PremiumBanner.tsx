@@ -106,8 +106,7 @@ const PremiumBanner = ({ user, displayName, newJobsCount, onLogout }: PremiumBan
               color: "#fff",
             }}
           >
-            If You Don't Try More,<br />
-            When Will You Know You are <span style={{ color: "#7FE38A" }}>Capable?</span>
+            Real jobs. <span style={{ color: "#7FE38A" }}>Real futures.</span>
           </p>
         </div>
 
