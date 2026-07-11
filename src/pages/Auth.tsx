@@ -110,6 +110,11 @@ const Auth = () => {
             <p className="text-center text-xs text-muted-foreground mt-4">
               <Link to="/" className="hover:underline">← Back to home</Link>
             </p>
+            <div className="mt-6 pt-4 border-t border-border text-center">
+              <Link to="/admin-login" className="text-[11px] uppercase tracking-widest text-muted-foreground hover:text-primary">
+                Admin dashboard →
+              </Link>
+            </div>
           </motion.div>
         </div>
       </section>

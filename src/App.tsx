@@ -25,6 +25,8 @@ import SavedJobs from "./pages/SavedJobs";
 import Auth from "./pages/Auth";
 import Notifications from "./pages/Notifications";
 import NotFound from "./pages/NotFound";
+import Admin from "./pages/Admin";
+import AdminLogin from "./pages/AdminLogin";
 
 const queryClient = new QueryClient();
 
@@ -57,6 +59,8 @@ const App = () => (
               <Route path="/saved-jobs" element={<SavedJobs />} />
               <Route path="/auth" element={<Auth />} />
               <Route path="/notifications" element={<Notifications />} />
+              <Route path="/admin-login" element={<AdminLogin />} />
+              <Route path="/admin" element={<Admin />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </SavedJobsProvider>
