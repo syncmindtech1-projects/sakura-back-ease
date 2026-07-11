@@ -46,7 +46,7 @@ const PremiumBanner = ({ user, displayName, newJobsCount, onLogout }: PremiumBan
       />
 
       <div
-        className="relative h-full flex items-center gap-6 mx-auto"
+        className="relative flex items-center gap-6 mx-auto min-h-[68px]"
         style={{
           maxWidth: 1440,
           paddingLeft: "clamp(16px, 3vw, 32px)",
