@@ -16,7 +16,9 @@ const PremiumBanner = ({ user, displayName, newJobsCount, onLogout }: PremiumBan
     <div
       className="relative w-full text-white overflow-hidden"
       style={{
-        height: 72,
+        minHeight: 96,
+        paddingTop: 14,
+        paddingBottom: 14,
         background:
           "linear-gradient(90deg, #062C1D 0%, #0A3B29 50%, #062C1D 100%)",
         borderBottom: "1px solid rgba(255,255,255,0.08)",
