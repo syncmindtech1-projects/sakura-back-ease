@@ -171,10 +171,10 @@ const PremiumBanner = ({ user, displayName, newJobsCount, onLogout }: PremiumBan
             </>
           ) : (
             <>
-              <a href="/auth" className="hidden md:inline" style={{ fontSize: 15, fontWeight: 600, color: "#fff" }}>
+              {/* <a href="/auth" className="hidden md:inline" style={{ fontSize: 15, fontWeight: 600, color: "#fff" }}>
                 Login
-              </a>
-              <a
+              </a> */}
+              {/* <a
                 href="/auth?mode=register"
                 className="inline-flex items-center"
                 style={{
@@ -190,7 +190,7 @@ const PremiumBanner = ({ user, displayName, newJobsCount, onLogout }: PremiumBan
                 }}
               >
                 Get started
-              </a>
+              </a> */}
             </>
           )}
         </div>
