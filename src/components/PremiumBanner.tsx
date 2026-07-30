@@ -1,6 +1,5 @@
 import type { User } from "@supabase/supabase-js";
 import { BadgeCheck, Globe2, LogOut } from "lucide-react";
-import Link from "next/link";
 
 interface PremiumBannerProps {
   user: User | null;
@@ -172,10 +171,10 @@ const PremiumBanner = ({ user, displayName, newJobsCount, onLogout }: PremiumBan
             </>
           ) : (
             <>
-              <Link href="/auth" className="hidden md:inline" style={{ fontSize: 15, fontWeight: 600, color: "#fff" }}>
+              <a href="/auth" className="hidden md:inline" style={{ fontSize: 15, fontWeight: 600, color: "#fff" }}>
                 Login
-              </Link>
-               <Link
+              </a>
+               <a
                 href="/auth?mode=register"
                 className="inline-flex items-center"
                 style={{
@@ -191,7 +190,7 @@ const PremiumBanner = ({ user, displayName, newJobsCount, onLogout }: PremiumBan
                 }}
               >
                 Get started
-              </Link> 
+              </a> 
             </>
           )}
         </div>
