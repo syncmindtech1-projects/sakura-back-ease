@@ -35,6 +35,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (s?.user) {
         // defer profile fetch to avoid deadlock
         setTimeout(() => loadProfile(s.user.id), 0);
+        setTimeout(() => notifySignup(), 0);
       } else {
         setProfile(null);
       }
@@ -43,12 +44,25 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     supabase.auth.getSession().then(({ data: { session: s } }) => {
       setSession(s);
       setUser(s?.user ?? null);
-      if (s?.user) loadProfile(s.user.id);
+      if (s?.user) {
+        loadProfile(s.user.id);
+        notifySignup();
+      }
       setLoading(false);
     });
 
     return () => sub.subscription.unsubscribe();
   }, []);
+
+  // Fires the admin notification once per user (server-side deduplicated).
+  const notifySignup = async () => {
+    try {
+      await supabase.functions.invoke("notify-signup");
+    } catch (e) {
+      console.warn("signup notification skipped", e);
+    }
+  };
+
 
   const loadProfile = async (uid: string) => {
     const { data } = await supabase.from("profiles").select("id,full_name,avatar_url").eq("id", uid).maybeSingle();
@@ -75,7 +89,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const signInWithGoogle = async () => {
-    const result = await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin });
+    try {
+      sessionStorage.setItem("postAuthRedirect", window.location.pathname);
+    } catch {
+      /* ignore */
+    }
+    const result = await lovable.auth.signInWithOAuth("google", {
+      redirect_uri: `${window.location.origin}/auth/callback`,
+    });
     if (result.error) return { error: (result.error as Error).message };
     return {};
   };
