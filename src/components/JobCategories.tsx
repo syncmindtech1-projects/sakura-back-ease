@@ -9,6 +9,10 @@ import catEducation from "@/assets/cat-education.jpg";
 import catMarketing from "@/assets/cat-marketing.jpg";
 import catManufacturing from "@/assets/cat-manufacturing.jpg";
 import catHospitality from "@/assets/cat-hospitality.jpg";
+import catTransportation from "@/assets/cat-transportation.jpg";
+import catRetail from "@/assets/cat-retail.jpg";
+import catEngineering from "@/assets/cat-engineering.jpg";
+import catLegal from "@/assets/cat-legal.jpg";
 
 const categoryImages: Record<string, string> = {
   Technology: catTech,
@@ -19,6 +23,10 @@ const categoryImages: Record<string, string> = {
   Marketing: catMarketing,
   Manufacturing: catManufacturing,
   Hospitality: catHospitality,
+  Transportation: catTransportation,
+  Retail: catRetail,
+  Engineering: catEngineering,
+  Legal: catLegal,
 };
 
 const jobCategories = getJobCategoriesWithCounts();

@@ -3,4 +3,4 @@ Allow: /
 Disallow: /admin
 Disallow: /admin-login
 
-Sitemap: https://sakura-back-ease.lovable.app/sitemap.xml
+Sitemap: https://jobsphere.net/sitemap.xml
