@@ -61,10 +61,13 @@ const Footer = () => {
 
         <div className="border-t border-background/10 mt-12 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-sm text-background/40">© {new Date().getFullYear()} JobSphere. All rights reserved.</p>
-          <div className="flex items-center gap-6">
+          <nav aria-label="Legal" className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
             <Link to="/about" className="text-sm text-background/40 hover:text-background/70 transition-colors">About</Link>
             <Link to="/contact" className="text-sm text-background/40 hover:text-background/70 transition-colors">Contact</Link>
-          </div>
+            <Link to="/privacy-policy" className="text-sm text-background/40 hover:text-background/70 transition-colors">Privacy Policy</Link>
+            <Link to="/terms-of-service" className="text-sm text-background/40 hover:text-background/70 transition-colors">Terms of Service</Link>
+            <Link to="/disclaimer" className="text-sm text-background/40 hover:text-background/70 transition-colors">Disclaimer</Link>
+          </nav>
         </div>
       </div>
     </footer>

@@ -9,6 +9,10 @@ import catEducation from "@/assets/cat-education.jpg";
 import catManufacturing from "@/assets/cat-manufacturing.jpg";
 import catMarketing from "@/assets/cat-marketing.jpg";
 import catHospitality from "@/assets/cat-hospitality.jpg";
+import catTransportation from "@/assets/cat-transportation.jpg";
+import catRetail from "@/assets/cat-retail.jpg";
+import catEngineering from "@/assets/cat-engineering.jpg";
+import catLegal from "@/assets/cat-legal.jpg";
 
 const imageMap: Record<string, string> = {
   Technology: catTech,
@@ -19,10 +23,10 @@ const imageMap: Record<string, string> = {
   Manufacturing: catManufacturing,
   Marketing: catMarketing,
   Hospitality: catHospitality,
-  Transportation: catManufacturing,
-  Retail: catMarketing,
-  Engineering: catConstruction,
-  Legal: catFinance,
+  Transportation: catTransportation,
+  Retail: catRetail,
+  Engineering: catEngineering,
+  Legal: catLegal,
 };
 
 const colorMap: Record<string, string> = {
