@@ -269,6 +269,30 @@ export type Database = {
         }
         Relationships: []
       }
+      signup_notifications: {
+        Row: {
+          email: string | null
+          full_name: string | null
+          method: string | null
+          notified_at: string
+          user_id: string
+        }
+        Insert: {
+          email?: string | null
+          full_name?: string | null
+          method?: string | null
+          notified_at?: string
+          user_id: string
+        }
+        Update: {
+          email?: string | null
+          full_name?: string | null
+          method?: string | null
+          notified_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       site_ads: {
         Row: {
           active: boolean
