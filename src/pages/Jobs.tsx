@@ -39,7 +39,6 @@ const Jobs = () => {
           description: p.description,
           tags: [p.category ?? "General"].filter(Boolean),
           applyUrl: p.apply_url ?? `mailto:${p.contact_email}`,
-          logo: "💼",
           remote: /remote/i.test(p.location ?? ""),
           urgent: false,
           featured: true,
@@ -140,7 +139,7 @@ const Jobs = () => {
                   <motion.div key={job.id} className="group bg-card rounded-2xl border border-border p-5 hover:shadow-elevated hover:border-primary/20 transition-all" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.03 }}>
                     <Link to={`/jobs/${job.id}`} className="block">
                       <div className="flex flex-col sm:flex-row sm:items-start gap-4">
-                        <div className="w-12 h-12 rounded-xl bg-secondary flex items-center justify-center text-xl shrink-0">{job.logo}</div>
+                        <CompanyLogo name={job.company} size="md" />
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 flex-wrap mb-1">
                             {job.remote && <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded-md bg-accent/10 text-accent">Remote</span>}
@@ -190,7 +189,7 @@ const Jobs = () => {
 
               {filtered.length === 0 && (
                 <div className="text-center py-16">
-                  <span className="text-5xl block mb-4">🔍</span>
+                  <SearchX size={44} className="mx-auto mb-4 text-primary" />
                   <h3 className="text-lg font-semibold text-foreground mb-2">No jobs found</h3>
                   <p className="text-sm text-muted-foreground">Try adjusting your filters or search terms</p>
                   <button onClick={() => { setSearchQuery(""); setTypeFilter("All"); setLocationFilter("All Locations"); }} className="mt-4 text-sm font-semibold text-primary hover:underline">

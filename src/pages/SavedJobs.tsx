@@ -28,7 +28,6 @@ const SavedJobs = () => {
         description: p.description,
         tags: [p.category ?? "General"].filter(Boolean),
         applyUrl: p.apply_url ?? `mailto:${p.contact_email}`,
-        logo: "💼",
         remote: /remote/i.test(p.location ?? ""),
         urgent: false,
         featured: true,
@@ -71,9 +70,7 @@ const SavedJobs = () => {
                 >
                   <div className="flex flex-col sm:flex-row sm:items-start gap-4">
                     <Link to={`/jobs/${job.id}`} className="flex items-start gap-3 flex-1 min-w-0">
-                      <div className="w-12 h-12 rounded-xl bg-secondary flex items-center justify-center text-xl shrink-0">
-                        {job.logo}
-                      </div>
+                      <CompanyLogo name={job.company} size="md" />
                       <div className="min-w-0">
                         <div className="flex items-center gap-2 flex-wrap mb-1">
                           {job.remote && <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded-md bg-accent/10 text-accent">Remote</span>}
@@ -111,7 +108,7 @@ const SavedJobs = () => {
             </div>
           ) : (
             <div className="text-center py-20">
-              <span className="text-6xl block mb-4">💼</span>
+              <Bookmark size={52} className="mx-auto mb-4 text-primary" />
               <h3 className="text-xl font-bold text-foreground mb-2">No saved jobs yet</h3>
               <p className="text-muted-foreground mb-6">Browse jobs and click the bookmark icon to save them here</p>
               <Link to="/jobs" className="inline-flex items-center gap-2 gradient-primary text-primary-foreground font-semibold px-6 py-3 rounded-xl hover:opacity-90 transition-opacity">
