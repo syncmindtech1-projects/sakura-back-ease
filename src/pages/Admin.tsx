@@ -52,9 +52,23 @@ const Admin = () => {
       ]);
       setJobs(j || []); setSubs(s || []); setAds(a || []); setLeads(l || []);
     } catch (e: any) {
+      if (/unauthor|invalid|credential|forbidden/i.test(e.message || "")) {
+        sessionStorage.removeItem("jobsphere_admin");
+        navigate("/admin-login", { replace: true });
+        return;
+      }
       toast({ title: "Load failed", description: e.message, variant: "destructive" });
     } finally { setBusy(false); }
   };
+
+
+  useEffect(() => {
+    const meta = document.createElement("meta");
+    meta.name = "robots";
+    meta.content = "noindex, nofollow, noarchive";
+    document.head.appendChild(meta);
+    return () => { document.head.removeChild(meta); };
+  }, []);
 
   useEffect(() => { if (creds) refresh(); /* eslint-disable-next-line */ }, [creds]);
 
