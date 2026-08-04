@@ -1,7 +1,8 @@
 import PageLayout from "@/components/PageLayout";
 import AdsBanner from "@/components/AdsBanner";
 import { motion } from "framer-motion";
-import { MapPin, Clock, Bookmark, Search, Briefcase, SlidersHorizontal, ExternalLink } from "lucide-react";
+import { MapPin, Clock, Bookmark, Search, Briefcase, SlidersHorizontal, ExternalLink, SearchX } from "lucide-react";
+import CompanyLogo from "@/components/CompanyLogo";
 import { featuredJobs, Job } from "@/lib/jobData";
 import { useEffect, useState, useMemo } from "react";
 import { useSearchParams, Link } from "react-router-dom";
