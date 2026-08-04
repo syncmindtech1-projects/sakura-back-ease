@@ -4,17 +4,29 @@ import { motion } from "framer-motion";
 import { Mail, MapPin, Phone, Clock, MessageSquare, Send } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 const Contact = () => {
   const [formData, setFormData] = useState({ name: "", email: "", subject: "", message: "" });
   const { toast } = useToast();
 
-  const handleSubmit = () => {
+  const [sending, setSending] = useState(false);
+
+  const handleSubmit = async () => {
     if (!formData.name || !formData.email || !formData.message) {
       toast({ title: "Missing fields", description: "Please fill in all required fields.", variant: "destructive" });
       return;
     }
-    toast({ title: "Message sent! ✅", description: "We'll get back to you within 24 hours." });
+    setSending(true);
+    const { data, error } = await supabase.functions.invoke("submit-contact", {
+      body: { form_type: "contact", ...formData },
+    });
+    setSending(false);
+    if (error || (data as any)?.error) {
+      toast({ title: "Could not send", description: (data as any)?.error || error?.message, variant: "destructive" });
+      return;
+    }
+    toast({ title: "Message sent!", description: "Our team will get back to you within 24 hours." });
     setFormData({ name: "", email: "", subject: "", message: "" });
   };
 
@@ -85,8 +97,8 @@ const Contact = () => {
                   <label className="text-sm font-medium text-foreground mb-1.5 block">Message *</label>
                   <textarea placeholder="Tell us how we can help..." rows={5} value={formData.message} onChange={(e) => setFormData({ ...formData, message: e.target.value })} className="w-full px-4 py-3 rounded-xl bg-secondary border border-border text-sm text-foreground placeholder:text-muted-foreground outline-none focus:border-primary resize-none transition-colors" />
                 </div>
-                <button onClick={handleSubmit} className="gradient-primary text-primary-foreground font-semibold px-8 py-3.5 rounded-xl hover:opacity-90 transition-opacity w-full sm:w-auto inline-flex items-center gap-2 justify-center active:scale-[0.97]">
-                  <Send size={16} /> Send Message
+                <button onClick={handleSubmit} disabled={sending} className="gradient-primary text-primary-foreground font-semibold px-8 py-3.5 rounded-xl hover:opacity-90 transition-opacity w-full sm:w-auto inline-flex items-center gap-2 justify-center active:scale-[0.97]">
+                  <Send size={16} /> {sending ? "Sending…" : "Send Message"}
                 </button>
               </div>
             </motion.div>

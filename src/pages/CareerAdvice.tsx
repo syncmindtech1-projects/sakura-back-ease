@@ -8,7 +8,7 @@ interface Article {
   title: string;
   tag: string;
   read: string;
-  emoji: string;
+  image: string;
   author: string;
   date: string;
   excerpt: string;
@@ -18,7 +18,7 @@ interface Article {
 const articles: Article[] = [
   {
     title: "How to Write a Resume That Gets Noticed",
-    tag: "Resume", read: "5 min", emoji: "📝",
+    tag: "Resume", read: "5 min", image: "https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=640&h=360&fit=crop",
     author: "Sarah Mitchell", date: "Mar 15, 2026",
     excerpt: "Your resume is the first impression employers get. Learn formatting tips, keyword optimization, and how to highlight achievements over duties.",
     content: [
@@ -36,7 +36,7 @@ const articles: Article[] = [
   },
   {
     title: "10 Interview Questions You Must Prepare For",
-    tag: "Interview", read: "8 min", emoji: "🎯",
+    tag: "Interview", read: "8 min", image: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=640&h=360&fit=crop",
     author: "James Torres", date: "Mar 12, 2026",
     excerpt: "From 'Tell me about yourself' to 'Why should we hire you?' — master the most common interview questions with expert-crafted answers.",
     content: [
@@ -54,7 +54,7 @@ const articles: Article[] = [
   },
   {
     title: "Negotiating Your Salary: A Complete Guide",
-    tag: "Salary", read: "6 min", emoji: "💰",
+    tag: "Salary", read: "6 min", image: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=640&h=360&fit=crop",
     author: "Emily Chen", date: "Mar 10, 2026",
     excerpt: "Most people leave thousands on the table. Learn when to negotiate, what to say, and how to research your market value.",
     content: [
@@ -67,7 +67,7 @@ const articles: Article[] = [
   },
   {
     title: "Remote Work: Tips for Staying Productive",
-    tag: "Remote", read: "4 min", emoji: "🏠",
+    tag: "Remote", read: "4 min", image: "https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=640&h=360&fit=crop",
     author: "Marcus Johnson", date: "Mar 8, 2026",
     excerpt: "Set boundaries, create a dedicated workspace, and use time-blocking techniques to thrive in a remote work environment.",
     content: [
@@ -79,7 +79,7 @@ const articles: Article[] = [
   },
   {
     title: "Career Change at 30: Is It Too Late?",
-    tag: "Career", read: "7 min", emoji: "🔄",
+    tag: "Career", read: "7 min", image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=640&h=360&fit=crop",
     author: "Priya Sharma", date: "Mar 5, 2026",
     excerpt: "Spoiler: It's never too late. Discover how transferable skills, reskilling programs, and strategic networking can transform your career.",
     content: [
@@ -92,7 +92,7 @@ const articles: Article[] = [
   },
   {
     title: "Building Your LinkedIn Profile for Job Hunting",
-    tag: "Networking", read: "5 min", emoji: "🔗",
+    tag: "Networking", read: "5 min", image: "https://images.unsplash.com/photo-1515169067868-5387ec356754?w=640&h=360&fit=crop",
     author: "David Kim", date: "Mar 3, 2026",
     excerpt: "Optimize your headline, craft a compelling summary, and leverage LinkedIn's algorithm to get noticed by recruiters.",
     content: [
@@ -104,7 +104,7 @@ const articles: Article[] = [
   },
   {
     title: "From Trades to Tech: Making the Transition",
-    tag: "Career", read: "6 min", emoji: "🔧",
+    tag: "Career", read: "6 min", image: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=640&h=360&fit=crop",
     author: "Mike Reynolds", date: "Feb 28, 2026",
     excerpt: "Many skilled tradespeople successfully move into tech roles. Learn about bootcamps, certifications, and which tech jobs value hands-on experience.",
     content: [
@@ -116,7 +116,7 @@ const articles: Article[] = [
   },
   {
     title: "The Hidden Job Market: How to Access It",
-    tag: "Networking", read: "5 min", emoji: "🕵️",
+    tag: "Networking", read: "5 min", image: "https://images.unsplash.com/photo-1497215728101-856f4ea42174?w=640&h=360&fit=crop",
     author: "Lisa Park", date: "Feb 25, 2026",
     excerpt: "Up to 80% of jobs are never publicly posted. Discover how informational interviews and professional networks unlock hidden opportunities.",
     content: [
@@ -146,7 +146,7 @@ const CareerAdvice = () => {
       <section className="bg-gradient-to-br from-[hsl(45,40%,96%)] to-[hsl(160,25%,95%)] py-10 md:py-14">
         <div className="container mx-auto px-4 md:px-8">
           <motion.h1 className="text-3xl md:text-5xl font-bold font-display text-foreground mb-2" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-            📖 Career Advice
+            Career Advice
           </motion.h1>
           <p className="text-muted-foreground mb-6">Expert tips to level up your career — click any article to read the full guide.</p>
           <div className="flex flex-col sm:flex-row gap-3">
@@ -170,7 +170,7 @@ const CareerAdvice = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filtered.map((a, i) => (
               <motion.article key={a.title} onClick={() => setOpenArticle(a)} className="group bg-card rounded-2xl border border-border overflow-hidden hover:shadow-elevated hover:border-primary/30 transition-all cursor-pointer text-left" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.04 }}>
-                <div className="h-32 bg-gradient-to-br from-secondary to-muted flex items-center justify-center text-6xl">{a.emoji}</div>
+                <img src={a.image} alt={a.title} loading="lazy" className="h-40 w-full object-cover" />
                 <div className="p-6">
                   <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-primary/10 text-primary">{a.tag}</span>
                   <h3 className="text-lg font-semibold font-display text-foreground mt-3 mb-2 group-hover:text-primary transition-colors leading-snug">{a.title}</h3>
@@ -201,7 +201,7 @@ const CareerAdvice = () => {
                 <button onClick={() => setOpenArticle(null)} className="p-1.5 rounded-lg hover:bg-secondary"><X size={18} /></button>
               </div>
               <div className="px-6 py-6 md:px-10 md:py-8">
-                <div className="text-5xl mb-3">{openArticle.emoji}</div>
+                <img src={openArticle.image} alt={openArticle.title} className="w-full h-48 object-cover rounded-2xl mb-4" />
                 <h2 className="text-2xl md:text-3xl font-bold font-display text-foreground leading-tight">{openArticle.title}</h2>
                 <div className="flex items-center gap-4 text-xs text-muted-foreground mt-3 mb-6">
                   <span className="flex items-center gap-1"><User size={12} />{openArticle.author}</span>

@@ -4,6 +4,8 @@ import { motion } from "framer-motion";
 import { ArrowRight, Search, Briefcase, MapPin, Clock } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import { getJobCategoriesWithCounts, featuredJobs } from "@/lib/jobData";
+import { getCategoryIcon } from "@/lib/categoryIcons";
+import CompanyLogo from "@/components/CompanyLogo";
 
 const jobCategories = getJobCategoriesWithCounts();
 import { useState } from "react";
@@ -22,7 +24,7 @@ const Categories = () => {
           <div className="container mx-auto px-4 md:px-8">
             <Link to="/categories" className="text-sm text-primary hover:underline mb-4 inline-block">← All Categories</Link>
             <motion.h1 className="text-3xl md:text-5xl font-bold font-display text-foreground mb-2" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-              {catData?.icon} {catData?.name || category} Jobs
+              {catData?.name || category} Jobs
             </motion.h1>
             <p className="text-muted-foreground">{catData?.count.toLocaleString() || 0} positions available</p>
           </div>
@@ -36,7 +38,7 @@ const Categories = () => {
                   <Link key={job.id} to={`/jobs/${job.id}`} className="block">
                     <motion.div className="bg-card rounded-2xl border border-border p-5 hover:shadow-elevated hover:border-primary/20 transition-all cursor-pointer" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
                       <div className="flex items-start gap-4">
-                        <div className="w-11 h-11 rounded-xl bg-secondary flex items-center justify-center text-lg">{job.logo}</div>
+                        <CompanyLogo name={job.company} size="sm" />
                         <div className="flex-1">
                           <h3 className="text-base font-semibold text-foreground group-hover:text-primary transition-colors">{job.title}</h3>
                           <p className="text-sm text-muted-foreground">{job.company}</p>
@@ -62,7 +64,7 @@ const Categories = () => {
               </div>
             ) : (
               <div className="text-center py-16">
-                <span className="text-5xl block mb-4">{catData?.icon || "📂"}</span>
+                {(() => { const Icon = getCategoryIcon(catData?.name || category); return <Icon size={44} className="mx-auto mb-4 text-primary" />; })()}
                 <h3 className="text-lg font-semibold text-foreground mb-2">Jobs coming soon</h3>
                 <p className="text-sm text-muted-foreground">We're actively curating {catData?.name || category} jobs. Check back shortly!</p>
                 <Link to="/jobs" className="mt-4 inline-block text-sm font-semibold text-primary hover:underline">Browse all jobs →</Link>
@@ -111,7 +113,7 @@ const Categories = () => {
               <motion.div key={cat.name} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.04 }}>
                 <Link to={`/categories/${cat.name.toLowerCase()}`} className="group flex flex-col h-full p-6 rounded-2xl border border-border bg-card hover:shadow-elevated hover:border-primary/20 transition-all">
                   <div className="flex items-center justify-between mb-3">
-                    <span className="text-4xl">{cat.icon}</span>
+                    {(() => { const Icon = getCategoryIcon(cat.name); return <Icon size={30} className="text-primary" />; })()}
                     <span className="text-xs font-bold px-2 py-1 rounded-full bg-primary/10 text-primary">{cat.count.toLocaleString()} jobs</span>
                   </div>
                   <h3 className="text-lg font-bold text-foreground group-hover:text-primary transition-colors">{cat.name}</h3>

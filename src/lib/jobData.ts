@@ -8,7 +8,7 @@ export interface Job {
   
   salary: string;
   posted: string;
-  logo: string;
+  logo?: string;
   featured?: boolean;
   remote?: boolean;
   urgent?: boolean;

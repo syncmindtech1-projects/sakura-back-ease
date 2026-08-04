@@ -59,6 +59,39 @@ export type Database = {
         }
         Relationships: []
       }
+      contact_messages: {
+        Row: {
+          created_at: string
+          email: string
+          form_type: string
+          id: string
+          message: string | null
+          meta: Json | null
+          name: string | null
+          subject: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          form_type: string
+          id?: string
+          message?: string | null
+          meta?: Json | null
+          name?: string | null
+          subject?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          form_type?: string
+          id?: string
+          message?: string | null
+          meta?: Json | null
+          name?: string | null
+          subject?: string | null
+        }
+        Relationships: []
+      }
       job_submissions: {
         Row: {
           apply_url: string | null

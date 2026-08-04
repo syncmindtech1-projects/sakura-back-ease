@@ -2,7 +2,8 @@ import PageLayout from "@/components/PageLayout";
 import { useParams, Link } from "react-router-dom";
 import { featuredJobs } from "@/lib/jobData";
 import { motion } from "framer-motion";
-import { MapPin, Clock, Briefcase, Bookmark, ArrowLeft, Share2, Building2, DollarSign, Tag, ExternalLink, Loader2 } from "lucide-react";
+import { MapPin, Clock, Briefcase, Bookmark, ArrowLeft, Share2, Building2, DollarSign, Tag, ExternalLink, Loader2, Check, SearchX } from "lucide-react";
+import CompanyLogo from "@/components/CompanyLogo";
 import AdsBanner from "@/components/AdsBanner";
 import { useSavedJobs } from "@/contexts/SavedJobsContext";
 import { useToast } from "@/hooks/use-toast";
@@ -55,7 +56,6 @@ const JobDetail = () => {
     description: postedJob.description,
     tags: [postedJob.category ?? "General"].filter(Boolean) as string[],
     applyUrl: postedJob.apply_url ?? `mailto:${postedJob.contact_email}`,
-    logo: "💼",
     remote: /remote/i.test(postedJob.location ?? ""),
     urgent: false,
     featured: true,
@@ -96,7 +96,7 @@ const JobDetail = () => {
     return (
       <PageLayout>
         <div className="container mx-auto px-4 py-20 text-center">
-          <span className="text-6xl block mb-4">😕</span>
+          <SearchX size={52} className="mx-auto mb-4 text-primary" />
           <h1 className="text-2xl font-bold text-foreground mb-2">Job Not Found</h1>
           <p className="text-muted-foreground mb-6">This job listing may have been removed or expired.</p>
           <Link to="/jobs" className="text-sm font-semibold text-primary hover:underline">← Back to all jobs</Link>
@@ -118,7 +118,7 @@ const JobDetail = () => {
             <ArrowLeft size={16} /> Back to jobs
           </Link>
           <motion.div className="flex flex-col md:flex-row md:items-start gap-6" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-            <div className="w-16 h-16 rounded-2xl bg-secondary flex items-center justify-center text-3xl shrink-0">{job.logo}</div>
+            <CompanyLogo name={job.company} size="lg" />
             <div className="flex-1 min-w-0">
               <div className="flex flex-wrap items-center gap-2 mb-2">
                 {job.remote && <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded-md bg-accent/10 text-accent">Remote</span>}
@@ -179,7 +179,7 @@ const JobDetail = () => {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     {job.benefits.map((benefit, i) => (
                       <div key={i} className="flex items-center gap-2 text-sm text-muted-foreground bg-secondary/50 px-3 py-2 rounded-lg">
-                        <span className="text-accent">✓</span>{benefit}
+                        <Check size={14} className="text-accent shrink-0 mt-1" />{benefit}
                       </div>
                     ))}
                   </div>
@@ -231,7 +231,7 @@ const JobDetail = () => {
                     {similarJobs.map((sj) => (
                       <Link key={sj.id} to={`/jobs/${sj.id}`} className="block p-3 rounded-xl hover:bg-secondary transition-colors group">
                         <div className="flex items-start gap-2">
-                          <span className="text-lg">{sj.logo}</span>
+                          <CompanyLogo name={sj.company} size="sm" />
                           <div className="min-w-0">
                             <p className="text-sm font-medium text-foreground group-hover:text-primary transition-colors truncate">{sj.title}</p>
                             <p className="text-xs text-muted-foreground">{sj.company}</p>
