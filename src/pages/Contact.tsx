@@ -14,7 +14,7 @@ const Contact = () => {
       toast({ title: "Missing fields", description: "Please fill in all required fields.", variant: "destructive" });
       return;
     }
-    toast({ title: "Message sent! ✅", description: "We'll get back to you within 24 hours." });
+    toast({ title: "Message sent!", description: "We'll get back to you within 24 hours." });
     setFormData({ name: "", email: "", subject: "", message: "" });
   };
 

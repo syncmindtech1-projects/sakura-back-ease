@@ -23,7 +23,7 @@ const JobAlerts = () => {
       toast({ title: "Email required", description: "Please enter your email address.", variant: "destructive" });
       return;
     }
-    toast({ title: "Alert created! ✅", description: `We'll send ${frequency} job alerts to ${email}` });
+    toast({ title: "Alert created!", description: `We'll send ${frequency} job alerts to ${email}` });
     setEmail("");
     setJobTitle("");
     setLocation("");
@@ -34,7 +34,7 @@ const JobAlerts = () => {
       <section className="bg-gradient-to-br from-[hsl(45,40%,96%)] to-[hsl(160,25%,95%)] py-10 md:py-14">
         <div className="container mx-auto px-4 md:px-8">
           <motion.div className="max-w-2xl" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-            <h1 className="text-3xl md:text-5xl font-bold font-display text-foreground mb-4">🔔 Job Alerts</h1>
+            <h1 className="text-3xl md:text-5xl font-bold font-display text-foreground mb-4">Job Alerts</h1>
             <p className="text-lg text-muted-foreground">Never miss an opportunity — get personalized job alerts delivered to your inbox.</p>
           </motion.div>
         </div>

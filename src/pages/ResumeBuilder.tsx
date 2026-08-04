@@ -71,7 +71,7 @@ const ResumeBuilder = () => {
       <section className="bg-gradient-to-br from-[hsl(45,40%,96%)] to-[hsl(160,25%,95%)] py-10 md:py-14 no-print">
         <div className="container mx-auto px-4 md:px-8">
           <motion.h1 className="text-3xl md:text-5xl font-bold font-display text-foreground mb-4" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-            📝 Resume Builder
+            Resume Builder
           </motion.h1>
           <p className="text-lg text-muted-foreground max-w-2xl">Fill in your details on the left, preview live on the right, then download as PDF — free and instant.</p>
         </div>

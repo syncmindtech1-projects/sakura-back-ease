@@ -32,7 +32,7 @@ const Auth = () => {
       return;
     }
     if (mode === "register") {
-      toast({ title: "Welcome to JobSphere 🎉", description: "Please check your email to confirm your account, then log in." });
+      toast({ title: "Welcome to JobSphere", description: "Please check your email to confirm your account, then log in." });
       setMode("login");
     } else {
       toast({ title: "Welcome back!" });

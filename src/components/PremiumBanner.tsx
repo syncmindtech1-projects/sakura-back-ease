@@ -141,7 +141,7 @@ const PremiumBanner = ({ user, displayName, newJobsCount, onLogout }: PremiumBan
           {user ? (
             <>
               <span className="hidden md:inline" style={{ fontSize: 16, fontWeight: 600, color: "#fff" }}>
-                👋 Hi, {displayName}
+                Hi, {displayName}
               </span>
               <button
                 onClick={onLogout}

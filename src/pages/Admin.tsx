@@ -229,7 +229,7 @@ const AdsPanel = ({ ads, onEdit, onNew, onDelete }: any) => (
             <>
               <p className="font-semibold text-sm">{ad.title}</p>
               <p className="text-xs text-muted-foreground line-clamp-2 mt-1">{ad.blurb}</p>
-              {ad.video_url && <p className="text-[11px] mt-2 text-primary truncate">🎬 {ad.video_url}</p>}
+              {ad.video_url && <p className="text-[11px] mt-2 text-primary truncate">{ad.video_url}</p>}
               <div className="flex gap-2 mt-3">
                 <button onClick={() => onEdit(ad)} className="text-xs px-3 py-2 rounded-lg border border-border inline-flex items-center gap-1"><Pencil size={12} /> Edit</button>
                 <button onClick={() => onDelete(ad.id)} className="text-xs px-3 py-2 rounded-lg border border-border text-red-600 inline-flex items-center gap-1"><Trash2 size={12} /> Remove</button>
@@ -254,7 +254,7 @@ const LeadsPanel = ({ leads }: any) => (
         <div key={l.id} className="p-4">
           <p className="font-semibold">{l.advertiser_name} <span className="text-xs text-muted-foreground">· {l.contact_email}</span></p>
           <p className="text-xs text-muted-foreground">{l.company || "—"} · Budget: {l.budget || "—"} · Type: {l.ad_type || "—"}</p>
-          {l.video_url && <p className="text-xs text-primary">🎬 {l.video_url}</p>}
+          {l.video_url && <p className="text-xs text-primary">{l.video_url}</p>}
           <p className="text-sm mt-1">{l.message}</p>
         </div>
       ))}

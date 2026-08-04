@@ -56,7 +56,7 @@ const PostJob = () => {
       }).catch(() => {});
 
       toast({
-        title: "Submitted for review ✅",
+        title: "Submitted for review",
         description: `"${formData.title}" has been sent to the SyncMind Tech team. It will go live once approved (usually within a few hours).`,
       });
       setFormData({ title: "", company: "", contact_email: "", location: "", salary: "", apply_url: "", type: "Full-time", category: "Technology", description: "" });
