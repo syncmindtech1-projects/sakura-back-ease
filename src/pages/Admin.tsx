@@ -76,6 +76,17 @@ const Admin = () => {
 
   useEffect(() => { if (creds) refresh(); /* eslint-disable-next-line */ }, [creds]);
 
+  // Keep signups near real time.
+  useEffect(() => {
+    if (!creds) return;
+    const t = setInterval(() => {
+      call("list_signups").then((u) => setSignups(u || [])).catch(() => {});
+    }, 20000);
+    return () => clearInterval(t);
+    /* eslint-disable-next-line */
+  }, [creds]);
+
+
   const logout = () => { sessionStorage.removeItem("jobsphere_admin"); navigate("/admin-login"); };
 
   return (
