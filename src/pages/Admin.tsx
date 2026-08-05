@@ -2,9 +2,10 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Briefcase, Megaphone, Inbox, LogOut, Plus, Pencil, Trash2, Check, X, Video, Loader2 } from "lucide-react";
+import { Briefcase, Megaphone, Inbox, LogOut, Plus, Pencil, Trash2, Check, X, Video, Loader2, LayoutDashboard, Users } from "lucide-react";
 
-type Tab = "jobs" | "submissions" | "ads" | "leads";
+type Tab = "overview" | "jobs" | "submissions" | "ads" | "leads" | "users";
+
 
 const AD_SLOTS = [
   { key: "banner-0", label: "Text ad – slot 1", kind: "text" },
@@ -18,13 +19,15 @@ const AD_SLOTS = [
 const Admin = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [tab, setTab] = useState<Tab>("jobs");
+  const [tab, setTab] = useState<Tab>("overview");
   const [busy, setBusy] = useState(false);
   const [creds, setCreds] = useState<{ username: string; password: string } | null>(null);
   const [jobs, setJobs] = useState<any[]>([]);
   const [subs, setSubs] = useState<any[]>([]);
   const [ads, setAds] = useState<any[]>([]);
   const [leads, setLeads] = useState<any[]>([]);
+  const [signups, setSignups] = useState<any[]>([]);
+
   const [editingJob, setEditingJob] = useState<any | null>(null);
   const [editingAd, setEditingAd] = useState<any | null>(null);
 
@@ -47,10 +50,11 @@ const Admin = () => {
     if (!creds) return;
     setBusy(true);
     try {
-      const [j, s, a, l] = await Promise.all([
-        call("list_jobs"), call("list_submissions"), call("list_ads"), call("list_ad_submissions"),
+      const [j, s, a, l, u] = await Promise.all([
+        call("list_jobs"), call("list_submissions"), call("list_ads"), call("list_ad_submissions"), call("list_signups"),
       ]);
-      setJobs(j || []); setSubs(s || []); setAds(a || []); setLeads(l || []);
+      setJobs(j || []); setSubs(s || []); setAds(a || []); setLeads(l || []); setSignups(u || []);
+
     } catch (e: any) {
       if (/unauthor|invalid|credential|forbidden/i.test(e.message || "")) {
         sessionStorage.removeItem("jobsphere_admin");
@@ -72,6 +76,17 @@ const Admin = () => {
 
   useEffect(() => { if (creds) refresh(); /* eslint-disable-next-line */ }, [creds]);
 
+  // Keep signups near real time.
+  useEffect(() => {
+    if (!creds) return;
+    const t = setInterval(() => {
+      call("list_signups").then((u) => setSignups(u || [])).catch(() => {});
+    }, 20000);
+    return () => clearInterval(t);
+    /* eslint-disable-next-line */
+  }, [creds]);
+
+
   const logout = () => { sessionStorage.removeItem("jobsphere_admin"); navigate("/admin-login"); };
 
   return (
@@ -92,10 +107,12 @@ const Admin = () => {
       <div className="container mx-auto px-4 md:px-8 py-6">
         <nav className="flex flex-wrap gap-2 mb-6">
           {[
+            { id: "overview", label: "Overview", icon: LayoutDashboard, count: signups.filter((s: any) => !s.reviewed).length },
             { id: "jobs", label: "Live Jobs", icon: Briefcase, count: jobs.length },
             { id: "submissions", label: "Pending Submissions", icon: Inbox, count: subs.filter(s => s.status === "pending").length },
             { id: "ads", label: "Site Ads", icon: Megaphone, count: ads.length },
             { id: "leads", label: "Ad Leads", icon: Inbox, count: leads.length },
+            { id: "users", label: "User Management", icon: Users, count: signups.length },
           ].map((t: any) => (
             <button key={t.id} onClick={() => setTab(t.id)}
               className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold border ${tab === t.id ? "bg-primary text-primary-foreground border-primary" : "bg-card border-border hover:bg-secondary"}`}>
@@ -108,6 +125,17 @@ const Admin = () => {
           </button>
         </nav>
 
+        {tab === "overview" && (
+          <OverviewPanel signups={signups} jobs={jobs} subs={subs} leads={leads} onViewAll={() => setTab("users")} />
+        )}
+
+        {tab === "users" && (
+          <UsersPanel signups={signups} onReview={async (uid: string, reviewed: boolean) => {
+            await call("mark_signup_reviewed", { user_id: uid, reviewed });
+            setSignups((prev) => prev.map((s) => (s.user_id === uid ? { ...s, reviewed } : s)));
+          }} />
+        )}
+
         {tab === "jobs" && (
           <JobsPanel jobs={jobs} onEdit={setEditingJob} onDelete={async (id) => {
             if (!confirm("Delete this job?")) return;
@@ -117,8 +145,14 @@ const Admin = () => {
 
         {tab === "submissions" && (
           <SubmissionsPanel subs={subs}
-            onApprove={async (id) => { await call("approve_submission", { id }); await refresh(); toast({ title: "Approved and published" }); }}
-            onReject={async (id) => { await call("reject_submission", { id }); await refresh(); }}
+            onApprove={async (id) => { await call("approve_submission", { id }); await refresh(); toast({ title: "Approved and published", description: "The provider has been emailed." }); }}
+            onReject={async (id) => {
+              const reason = prompt("Reason for rejection (emailed to the provider):");
+              if (!reason) return;
+              await call("reject_submission", { id, reason });
+              await refresh();
+              toast({ title: "Rejected", description: "The provider has been emailed the reason." });
+            }}
             onDelete={async (id) => { if (confirm("Delete?")) { await call("delete_submission", { id }); await refresh(); } }}
           />
         )}
@@ -128,7 +162,18 @@ const Admin = () => {
             onDelete={async (id) => { if (confirm("Remove ad?")) { await call("delete_ad", { id }); await refresh(); } }} />
         )}
 
-        {tab === "leads" && <LeadsPanel leads={leads} />}
+        {tab === "leads" && (
+          <LeadsPanel leads={leads}
+            onApprove={async (id: string) => { await call("approve_ad_submission", { id }); await refresh(); toast({ title: "Ad approved", description: "The advertiser has been emailed." }); }}
+            onReject={async (id: string) => {
+              const reason = prompt("Reason for rejection (emailed to the advertiser):");
+              if (!reason) return;
+              await call("reject_ad_submission", { id, reason });
+              await refresh();
+              toast({ title: "Ad rejected" });
+            }} />
+        )}
+
       </div>
 
       {editingJob && (
@@ -260,18 +305,114 @@ const AdsPanel = ({ ads, onEdit, onNew, onDelete }: any) => (
   </div>
 );
 
-const LeadsPanel = ({ leads }: any) => (
+const fmt = (d: string) => (d ? new Date(d).toLocaleString() : "—");
+
+const RoleBadge = ({ role }: { role?: string }) => (
+  <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold uppercase ${role === "Job Provider" ? "bg-primary/10 text-primary" : "bg-secondary text-muted-foreground"}`}>
+    {role || "Job Seeker"}
+  </span>
+);
+
+const OverviewPanel = ({ signups, jobs, subs, leads, onViewAll }: any) => (
+  <div className="space-y-5">
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+      {[
+        { label: "Total users", value: signups.length },
+        { label: "New (unreviewed)", value: signups.filter((s: any) => !s.reviewed).length },
+        { label: "Live jobs", value: jobs.length },
+        { label: "Pending approvals", value: subs.filter((s: any) => s.status === "pending").length + leads.filter((l: any) => (l.status ?? "pending") === "pending").length },
+      ].map((c) => (
+        <div key={c.label} className="bg-card border border-border rounded-2xl p-4">
+          <p className="text-2xl font-bold font-display">{c.value}</p>
+          <p className="text-xs text-muted-foreground">{c.label}</p>
+        </div>
+      ))}
+    </div>
+
+    <div className="bg-card border border-border rounded-2xl overflow-hidden">
+      <div className="flex items-center justify-between p-4 border-b border-border">
+        <div>
+          <h2 className="font-bold font-display">New signups</h2>
+          <p className="text-xs text-muted-foreground">10 most recent registrations</p>
+        </div>
+        <button onClick={onViewAll} className="text-xs font-semibold px-3 py-2 rounded-lg border border-border hover:bg-secondary">View all in User Management</button>
+      </div>
+      <div className="divide-y divide-border">
+        {signups.slice(0, 10).map((s: any) => (
+          <div key={s.user_id} className={`p-4 flex flex-wrap items-center gap-2 ${s.reviewed ? "" : "bg-primary/5"}`}>
+            <div className="flex-1 min-w-[200px]">
+              <p className="font-semibold text-sm flex items-center gap-2">
+                {s.full_name || "—"} {!s.reviewed && <span className="w-2 h-2 rounded-full bg-primary" />}
+              </p>
+              <p className="text-xs text-muted-foreground">{s.email}</p>
+            </div>
+            <RoleBadge role={s.role} />
+            <p className="text-xs text-muted-foreground w-40 text-right">{fmt(s.notified_at)}</p>
+          </div>
+        ))}
+        {signups.length === 0 && <div className="p-8 text-center text-muted-foreground">No signups yet.</div>}
+      </div>
+    </div>
+  </div>
+);
+
+const UsersPanel = ({ signups, onReview }: any) => (
+  <div className="bg-card border border-border rounded-2xl overflow-hidden">
+    <div className="p-4 border-b border-border">
+      <h2 className="font-bold font-display">User Management ({signups.length})</h2>
+      <p className="text-xs text-muted-foreground">Every registration on JobSphere, newest first.</p>
+    </div>
+    <div className="overflow-x-auto">
+      <table className="w-full text-sm">
+        <thead className="bg-secondary text-xs uppercase text-muted-foreground"><tr>
+          <th className="text-left p-3">Full name</th><th className="text-left p-3">Email</th><th className="text-left p-3">Role</th>
+          <th className="text-left p-3">Method</th><th className="text-left p-3">Signed up</th><th className="p-3"></th>
+        </tr></thead>
+        <tbody>
+          {signups.map((s: any) => (
+            <tr key={s.user_id} className={`border-t border-border ${s.reviewed ? "" : "bg-primary/5"}`}>
+              <td className="p-3 font-medium">{s.full_name || "—"}</td>
+              <td className="p-3 text-muted-foreground">{s.email}</td>
+              <td className="p-3"><RoleBadge role={s.role} /></td>
+              <td className="p-3 text-muted-foreground">{s.method || "Email/Password"}</td>
+              <td className="p-3 text-muted-foreground">{fmt(s.notified_at)}</td>
+              <td className="p-3 text-right">
+                <button onClick={() => onReview(s.user_id, !s.reviewed)}
+                  className="text-xs px-3 py-1.5 rounded-lg border border-border hover:bg-secondary">
+                  {s.reviewed ? "Mark new" : "Mark reviewed"}
+                </button>
+              </td>
+            </tr>
+          ))}
+          {signups.length === 0 && <tr><td colSpan={6} className="p-8 text-center text-muted-foreground">No users yet.</td></tr>}
+        </tbody>
+      </table>
+    </div>
+  </div>
+);
+
+const LeadsPanel = ({ leads, onApprove, onReject }: any) => (
   <div className="bg-card border border-border rounded-2xl overflow-hidden">
     <div className="p-4 border-b border-border"><h2 className="font-bold font-display">Advertiser Leads</h2></div>
     <div className="divide-y divide-border">
       {leads.map((l: any) => (
         <div key={l.id} className="p-4">
-          <p className="font-semibold">{l.advertiser_name} <span className="text-xs text-muted-foreground">· {l.contact_email}</span></p>
+          <p className="font-semibold flex items-center gap-2">
+            {l.advertiser_name} <span className="text-xs text-muted-foreground">· {l.contact_email}</span>
+            <span className={`text-[10px] px-2 py-0.5 rounded-full uppercase font-bold ${(l.status ?? "pending") === "pending" ? "bg-yellow-100 text-yellow-800" : l.status === "approved" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}>{l.status ?? "pending"}</span>
+          </p>
           <p className="text-xs text-muted-foreground">{l.company || "—"} · Budget: {l.budget || "—"} · Type: {l.ad_type || "—"}</p>
           {l.video_url && <p className="text-xs text-primary">{l.video_url}</p>}
           <p className="text-sm mt-1">{l.message}</p>
+          {(l.status ?? "pending") === "pending" && (
+            <div className="flex gap-2 mt-3">
+              <button onClick={() => onApprove(l.id)} className="text-xs px-3 py-2 rounded-lg bg-green-600 text-white inline-flex items-center gap-1"><Check size={12} /> Approve</button>
+              <button onClick={() => onReject(l.id)} className="text-xs px-3 py-2 rounded-lg bg-red-600 text-white inline-flex items-center gap-1"><X size={12} /> Reject</button>
+            </div>
+          )}
         </div>
       ))}
+
       {leads.length === 0 && <div className="p-8 text-center text-muted-foreground">No leads yet.</div>}
     </div>
   </div>

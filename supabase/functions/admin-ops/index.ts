@@ -70,11 +70,22 @@ Deno.serve(async (req) => {
         }).select().single()
         if (e2) throw e2
         await supabase.from('job_submissions').update({ status: 'approved' }).eq('id', payload.id)
+        await sendProviderEmail(sub.contact_email, `Your job "${sub.title}" is now live on JobSphere`,
+          `<h2>Your job posting has been approved</h2>
+           <p><strong>${esc(sub.title)}</strong> at <strong>${esc(sub.company)}</strong> is now published on JobSphere.</p>
+           <p>Thank you for posting with us.</p>`)
         return json({ data: job })
       }
       case 'reject_submission': {
-        const { error } = await supabase.from('job_submissions').update({ status: 'rejected' }).eq('id', payload.id)
+        const reason = payload.reason || 'No reason provided.'
+        const { data: sub, error } = await supabase.from('job_submissions')
+          .update({ status: 'rejected', rejection_reason: reason }).eq('id', payload.id).select().single()
         if (error) throw error
+        await sendProviderEmail(sub.contact_email, `Update on your job submission "${sub.title}"`,
+          `<h2>Your job posting was not approved</h2>
+           <p><strong>${esc(sub.title)}</strong> at <strong>${esc(sub.company)}</strong> could not be published.</p>
+           <p><strong>Reason:</strong> ${esc(reason)}</p>
+           <p>You are welcome to revise and submit again.</p>`)
         return json({ ok: true })
       }
       case 'delete_submission': {
@@ -82,6 +93,42 @@ Deno.serve(async (req) => {
         if (error) throw error
         return json({ ok: true })
       }
+
+      // ---------- Signups (dashboard-only user tracking) ----------
+      case 'list_signups': {
+        const { data, error } = await supabase.from('signup_notifications').select('*').order('notified_at', { ascending: false })
+        if (error) throw error
+        return json({ data })
+      }
+      case 'mark_signup_reviewed': {
+        const { error } = await supabase.from('signup_notifications')
+          .update({ reviewed: payload.reviewed ?? true }).eq('user_id', payload.user_id)
+        if (error) throw error
+        return json({ ok: true })
+      }
+
+      // ---------- Ad submission decisions ----------
+      case 'approve_ad_submission': {
+        const { data: lead, error } = await supabase.from('ad_submissions')
+          .update({ status: 'approved' }).eq('id', payload.id).select().single()
+        if (error) throw error
+        await sendProviderEmail(lead.contact_email, 'Your JobSphere ad has been approved',
+          `<h2>Your advertisement has been approved</h2>
+           <p>Hi ${esc(lead.advertiser_name)}, your ad request has been approved and will go live on JobSphere.</p>`)
+        return json({ ok: true })
+      }
+      case 'reject_ad_submission': {
+        const reason = payload.reason || 'No reason provided.'
+        const { data: lead, error } = await supabase.from('ad_submissions')
+          .update({ status: 'rejected', rejection_reason: reason }).eq('id', payload.id).select().single()
+        if (error) throw error
+        await sendProviderEmail(lead.contact_email, 'Update on your JobSphere ad request',
+          `<h2>Your advertisement was not approved</h2>
+           <p>Hi ${esc(lead.advertiser_name)}, unfortunately your ad request could not be approved.</p>
+           <p><strong>Reason:</strong> ${esc(reason)}</p>`)
+        return json({ ok: true })
+      }
+
 
       // ---------- Ads (site_ads) ----------
       case 'list_ads': {
@@ -123,4 +170,25 @@ function json(body: unknown, status = 200) {
     status,
     headers: { ...corsHeaders, 'Content-Type': 'application/json' },
   })
+}
+
+function esc(s: unknown) {
+  return String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]!))
+}
+
+async function sendProviderEmail(to: string, subject: string, html: string) {
+  const key = Deno.env.get('RESEND_API_KEY')
+  if (!key || !to) return false
+  try {
+    const r = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ from: 'JobSphere <onboarding@resend.dev>', to: [to], subject, html }),
+    })
+    if (!r.ok) console.error('Resend error', r.status, await r.text())
+    return r.ok
+  } catch (e) {
+    console.error('email failed', e)
+    return false
+  }
 }
