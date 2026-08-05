@@ -294,18 +294,114 @@ const AdsPanel = ({ ads, onEdit, onNew, onDelete }: any) => (
   </div>
 );
 
-const LeadsPanel = ({ leads }: any) => (
+const fmt = (d: string) => (d ? new Date(d).toLocaleString() : "—");
+
+const RoleBadge = ({ role }: { role?: string }) => (
+  <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold uppercase ${role === "Job Provider" ? "bg-primary/10 text-primary" : "bg-secondary text-muted-foreground"}`}>
+    {role || "Job Seeker"}
+  </span>
+);
+
+const OverviewPanel = ({ signups, jobs, subs, leads, onViewAll }: any) => (
+  <div className="space-y-5">
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+      {[
+        { label: "Total users", value: signups.length },
+        { label: "New (unreviewed)", value: signups.filter((s: any) => !s.reviewed).length },
+        { label: "Live jobs", value: jobs.length },
+        { label: "Pending approvals", value: subs.filter((s: any) => s.status === "pending").length + leads.filter((l: any) => (l.status ?? "pending") === "pending").length },
+      ].map((c) => (
+        <div key={c.label} className="bg-card border border-border rounded-2xl p-4">
+          <p className="text-2xl font-bold font-display">{c.value}</p>
+          <p className="text-xs text-muted-foreground">{c.label}</p>
+        </div>
+      ))}
+    </div>
+
+    <div className="bg-card border border-border rounded-2xl overflow-hidden">
+      <div className="flex items-center justify-between p-4 border-b border-border">
+        <div>
+          <h2 className="font-bold font-display">New signups</h2>
+          <p className="text-xs text-muted-foreground">10 most recent registrations</p>
+        </div>
+        <button onClick={onViewAll} className="text-xs font-semibold px-3 py-2 rounded-lg border border-border hover:bg-secondary">View all in User Management</button>
+      </div>
+      <div className="divide-y divide-border">
+        {signups.slice(0, 10).map((s: any) => (
+          <div key={s.user_id} className={`p-4 flex flex-wrap items-center gap-2 ${s.reviewed ? "" : "bg-primary/5"}`}>
+            <div className="flex-1 min-w-[200px]">
+              <p className="font-semibold text-sm flex items-center gap-2">
+                {s.full_name || "—"} {!s.reviewed && <span className="w-2 h-2 rounded-full bg-primary" />}
+              </p>
+              <p className="text-xs text-muted-foreground">{s.email}</p>
+            </div>
+            <RoleBadge role={s.role} />
+            <p className="text-xs text-muted-foreground w-40 text-right">{fmt(s.notified_at)}</p>
+          </div>
+        ))}
+        {signups.length === 0 && <div className="p-8 text-center text-muted-foreground">No signups yet.</div>}
+      </div>
+    </div>
+  </div>
+);
+
+const UsersPanel = ({ signups, onReview }: any) => (
+  <div className="bg-card border border-border rounded-2xl overflow-hidden">
+    <div className="p-4 border-b border-border">
+      <h2 className="font-bold font-display">User Management ({signups.length})</h2>
+      <p className="text-xs text-muted-foreground">Every registration on JobSphere, newest first.</p>
+    </div>
+    <div className="overflow-x-auto">
+      <table className="w-full text-sm">
+        <thead className="bg-secondary text-xs uppercase text-muted-foreground"><tr>
+          <th className="text-left p-3">Full name</th><th className="text-left p-3">Email</th><th className="text-left p-3">Role</th>
+          <th className="text-left p-3">Method</th><th className="text-left p-3">Signed up</th><th className="p-3"></th>
+        </tr></thead>
+        <tbody>
+          {signups.map((s: any) => (
+            <tr key={s.user_id} className={`border-t border-border ${s.reviewed ? "" : "bg-primary/5"}`}>
+              <td className="p-3 font-medium">{s.full_name || "—"}</td>
+              <td className="p-3 text-muted-foreground">{s.email}</td>
+              <td className="p-3"><RoleBadge role={s.role} /></td>
+              <td className="p-3 text-muted-foreground">{s.method || "Email/Password"}</td>
+              <td className="p-3 text-muted-foreground">{fmt(s.notified_at)}</td>
+              <td className="p-3 text-right">
+                <button onClick={() => onReview(s.user_id, !s.reviewed)}
+                  className="text-xs px-3 py-1.5 rounded-lg border border-border hover:bg-secondary">
+                  {s.reviewed ? "Mark new" : "Mark reviewed"}
+                </button>
+              </td>
+            </tr>
+          ))}
+          {signups.length === 0 && <tr><td colSpan={6} className="p-8 text-center text-muted-foreground">No users yet.</td></tr>}
+        </tbody>
+      </table>
+    </div>
+  </div>
+);
+
+const LeadsPanel = ({ leads, onApprove, onReject }: any) => (
   <div className="bg-card border border-border rounded-2xl overflow-hidden">
     <div className="p-4 border-b border-border"><h2 className="font-bold font-display">Advertiser Leads</h2></div>
     <div className="divide-y divide-border">
       {leads.map((l: any) => (
         <div key={l.id} className="p-4">
-          <p className="font-semibold">{l.advertiser_name} <span className="text-xs text-muted-foreground">· {l.contact_email}</span></p>
+          <p className="font-semibold flex items-center gap-2">
+            {l.advertiser_name} <span className="text-xs text-muted-foreground">· {l.contact_email}</span>
+            <span className={`text-[10px] px-2 py-0.5 rounded-full uppercase font-bold ${(l.status ?? "pending") === "pending" ? "bg-yellow-100 text-yellow-800" : l.status === "approved" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}>{l.status ?? "pending"}</span>
+          </p>
           <p className="text-xs text-muted-foreground">{l.company || "—"} · Budget: {l.budget || "—"} · Type: {l.ad_type || "—"}</p>
           {l.video_url && <p className="text-xs text-primary">{l.video_url}</p>}
           <p className="text-sm mt-1">{l.message}</p>
+          {(l.status ?? "pending") === "pending" && (
+            <div className="flex gap-2 mt-3">
+              <button onClick={() => onApprove(l.id)} className="text-xs px-3 py-2 rounded-lg bg-green-600 text-white inline-flex items-center gap-1"><Check size={12} /> Approve</button>
+              <button onClick={() => onReject(l.id)} className="text-xs px-3 py-2 rounded-lg bg-red-600 text-white inline-flex items-center gap-1"><X size={12} /> Reject</button>
+            </div>
+          )}
         </div>
       ))}
+
       {leads.length === 0 && <div className="p-8 text-center text-muted-foreground">No leads yet.</div>}
     </div>
   </div>
