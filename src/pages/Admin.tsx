@@ -26,6 +26,8 @@ const Admin = () => {
   const [subs, setSubs] = useState<any[]>([]);
   const [ads, setAds] = useState<any[]>([]);
   const [leads, setLeads] = useState<any[]>([]);
+  const [signups, setSignups] = useState<any[]>([]);
+
   const [editingJob, setEditingJob] = useState<any | null>(null);
   const [editingAd, setEditingAd] = useState<any | null>(null);
 
