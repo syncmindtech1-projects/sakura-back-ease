@@ -171,3 +171,24 @@ function json(body: unknown, status = 200) {
     headers: { ...corsHeaders, 'Content-Type': 'application/json' },
   })
 }
+
+function esc(s: unknown) {
+  return String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]!))
+}
+
+async function sendProviderEmail(to: string, subject: string, html: string) {
+  const key = Deno.env.get('RESEND_API_KEY')
+  if (!key || !to) return false
+  try {
+    const r = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ from: 'JobSphere <onboarding@resend.dev>', to: [to], subject, html }),
+    })
+    if (!r.ok) console.error('Resend error', r.status, await r.text())
+    return r.ok
+  } catch (e) {
+    console.error('email failed', e)
+    return false
+  }
+}
