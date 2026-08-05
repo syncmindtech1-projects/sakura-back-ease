@@ -50,10 +50,11 @@ const Admin = () => {
     if (!creds) return;
     setBusy(true);
     try {
-      const [j, s, a, l] = await Promise.all([
-        call("list_jobs"), call("list_submissions"), call("list_ads"), call("list_ad_submissions"),
+      const [j, s, a, l, u] = await Promise.all([
+        call("list_jobs"), call("list_submissions"), call("list_ads"), call("list_ad_submissions"), call("list_signups"),
       ]);
-      setJobs(j || []); setSubs(s || []); setAds(a || []); setLeads(l || []);
+      setJobs(j || []); setSubs(s || []); setAds(a || []); setLeads(l || []); setSignups(u || []);
+
     } catch (e: any) {
       if (/unauthor|invalid|credential|forbidden/i.test(e.message || "")) {
         sessionStorage.removeItem("jobsphere_admin");
