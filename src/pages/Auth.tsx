@@ -31,13 +31,8 @@ const Auth = () => {
       toast({ title: mode === "login" ? "Login failed" : "Registration failed", description: res.error, variant: "destructive" });
       return;
     }
-    if (mode === "register") {
-      toast({ title: "Welcome to JobSphere", description: "Please check your email to confirm your account, then log in." });
-      setMode("login");
-    } else {
-      toast({ title: "Welcome back!" });
-      navigate("/");
-    }
+    toast({ title: mode === "register" ? "Welcome to JobSphere" : "Welcome back!" });
+    navigate("/");
   };
 
   return (
