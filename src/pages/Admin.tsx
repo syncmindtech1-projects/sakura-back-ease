@@ -19,7 +19,7 @@ const AD_SLOTS = [
 const Admin = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [tab, setTab] = useState<Tab>("jobs");
+  const [tab, setTab] = useState<Tab>("overview");
   const [busy, setBusy] = useState(false);
   const [creds, setCreds] = useState<{ username: string; password: string } | null>(null);
   const [jobs, setJobs] = useState<any[]>([]);
