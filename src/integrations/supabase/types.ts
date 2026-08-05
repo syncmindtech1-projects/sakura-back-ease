@@ -25,7 +25,9 @@ export type Database = {
           id: string
           message: string
           phone: string | null
+          rejection_reason: string | null
           source: string | null
+          status: string
           target_url: string | null
           video_url: string | null
         }
@@ -39,7 +41,9 @@ export type Database = {
           id?: string
           message: string
           phone?: string | null
+          rejection_reason?: string | null
           source?: string | null
+          status?: string
           target_url?: string | null
           video_url?: string | null
         }
@@ -53,7 +57,9 @@ export type Database = {
           id?: string
           message?: string
           phone?: string | null
+          rejection_reason?: string | null
           source?: string | null
+          status?: string
           target_url?: string | null
           video_url?: string | null
         }
@@ -104,6 +110,7 @@ export type Database = {
           job_type: string | null
           location: string | null
           plan: string | null
+          rejection_reason: string | null
           salary: string | null
           status: string
           title: string
@@ -119,6 +126,7 @@ export type Database = {
           job_type?: string | null
           location?: string | null
           plan?: string | null
+          rejection_reason?: string | null
           salary?: string | null
           status?: string
           title: string
@@ -134,6 +142,7 @@ export type Database = {
           job_type?: string | null
           location?: string | null
           plan?: string | null
+          rejection_reason?: string | null
           salary?: string | null
           status?: string
           title?: string
@@ -308,6 +317,8 @@ export type Database = {
           full_name: string | null
           method: string | null
           notified_at: string
+          reviewed: boolean
+          role: string
           user_id: string
         }
         Insert: {
@@ -315,6 +326,8 @@ export type Database = {
           full_name?: string | null
           method?: string | null
           notified_at?: string
+          reviewed?: boolean
+          role?: string
           user_id: string
         }
         Update: {
@@ -322,6 +335,8 @@ export type Database = {
           full_name?: string | null
           method?: string | null
           notified_at?: string
+          reviewed?: boolean
+          role?: string
           user_id?: string
         }
         Relationships: []
