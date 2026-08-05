@@ -2,9 +2,10 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Briefcase, Megaphone, Inbox, LogOut, Plus, Pencil, Trash2, Check, X, Video, Loader2 } from "lucide-react";
+import { Briefcase, Megaphone, Inbox, LogOut, Plus, Pencil, Trash2, Check, X, Video, Loader2, LayoutDashboard, Users } from "lucide-react";
 
-type Tab = "jobs" | "submissions" | "ads" | "leads";
+type Tab = "overview" | "jobs" | "submissions" | "ads" | "leads" | "users";
+
 
 const AD_SLOTS = [
   { key: "banner-0", label: "Text ad – slot 1", kind: "text" },
