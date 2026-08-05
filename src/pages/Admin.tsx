@@ -96,10 +96,12 @@ const Admin = () => {
       <div className="container mx-auto px-4 md:px-8 py-6">
         <nav className="flex flex-wrap gap-2 mb-6">
           {[
+            { id: "overview", label: "Overview", icon: LayoutDashboard, count: signups.filter((s: any) => !s.reviewed).length },
             { id: "jobs", label: "Live Jobs", icon: Briefcase, count: jobs.length },
             { id: "submissions", label: "Pending Submissions", icon: Inbox, count: subs.filter(s => s.status === "pending").length },
             { id: "ads", label: "Site Ads", icon: Megaphone, count: ads.length },
             { id: "leads", label: "Ad Leads", icon: Inbox, count: leads.length },
+            { id: "users", label: "User Management", icon: Users, count: signups.length },
           ].map((t: any) => (
             <button key={t.id} onClick={() => setTab(t.id)}
               className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold border ${tab === t.id ? "bg-primary text-primary-foreground border-primary" : "bg-card border-border hover:bg-secondary"}`}>
@@ -112,6 +114,17 @@ const Admin = () => {
           </button>
         </nav>
 
+        {tab === "overview" && (
+          <OverviewPanel signups={signups} jobs={jobs} subs={subs} leads={leads} onViewAll={() => setTab("users")} />
+        )}
+
+        {tab === "users" && (
+          <UsersPanel signups={signups} onReview={async (uid: string, reviewed: boolean) => {
+            await call("mark_signup_reviewed", { user_id: uid, reviewed });
+            setSignups((prev) => prev.map((s) => (s.user_id === uid ? { ...s, reviewed } : s)));
+          }} />
+        )}
+
         {tab === "jobs" && (
           <JobsPanel jobs={jobs} onEdit={setEditingJob} onDelete={async (id) => {
             if (!confirm("Delete this job?")) return;
@@ -121,8 +134,14 @@ const Admin = () => {
 
         {tab === "submissions" && (
           <SubmissionsPanel subs={subs}
-            onApprove={async (id) => { await call("approve_submission", { id }); await refresh(); toast({ title: "Approved and published" }); }}
-            onReject={async (id) => { await call("reject_submission", { id }); await refresh(); }}
+            onApprove={async (id) => { await call("approve_submission", { id }); await refresh(); toast({ title: "Approved and published", description: "The provider has been emailed." }); }}
+            onReject={async (id) => {
+              const reason = prompt("Reason for rejection (emailed to the provider):");
+              if (!reason) return;
+              await call("reject_submission", { id, reason });
+              await refresh();
+              toast({ title: "Rejected", description: "The provider has been emailed the reason." });
+            }}
             onDelete={async (id) => { if (confirm("Delete?")) { await call("delete_submission", { id }); await refresh(); } }}
           />
         )}
@@ -132,7 +151,18 @@ const Admin = () => {
             onDelete={async (id) => { if (confirm("Remove ad?")) { await call("delete_ad", { id }); await refresh(); } }} />
         )}
 
-        {tab === "leads" && <LeadsPanel leads={leads} />}
+        {tab === "leads" && (
+          <LeadsPanel leads={leads}
+            onApprove={async (id: string) => { await call("approve_ad_submission", { id }); await refresh(); toast({ title: "Ad approved", description: "The advertiser has been emailed." }); }}
+            onReject={async (id: string) => {
+              const reason = prompt("Reason for rejection (emailed to the advertiser):");
+              if (!reason) return;
+              await call("reject_ad_submission", { id, reason });
+              await refresh();
+              toast({ title: "Ad rejected" });
+            }} />
+        )}
+
       </div>
 
       {editingJob && (
