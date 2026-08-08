@@ -22,6 +22,7 @@ const footerLinks = {
     { label: "Manufacturing", href: "/categories/manufacturing" },
   ],
   Company: [
+    { label: "Blog", href: "/blog" },
     { label: "About Us", href: "/about" },
     { label: "Contact", href: "/contact" },
     { label: "Reviews", href: "/reviews" },
