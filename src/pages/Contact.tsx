@@ -47,10 +47,10 @@ const Contact = () => {
             {/* Contact info */}
             <div className="space-y-4">
               {[
-                { icon: Mail, label: "Email", value: "hello@jobsphere.com", desc: "We respond within 24 hours" },
-                { icon: Phone, label: "Phone", value: "+1 (555) 123-4567", desc: "Mon–Fri 9am–6pm EST" },
-                { icon: MapPin, label: "Office", value: "123 Career St, San Francisco, CA", desc: "Open for in-person meetings" },
-                { icon: Clock, label: "Hours", value: "Monday – Friday", desc: "9:00 AM – 6:00 PM EST" },
+                { icon: Mail, label: "Email", value: "syncmindtech1@gmail.com", desc: "We respond within 24 hours" },
+                { icon: Phone, label: "Phone", value: "0757330656", desc: "Mon–Fri 9am–6pm EAT" },
+                { icon: MapPin, label: "Office", value: "Kagoma, Kampala, Uganda", desc: "Open for in-person meetings" },
+                { icon: Clock, label: "Hours", value: "Monday – Friday", desc: "9:00 AM – 6:00 PM EAT" },
               ].map((c) => (
                 <motion.div key={c.label} className="bg-card rounded-2xl border border-border p-5" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
                   <div className="flex items-center gap-4">
