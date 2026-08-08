@@ -55,7 +55,7 @@ const JobCategories = () => {
                 <div className="relative aspect-[16/10] overflow-hidden border-b border-border">
                   <img
                     src={categoryImages[cat.name] || catTech}
-                    alt=""
+                    alt={`${cat.name} jobs in Uganda and East Africa on JobSphere`}
                     loading="lazy"
                     width={480}
                     height={300}
