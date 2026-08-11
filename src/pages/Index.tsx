@@ -13,7 +13,6 @@ import VideoShowcase from "@/components/VideoShowcase";
 import VideoAdSection from "@/components/VideoAdSection";
 import LiveJobs from "@/components/LiveJobs";
 import SiteChatbot from "@/components/SiteChatbot";
-import AdvertisePopup from "@/components/AdvertisePopup";
 
 
 const Index = () => {
@@ -37,7 +36,6 @@ const Index = () => {
       <CTASection />
       <Footer />
       <SiteChatbot />
-      <AdvertisePopup />
     </div>
   );
 };
