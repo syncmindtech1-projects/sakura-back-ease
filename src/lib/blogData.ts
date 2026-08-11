@@ -40,7 +40,7 @@ export const AUTHORS: Record<string, Author> = {
     name: "SyncMind Tech Team — Remote & Business Desk",
     role: "Remote & Small Business Desk, JobSphere",
     bio: "The SyncMind Tech Team's remote and small business desk covers freelancing, distributed teams and how small East African businesses grow online.",
-    photo: avatarEmily,
+    photo: avatarSyncmind3,
   },
 };
 
