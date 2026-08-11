@@ -1,6 +1,6 @@
-import avatarSarah from "@/assets/avatar-sarah.jpg";
-import avatarMarcus from "@/assets/avatar-marcus.jpg";
-import avatarEmily from "@/assets/avatar-emily.jpg";
+import avatarSyncmind1 from "@/assets/author-syncmind-1.jpg";
+import avatarSyncmind2 from "@/assets/author-syncmind-2.jpg";
+import avatarSyncmind3 from "@/assets/author-syncmind-3.jpg";
 
 export const BLOG_CATEGORIES = [
   "Career Advice",
@@ -23,24 +23,24 @@ export interface Author {
 export const AUTHORS: Record<string, Author> = {
   aisha: {
     id: "aisha",
-    name: "Aisha Nabirye",
-    role: "Senior Editor, JobSphere",
-    bio: "Aisha has spent nine years covering labour markets in Kampala and Nairobi, first for a business weekly and now as JobSphere's senior editor. She writes about hiring, pay and the messy reality of finding work in East Africa.",
-    photo: avatarSarah,
+    name: "SyncMind Tech Team",
+    role: "Editorial Team, JobSphere",
+    bio: "The SyncMind Tech Team publishes JobSphere's editorial coverage of labour markets in Kampala, Nairobi and across East Africa — hiring, pay and the real work of finding a job.",
+    photo: avatarSyncmind1,
   },
   daniel: {
     id: "daniel",
-    name: "Daniel Otieno",
-    role: "Recruitment Correspondent",
-    bio: "Daniel spent six years as an in-house recruiter for logistics and fintech firms in Nairobi before joining JobSphere. He now writes about what hiring managers actually look at when a CV lands in the inbox.",
-    photo: avatarMarcus,
+    name: "SyncMind Tech Team — Recruitment Desk",
+    role: "Recruitment Desk, JobSphere",
+    bio: "The SyncMind Tech Team's recruitment desk draws on years of in-house hiring across logistics and fintech in Nairobi and Kampala, writing about what hiring managers actually look at when a CV lands in the inbox.",
+    photo: avatarSyncmind2,
   },
   grace: {
     id: "grace",
-    name: "Grace Mukasa",
-    role: "Contributing Writer, Remote & Small Business",
-    bio: "Grace runs a two-person content studio in Ntinda and has hired, fired and rehired across three time zones. She covers remote work, freelancing and how small East African businesses grow online.",
-    photo: avatarEmily,
+    name: "SyncMind Tech Team — Remote & Business Desk",
+    role: "Remote & Small Business Desk, JobSphere",
+    bio: "The SyncMind Tech Team's remote and small business desk covers freelancing, distributed teams and how small East African businesses grow online.",
+    photo: avatarSyncmind3,
   },
 };
 
