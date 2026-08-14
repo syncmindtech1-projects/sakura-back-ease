@@ -5,18 +5,37 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version',
 };
 
+const BM_UG = /brightermonday\.co\.ug\/listings\/[a-z0-9-]+/i;
+const BM_KE = /brightermonday\.co\.ke\/listings\/[a-z0-9-]+/i;
+const FUZU = /fuzu\.com\/[a-z-]+\/jobs\/[a-z0-9-]+-\d+/i;
+const JA_UG = /jobadverts\.ug\/(\?post_type=jb-job&p=\d+|job\/[^/]+)/i;
+
 const JOB_SOURCES = [
-  { url: 'https://jobadverts.ug/', region: 'Uganda', name: 'JobAdverts UG', detail: /jobadverts\.ug\/(\?post_type=jb-job&p=\d+|job\/[^/]+)/i },
-  { url: 'https://jobadverts.ug/jobs/', region: 'Uganda', name: 'JobAdverts UG', detail: /jobadverts\.ug\/(\?post_type=jb-job&p=\d+|job\/[^/]+)/i },
-  { url: 'https://www.brightermonday.co.ug/jobs', region: 'Uganda', name: 'BrighterMonday Uganda', detail: /brightermonday\.co\.ug\/listings\/[a-z0-9-]+/i },
-  { url: 'https://www.brightermonday.co.ke/jobs', region: 'Kenya', name: 'BrighterMonday Kenya', detail: /brightermonday\.co\.ke\/listings\/[a-z0-9-]+/i },
-  { url: 'https://www.fuzu.com/uganda/jobs', region: 'Uganda', name: 'Fuzu Uganda', detail: /fuzu\.com\/[a-z-]+\/jobs\/[a-z0-9-]+-\d+/i },
-  { url: 'https://www.fuzu.com/kenya/jobs', region: 'Kenya', name: 'Fuzu Kenya', detail: /fuzu\.com\/[a-z-]+\/jobs\/[a-z0-9-]+-\d+/i },
+  { url: 'https://jobadverts.ug/', region: 'Uganda', name: 'JobAdverts UG', detail: JA_UG },
+  { url: 'https://jobadverts.ug/page/2/', region: 'Uganda', name: 'JobAdverts UG', detail: JA_UG },
+  { url: 'https://jobadverts.ug/page/3/', region: 'Uganda', name: 'JobAdverts UG', detail: JA_UG },
+  { url: 'https://www.brightermonday.co.ug/jobs', region: 'Uganda', name: 'BrighterMonday Uganda', detail: BM_UG },
+  { url: 'https://www.brightermonday.co.ug/jobs?page=2', region: 'Uganda', name: 'BrighterMonday Uganda', detail: BM_UG },
+  { url: 'https://www.brightermonday.co.ug/jobs?page=3', region: 'Uganda', name: 'BrighterMonday Uganda', detail: BM_UG },
+  { url: 'https://www.brightermonday.co.ug/jobs/accounting-auditing-finance', region: 'Uganda', name: 'BrighterMonday Uganda', detail: BM_UG },
+  { url: 'https://www.brightermonday.co.ug/jobs/sales-marketing', region: 'Uganda', name: 'BrighterMonday Uganda', detail: BM_UG },
+  { url: 'https://www.brightermonday.co.ug/jobs/software-data', region: 'Uganda', name: 'BrighterMonday Uganda', detail: BM_UG },
+  { url: 'https://www.brightermonday.co.ug/jobs/healthcare', region: 'Uganda', name: 'BrighterMonday Uganda', detail: BM_UG },
+  { url: 'https://www.brightermonday.co.ug/jobs/admin-office', region: 'Uganda', name: 'BrighterMonday Uganda', detail: BM_UG },
+  { url: 'https://www.brightermonday.co.ke/jobs', region: 'Kenya', name: 'BrighterMonday Kenya', detail: BM_KE },
+  { url: 'https://www.brightermonday.co.ke/jobs?page=2', region: 'Kenya', name: 'BrighterMonday Kenya', detail: BM_KE },
+  { url: 'https://www.brightermonday.co.ke/jobs?page=3', region: 'Kenya', name: 'BrighterMonday Kenya', detail: BM_KE },
+  { url: 'https://www.brightermonday.co.ke/jobs/sales-marketing', region: 'Kenya', name: 'BrighterMonday Kenya', detail: BM_KE },
+  { url: 'https://www.brightermonday.co.ke/jobs/software-data', region: 'Kenya', name: 'BrighterMonday Kenya', detail: BM_KE },
+  { url: 'https://www.fuzu.com/uganda/jobs', region: 'Uganda', name: 'Fuzu Uganda', detail: FUZU },
+  { url: 'https://www.fuzu.com/kenya/jobs', region: 'Kenya', name: 'Fuzu Kenya', detail: FUZU },
   { url: 'https://www.theugandanjobline.com/', region: 'Uganda', name: 'Ugandan Job Line', detail: /theugandanjobline\.com\/\d{4}\/\d{2}\/[a-z0-9-]+\.html/i },
-  { url: 'https://ugjobsonline.com/', region: 'Uganda', name: 'UG Jobs Online', detail: /ugjobsonline\.com\/[a-z0-9-]{8,}\/?$/i },
+  { url: 'https://www.theugandanjobline.com/page/2/', region: 'Uganda', name: 'Ugandan Job Line', detail: /theugandanjobline\.com\/\d{4}\/\d{2}\/[a-z0-9-]+\.html/i },
   { url: 'https://wellfound.com/jobs', region: 'Global', name: 'Wellfound', detail: /wellfound\.com\/jobs\/\d+-[a-z0-9-]+/i },
   { url: 'https://web3.career/', region: 'Global', name: 'Web3.career', detail: /web3\.career\/[a-z0-9-]+\/\d+/i },
+  { url: 'https://web3.career/remote-jobs', region: 'Global', name: 'Web3.career', detail: /web3\.career\/[a-z0-9-]+\/\d+/i },
 ];
+
 
 interface ParsedJob {
   title: string;
