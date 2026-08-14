@@ -67,6 +67,38 @@ function extractJobsFromMarkdown(markdown: string, detail: RegExp): ParsedJob[] 
   return jobs;
 }
 
+// Direct HTML fallback: parse anchors straight from the page source
+async function extractJobsFromHtml(pageUrl: string, detail: RegExp): Promise<ParsedJob[]> {
+  const res = await fetch(pageUrl, {
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36',
+      'Accept': 'text/html,application/xhtml+xml',
+    },
+  });
+  if (!res.ok) return [];
+  const html = await res.text();
+  const base = new URL(pageUrl);
+  const jobs: ParsedJob[] = [];
+  const seen = new Set<string>();
+  const anchorRe = /<a\b[^>]*href=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/gi;
+  let m;
+  while ((m = anchorRe.exec(html)) !== null) {
+    let href: string;
+    try { href = new URL(m[1], base).toString().split('#')[0]; } catch { continue; }
+    if (ASSET_RE.test(href) || !detail.test(href) || seen.has(href)) continue;
+    seen.add(href);
+    let title = cleanTitle(m[2].replace(/<[^>]+>/g, ' '));
+    if (title.length < 6 || title.length > 160) {
+      const slug = href.replace(/\/$/, '').split('/').pop() || '';
+      title = slug.replace(/-[a-z0-9]{5,8}$/i, '').replace(/[-_]+/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+    }
+    if (title.length < 6) continue;
+    jobs.push({ title, apply_url: href });
+    if (jobs.length >= 60) break;
+  }
+  return jobs;
+}
+
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
