@@ -142,20 +142,31 @@ Deno.serve(async (req) => {
     for (const source of sourcesToScrape) {
       console.log('Scraping:', source.name);
       try {
-        const response = await fetch('https://api.firecrawl.dev/v1/scrape', {
-          method: 'POST',
-          headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
-          body: JSON.stringify({ url: source.url, formats: ['markdown', 'links'], onlyMainContent: true }),
-        });
-
-        const data = await response.json();
-        if (!response.ok) {
-          results.push({ source: source.name, region: source.region, error: data.error });
-          continue;
+        let parsed: ParsedJob[] = [];
+        // 1) Direct HTML pass (most reliable for real job-detail links)
+        try {
+          parsed = await extractJobsFromHtml(source.url, source.detail);
+        } catch (e) {
+          console.log('HTML pass failed for', source.name, String(e));
         }
 
-        const markdown = data.data?.markdown || data.markdown || '';
-        const parsed = extractJobsFromMarkdown(markdown, source.detail);
+        // 2) Firecrawl fallback when the page is JS-rendered / blocked
+        if (parsed.length === 0) {
+          const response = await fetch('https://api.firecrawl.dev/v1/scrape', {
+            method: 'POST',
+            headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
+            body: JSON.stringify({ url: source.url, formats: ['markdown', 'links'], onlyMainContent: true }),
+          });
+          const data = await response.json();
+          if (!response.ok) {
+            results.push({ source: source.name, region: source.region, error: data.error });
+            continue;
+          }
+          const markdown = data.data?.markdown || data.markdown || '';
+          parsed = extractJobsFromMarkdown(markdown, source.detail);
+        }
+
+
 
 
         let inserted = 0;
