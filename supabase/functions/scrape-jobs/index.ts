@@ -123,8 +123,8 @@ Deno.serve(async (req) => {
         }
 
         const markdown = data.data?.markdown || data.markdown || '';
-        const origin = new URL(source.url).host;
-        const parsed = extractJobsFromMarkdown(markdown, origin);
+        const parsed = extractJobsFromMarkdown(markdown, source.detail);
+
 
         let inserted = 0;
         if (persist && parsed.length > 0) {
