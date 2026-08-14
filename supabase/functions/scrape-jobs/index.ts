@@ -6,16 +6,16 @@ const corsHeaders = {
 };
 
 const JOB_SOURCES = [
-  { url: 'https://jobadverts.ug/', region: 'Uganda', name: 'JobAdverts UG' },
-  { url: 'https://www.brightermonday.co.ug/jobs', region: 'Uganda', name: 'BrighterMonday Uganda' },
-  { url: 'https://www.brightermonday.co.ke/jobs', region: 'Kenya', name: 'BrighterMonday Kenya' },
-  { url: 'https://www.fuzu.com/uganda/jobs', region: 'Uganda', name: 'Fuzu Uganda' },
-  { url: 'https://www.fuzu.com/kenya/jobs', region: 'Kenya', name: 'Fuzu Kenya' },
-  { url: 'https://www.theugandanjobline.com/', region: 'Uganda', name: 'Ugandan Job Line' },
-  { url: 'https://ugjobsonline.com/', region: 'Uganda', name: 'UG Jobs Online' },
-  { url: 'https://wellfound.com/jobs', region: 'Global', name: 'Wellfound' },
-  { url: 'https://web3.career/', region: 'Global', name: 'Web3.career' },
-  { url: 'https://www.linkedin.com/jobs/search/?location=Uganda', region: 'Uganda', name: 'LinkedIn Uganda' },
+  { url: 'https://jobadverts.ug/', region: 'Uganda', name: 'JobAdverts UG', detail: /jobadverts\.ug\/(\?post_type=jb-job&p=\d+|job\/[^/]+)/i },
+  { url: 'https://jobadverts.ug/jobs/', region: 'Uganda', name: 'JobAdverts UG', detail: /jobadverts\.ug\/(\?post_type=jb-job&p=\d+|job\/[^/]+)/i },
+  { url: 'https://www.brightermonday.co.ug/jobs', region: 'Uganda', name: 'BrighterMonday Uganda', detail: /brightermonday\.co\.ug\/listings\/[a-z0-9-]+/i },
+  { url: 'https://www.brightermonday.co.ke/jobs', region: 'Kenya', name: 'BrighterMonday Kenya', detail: /brightermonday\.co\.ke\/listings\/[a-z0-9-]+/i },
+  { url: 'https://www.fuzu.com/uganda/jobs', region: 'Uganda', name: 'Fuzu Uganda', detail: /fuzu\.com\/[a-z-]+\/jobs\/[a-z0-9-]+-\d+/i },
+  { url: 'https://www.fuzu.com/kenya/jobs', region: 'Kenya', name: 'Fuzu Kenya', detail: /fuzu\.com\/[a-z-]+\/jobs\/[a-z0-9-]+-\d+/i },
+  { url: 'https://www.theugandanjobline.com/', region: 'Uganda', name: 'Ugandan Job Line', detail: /theugandanjobline\.com\/\d{4}\/\d{2}\/[a-z0-9-]+\.html/i },
+  { url: 'https://ugjobsonline.com/', region: 'Uganda', name: 'UG Jobs Online', detail: /ugjobsonline\.com\/[a-z0-9-]{8,}\/?$/i },
+  { url: 'https://wellfound.com/jobs', region: 'Global', name: 'Wellfound', detail: /wellfound\.com\/jobs\/\d+-[a-z0-9-]+/i },
+  { url: 'https://web3.career/', region: 'Global', name: 'Web3.career', detail: /web3\.career\/[a-z0-9-]+\/\d+/i },
 ];
 
 interface ParsedJob {
@@ -25,26 +25,35 @@ interface ParsedJob {
   location?: string;
 }
 
-// Heuristic extraction from markdown links: [Job Title at Company](url)
-function extractJobsFromMarkdown(markdown: string, sourceOrigin: string): ParsedJob[] {
+const ASSET_RE = /\.(png|jpe?g|gif|svg|webp|css|js|ico|pdf)(\?|$)|\/cdn-cgi\/|\/static-assets\/|\/assets\/|active_storage/i;
+
+function cleanTitle(raw: string): string {
+  return raw
+    .replace(/!\[[^\]]*\]/g, '')
+    .replace(/[*_`]+/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+// Extract job-detail links from markdown: [Job Title at Company](url)
+function extractJobsFromMarkdown(markdown: string, detail: RegExp): ParsedJob[] {
   const jobs: ParsedJob[] = [];
   const seen = new Set<string>();
-  const linkRegex = /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g;
+  const linkRegex = /\[([^\]]*)\]\((https?:\/\/[^\s)]+)\)/g;
   let m;
   while ((m = linkRegex.exec(markdown)) !== null) {
-    const text = m[1].trim();
-    const href = m[2];
-    if (text.length < 8 || text.length > 160) continue;
-    // filter obvious nav links
-    const nav = /^(home|about|contact|login|register|sign up|apply|categories|next|previous|read more|view all|jobs|search|menu|share|facebook|twitter|linkedin|whatsapp|comments?|reply)$/i;
+    const text = cleanTitle(m[1]);
+    const href = m[2].split('#')[0];
+    if (ASSET_RE.test(href)) continue;
+    // Only accept true job-detail URLs for this source
+    if (!detail.test(href)) continue;
+    if (text.length < 6 || text.length > 160) continue;
+    const nav = /^(home|about|contact|login|register|sign up|apply|apply now|categories|next|previous|read more|view all|jobs|search|menu|share|facebook|twitter|linkedin|whatsapp|comments?|reply|view job|details)$/i;
     if (nav.test(text)) continue;
-    if (!/[A-Z]/.test(text)) continue;
+    if (!/[A-Za-z]{3}/.test(text)) continue;
     if (seen.has(href)) continue;
-    // Prefer links that look like job posts (contain 'job' or 'career' or hosted on same origin)
-    if (!href.includes(sourceOrigin) && !/job|career|vacan|hiring/i.test(href)) continue;
     seen.add(href);
 
-    // Try to split "Title at Company" or "Title - Company"
     let title = text;
     let company: string | undefined;
     const atMatch = text.match(/^(.+?)\s+(?:at|@)\s+(.+)$/i);
@@ -53,10 +62,11 @@ function extractJobsFromMarkdown(markdown: string, sourceOrigin: string): Parsed
     else if (dashMatch) { title = dashMatch[1].trim(); company = dashMatch[2].trim(); }
 
     jobs.push({ title, apply_url: href, company });
-    if (jobs.length >= 40) break;
+    if (jobs.length >= 60) break;
   }
   return jobs;
 }
+
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
