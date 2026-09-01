@@ -98,6 +98,69 @@ export type Database = {
         }
         Relationships: []
       }
+      deleted_jobs: {
+        Row: {
+          apply_url: string | null
+          category: string | null
+          company: string
+          contact_email: string | null
+          created_at: string
+          deleted_at: string
+          deleted_by: string | null
+          description: string | null
+          id: string
+          job_type: string | null
+          location: string | null
+          original_created_at: string | null
+          original_id: string | null
+          posted_by: string | null
+          salary: string | null
+          source_table: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          apply_url?: string | null
+          category?: string | null
+          company: string
+          contact_email?: string | null
+          created_at?: string
+          deleted_at?: string
+          deleted_by?: string | null
+          description?: string | null
+          id?: string
+          job_type?: string | null
+          location?: string | null
+          original_created_at?: string | null
+          original_id?: string | null
+          posted_by?: string | null
+          salary?: string | null
+          source_table?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          apply_url?: string | null
+          category?: string | null
+          company?: string
+          contact_email?: string | null
+          created_at?: string
+          deleted_at?: string
+          deleted_by?: string | null
+          description?: string | null
+          id?: string
+          job_type?: string | null
+          location?: string | null
+          original_created_at?: string | null
+          original_id?: string | null
+          posted_by?: string | null
+          salary?: string | null
+          source_table?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       job_submissions: {
         Row: {
           apply_url: string | null
