@@ -18,6 +18,8 @@ export interface Job {
   requirements?: string[];
   benefits?: string[];
   status?: "active" | "coming_soon";
+  contactEmail?: string;
+  source?: string;
 }
 
 export const jobCategories = [
