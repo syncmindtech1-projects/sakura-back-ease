@@ -10,7 +10,7 @@ export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "14.4"
+    PostgrestVersion: "14.5"
   }
   public: {
     Tables: {
@@ -95,6 +95,69 @@ export type Database = {
           meta?: Json | null
           name?: string | null
           subject?: string | null
+        }
+        Relationships: []
+      }
+      deleted_jobs: {
+        Row: {
+          apply_url: string | null
+          category: string | null
+          company: string
+          contact_email: string | null
+          created_at: string
+          deleted_at: string
+          deleted_by: string | null
+          description: string | null
+          id: string
+          job_type: string | null
+          location: string | null
+          original_created_at: string | null
+          original_id: string | null
+          posted_by: string | null
+          salary: string | null
+          source_table: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          apply_url?: string | null
+          category?: string | null
+          company: string
+          contact_email?: string | null
+          created_at?: string
+          deleted_at?: string
+          deleted_by?: string | null
+          description?: string | null
+          id?: string
+          job_type?: string | null
+          location?: string | null
+          original_created_at?: string | null
+          original_id?: string | null
+          posted_by?: string | null
+          salary?: string | null
+          source_table?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          apply_url?: string | null
+          category?: string | null
+          company?: string
+          contact_email?: string | null
+          created_at?: string
+          deleted_at?: string
+          deleted_by?: string | null
+          description?: string | null
+          id?: string
+          job_type?: string | null
+          location?: string | null
+          original_created_at?: string | null
+          original_id?: string | null
+          posted_by?: string | null
+          salary?: string | null
+          source_table?: string
+          title?: string
+          updated_at?: string
         }
         Relationships: []
       }
