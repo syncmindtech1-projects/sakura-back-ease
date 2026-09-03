@@ -22,34 +22,9 @@ const Jobs = () => {
   const [locationFilter, setLocationFilter] = useState("All Locations");
   const [sortBy, setSortBy] = useState("Most Recent");
   const [showFilters, setShowFilters] = useState(false);
-  const [postedJobs, setPostedJobs] = useState<Job[]>([]);
+  const { jobs: allJobs, loading } = useLiveJobs();
   const { toggleSave, isSaved } = useSavedJobs();
 
-  useEffect(() => {
-    supabase.from("posted_jobs").select("*").order("created_at", { ascending: false }).limit(200)
-      .then(({ data }) => {
-        if (!data) return;
-        const mapped: Job[] = data.map((p: any) => ({
-          id: `posted-${p.id}`,
-          title: p.title,
-          company: p.company,
-          location: p.location ?? "—",
-          salary: p.salary ?? "Not disclosed",
-          type: p.job_type ?? "Full-time",
-          posted: new Date(p.created_at).toLocaleDateString(),
-          category: p.category ?? "General",
-          description: p.description,
-          tags: [p.category ?? "General"].filter(Boolean),
-          applyUrl: p.apply_url ?? `mailto:${p.contact_email}`,
-          remote: /remote/i.test(p.location ?? ""),
-          urgent: false,
-          featured: true,
-        }));
-        setPostedJobs(mapped);
-      });
-  }, []);
-
-  const allJobs = useMemo(() => [...postedJobs, ...featuredJobs], [postedJobs]);
 
   const filtered = useMemo(() => {
     let jobs = allJobs.filter((job) => {
