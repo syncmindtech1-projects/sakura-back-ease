@@ -173,7 +173,16 @@ const Jobs = () => {
                 ))}
               </div>
 
-              {filtered.length === 0 && (
+              {filtered.length > visible && (
+                <div className="text-center mt-8">
+                  <button onClick={() => setVisible((v) => v + 30)} className="text-sm font-semibold border border-border px-6 py-3 rounded-lg hover:bg-secondary transition-colors">
+                    Load more jobs ({filtered.length - visible} remaining)
+                  </button>
+                </div>
+              )}
+
+              {!loading && filtered.length === 0 && (
+
                 <div className="text-center py-16">
                   <SearchX size={44} className="mx-auto mb-4 text-primary" />
                   <h3 className="text-lg font-semibold text-foreground mb-2">No jobs found</h3>
