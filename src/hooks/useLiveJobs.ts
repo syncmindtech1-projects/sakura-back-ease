@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import type { Job } from "@/lib/jobData";
-import { setLiveJobsCache } from "@/lib/jobData";
+import { setLiveJobsCache, inferCategory, getJobCategoriesWithCounts } from "@/lib/jobData";
+
 
 /**
  * Builds a mailto: apply link when an employer did not supply an apply URL.
