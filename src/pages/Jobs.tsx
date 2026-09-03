@@ -22,8 +22,10 @@ const Jobs = () => {
   const [locationFilter, setLocationFilter] = useState("All Locations");
   const [sortBy, setSortBy] = useState("Most Recent");
   const [showFilters, setShowFilters] = useState(false);
+  const [visible, setVisible] = useState(30);
   const { jobs: allJobs, loading } = useLiveJobs();
   const { toggleSave, isSaved } = useSavedJobs();
+
 
 
   const filtered = useMemo(() => {
