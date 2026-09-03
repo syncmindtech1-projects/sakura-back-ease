@@ -146,3 +146,9 @@ export const useLiveJobStats = () => {
   ).size;
   return { totalJobs: jobs.length, companies, countries, loading };
 };
+
+/** Job categories with live counts derived from the database. */
+export const useJobCategories = () => {
+  const { jobs, loading } = useLiveJobs();
+  return { categories: getJobCategoriesWithCounts(jobs), loading };
+};
