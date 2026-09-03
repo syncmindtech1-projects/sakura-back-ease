@@ -3,20 +3,21 @@ import AdsBanner from "@/components/AdsBanner";
 import { motion } from "framer-motion";
 import { ArrowRight, Search, Briefcase, MapPin, Clock } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
-import { getJobCategoriesWithCounts, featuredJobs } from "@/lib/jobData";
 import { getCategoryIcon } from "@/lib/categoryIcons";
 import CompanyLogo from "@/components/CompanyLogo";
-
-const jobCategories = getJobCategoriesWithCounts();
+import { useLiveJobs, useJobCategories } from "@/hooks/useLiveJobs";
 import { useState } from "react";
 
 const Categories = () => {
   const { category } = useParams();
   const [search, setSearch] = useState("");
+  const { categories: jobCategories, loading } = useJobCategories();
+  const { jobs } = useLiveJobs();
 
   if (category) {
     const catData = jobCategories.find((c) => c.name.toLowerCase() === category.toLowerCase());
-    const catJobs = featuredJobs.filter((j) => j.category.toLowerCase() === category.toLowerCase());
+    const catJobs = jobs.filter((j) => j.category.toLowerCase() === category.toLowerCase()).slice(0, 60);
+
 
     return (
       <PageLayout>
