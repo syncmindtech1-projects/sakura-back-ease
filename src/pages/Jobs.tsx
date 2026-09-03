@@ -101,7 +101,7 @@ const Jobs = () => {
             <div className="flex-1">
               <div className="flex items-center justify-between mb-6">
                 <p className="text-sm text-muted-foreground">
-                  <span className="font-semibold text-foreground">{filtered.length}</span> jobs found
+                  {loading ? "Loading live jobs…" : (<><span className="font-semibold text-foreground">{filtered.length}</span> jobs found</>)}
                 </p>
                 <div className="flex items-center gap-2">
                   <span className="text-xs text-muted-foreground hidden sm:inline">Sort by:</span>
@@ -111,8 +111,17 @@ const Jobs = () => {
                 </div>
               </div>
 
+              {loading && (
+                <div className="space-y-3">
+                  {Array.from({ length: 6 }).map((_, i) => (
+                    <div key={i} className="h-32 rounded-2xl border border-border bg-card animate-pulse" />
+                  ))}
+                </div>
+              )}
+
               <div className="space-y-3">
-                {filtered.map((job, i) => (
+                {filtered.slice(0, visible).map((job, i) => (
+
                   <motion.div key={job.id} className="group bg-card rounded-2xl border border-border p-5 hover:shadow-elevated hover:border-primary/20 transition-all" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.03 }}>
                     <Link to={`/jobs/${job.id}`} className="block">
                       <div className="flex flex-col sm:flex-row sm:items-start gap-4">
