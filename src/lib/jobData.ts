@@ -22,7 +22,30 @@ export interface Job {
   source?: string;
 }
 
+/** Keyword map used to classify scraped listings that arrive without a category. */
+const CATEGORY_KEYWORDS: [string, RegExp][] = [
+  ["Technology", /\b(software|developer|engineer(ing)? intern|it |ict|data|devops|cloud|cyber|network|programmer|web|frontend|backend|full[- ]?stack|system admin|database|analyst programmer|ai|machine learning|product manager|ui\/ux|technical support)\b/i],
+  ["Healthcare", /\b(nurse|nursing|clinical|medical|doctor|health|midwife|pharmac|laborator|lab technician|dental|hiv|nutrition|counsel(l)?or|surgeon|radiograph)\b/i],
+  ["Finance", /\b(account(ant|s|ing)?|finance|financial|audit|banker|banking|credit|loan|treasur|tax|bookkeep|cashier|grants|microfinance|investment)\b/i],
+  ["Construction", /\b(construction|site (engineer|manager|supervisor)|foreman|mason|quantity surveyor|surveyor|architect|plumb|carpent|welder)\b/i],
+  ["Education", /\b(teacher|teaching|lecturer|tutor|school|head ?teacher|academic|training officer|trainer|education|curriculum|librarian)\b/i],
+  ["Marketing", /\b(marketing|brand|digital market|content|seo|social media|communicat|public relations|graphic design|copywrit)\b/i],
+  ["Manufacturing", /\b(production|factory|plant|quality (control|assurance)|qa officer|machine operator|manufactur|packaging|maintenance technician)\b/i],
+  ["Transportation", /\b(driver|logistic|fleet|dispatch|transport|supply chain|warehouse|courier|rider|store ?keeper|procurement)\b/i],
+  ["Hospitality", /\b(chef|cook|waiter|waitress|hotel|restaurant|barista|housekeep|front office|receptionist|tour|travel|catering|laundry)\b/i],
+  ["Retail", /\b(sales|shop|retail|merchandis|store manager|customer (care|service)|business development|telesales|agent)\b/i],
+  ["Engineering", /\b(mechanic|electric|civil engineer|mechanical|technician|engineer|solar|energy|water)\b/i],
+  ["Legal", /\b(legal|advocate|lawyer|paralegal|compliance|governance|policy officer)\b/i],
+];
+
+/** Best-effort category classification for listings scraped without metadata. */
+export const inferCategory = (text: string): string => {
+  for (const [name, re] of CATEGORY_KEYWORDS) if (re.test(text)) return name;
+  return "General";
+};
+
 export const jobCategories = [
+
   { name: "Technology", icon: "💻", color: "primary", description: "Software, data, cloud and IT roles across East Africa.", roles: ["Software Engineer", "Data Analyst", "DevOps", "Product Manager"] },
   { name: "Healthcare", icon: "🏥", color: "accent", description: "Clinical, public health and medical support positions.", roles: ["Nurse", "Medical Officer", "Lab Technician", "Pharmacist"] },
   { name: "Finance", icon: "💰", color: "highlight", description: "Banking, accounting, audit and fintech opportunities.", roles: ["Accountant", "Banker", "Auditor", "Loan Officer"] },

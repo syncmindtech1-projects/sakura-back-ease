@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import type { Job } from "@/lib/jobData";
-import { setLiveJobsCache } from "@/lib/jobData";
+import { setLiveJobsCache, inferCategory, getJobCategoriesWithCounts } from "@/lib/jobData";
+
 
 /**
  * Builds a mailto: apply link when an employer did not supply an apply URL.
@@ -89,27 +90,36 @@ const fetchJobs = async (): Promise<Job[]> => {
 
   const scrapedJobs: Job[] = (scraped.data ?? [])
     .filter((s: any) => !!s.apply_url)
-    .map((s: any) => ({
-      id: `sc-${s.id}`,
-      title: s.title,
-      company: s.company ?? "Confidential Employer",
-      location: s.location ?? s.region ?? "East Africa",
-      type: normaliseType(s.job_type),
-      category: s.category ?? "General",
-      salary: s.salary ?? "Not disclosed",
-      posted: relative(s.posted_at ?? s.scraped_at),
-      remote: !!s.remote,
-      description: s.description ?? `${s.title} at ${s.company ?? "a leading employer"}.`,
-      tags: [s.category, s.job_type, s.remote ? "Remote" : null].filter(Boolean) as string[],
-      applyUrl: s.apply_url,
-      source: s.source_name,
-    }));
+    .map((s: any) => {
+      const title = s.title as string;
+      const region = s.region ?? "East Africa";
+      const category = s.category ?? inferCategory(`${title} ${s.description ?? ""}`);
+      const remote = !!s.remote || /remote|work from home/i.test(`${title} ${s.location ?? ""}`);
+      return {
+        id: `sc-${s.id}`,
+        title,
+        company: s.company ?? `Employer via ${s.source_name}`,
+        location: s.location ?? region,
+        type: normaliseType(s.job_type),
+        category,
+        salary: s.salary ?? "Not disclosed",
+        posted: relative(s.posted_at ?? s.scraped_at),
+        remote,
+        description:
+          s.description ||
+          `${title} — an open ${category.toLowerCase()} vacancy in ${region}. Click through to the original listing for full requirements, responsibilities and how to apply.`,
+        tags: [category, remote ? "Remote" : null, region].filter(Boolean) as string[],
+        applyUrl: s.apply_url,
+        source: s.source_name,
+      } as Job;
+    });
 
   const all = [...postedJobs, ...scrapedJobs];
   cache = all;
   setLiveJobsCache(all);
   return all;
 };
+
 
 export const useLiveJobs = () => {
   const [jobs, setJobs] = useState<Job[]>(cache ?? []);
@@ -135,4 +145,10 @@ export const useLiveJobStats = () => {
     jobs.map((j) => j.location.split(",").pop()?.trim()).filter(Boolean)
   ).size;
   return { totalJobs: jobs.length, companies, countries, loading };
+};
+
+/** Job categories with live counts derived from the database. */
+export const useJobCategories = () => {
+  const { jobs, loading } = useLiveJobs();
+  return { categories: getJobCategoriesWithCounts(jobs), loading };
 };

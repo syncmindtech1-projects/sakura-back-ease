@@ -3,11 +3,12 @@ import AdsBanner from "@/components/AdsBanner";
 import { motion } from "framer-motion";
 import { MapPin, Clock, Bookmark, Search, Briefcase, SlidersHorizontal, ExternalLink, SearchX } from "lucide-react";
 import CompanyLogo from "@/components/CompanyLogo";
-import { featuredJobs, Job } from "@/lib/jobData";
-import { useEffect, useState, useMemo } from "react";
+import { Job } from "@/lib/jobData";
+import { useState, useMemo } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import { useSavedJobs } from "@/contexts/SavedJobsContext";
-import { supabase } from "@/integrations/supabase/client";
+import { useLiveJobs } from "@/hooks/useLiveJobs";
+
 
 const jobTypes = ["All", "Full-time", "Part-time", "Contract", "Freelance", "Internship"];
 const locationFilters = ["All Locations", "Uganda", "Kenya", "Tanzania", "Rwanda", "South Sudan", "Ethiopia", "Ghana", "Remote"];
@@ -21,34 +22,11 @@ const Jobs = () => {
   const [locationFilter, setLocationFilter] = useState("All Locations");
   const [sortBy, setSortBy] = useState("Most Recent");
   const [showFilters, setShowFilters] = useState(false);
-  const [postedJobs, setPostedJobs] = useState<Job[]>([]);
+  const [visible, setVisible] = useState(30);
+  const { jobs: allJobs, loading } = useLiveJobs();
   const { toggleSave, isSaved } = useSavedJobs();
 
-  useEffect(() => {
-    supabase.from("posted_jobs").select("*").order("created_at", { ascending: false }).limit(200)
-      .then(({ data }) => {
-        if (!data) return;
-        const mapped: Job[] = data.map((p: any) => ({
-          id: `posted-${p.id}`,
-          title: p.title,
-          company: p.company,
-          location: p.location ?? "—",
-          salary: p.salary ?? "Not disclosed",
-          type: p.job_type ?? "Full-time",
-          posted: new Date(p.created_at).toLocaleDateString(),
-          category: p.category ?? "General",
-          description: p.description,
-          tags: [p.category ?? "General"].filter(Boolean),
-          applyUrl: p.apply_url ?? `mailto:${p.contact_email}`,
-          remote: /remote/i.test(p.location ?? ""),
-          urgent: false,
-          featured: true,
-        }));
-        setPostedJobs(mapped);
-      });
-  }, []);
 
-  const allJobs = useMemo(() => [...postedJobs, ...featuredJobs], [postedJobs]);
 
   const filtered = useMemo(() => {
     let jobs = allJobs.filter((job) => {
@@ -125,7 +103,7 @@ const Jobs = () => {
             <div className="flex-1">
               <div className="flex items-center justify-between mb-6">
                 <p className="text-sm text-muted-foreground">
-                  <span className="font-semibold text-foreground">{filtered.length}</span> jobs found
+                  {loading ? "Loading live jobs…" : (<><span className="font-semibold text-foreground">{filtered.length}</span> jobs found</>)}
                 </p>
                 <div className="flex items-center gap-2">
                   <span className="text-xs text-muted-foreground hidden sm:inline">Sort by:</span>
@@ -135,8 +113,17 @@ const Jobs = () => {
                 </div>
               </div>
 
+              {loading && (
+                <div className="space-y-3">
+                  {Array.from({ length: 6 }).map((_, i) => (
+                    <div key={i} className="h-32 rounded-2xl border border-border bg-card animate-pulse" />
+                  ))}
+                </div>
+              )}
+
               <div className="space-y-3">
-                {filtered.map((job, i) => (
+                {filtered.slice(0, visible).map((job, i) => (
+
                   <motion.div key={job.id} className="group bg-card rounded-2xl border border-border p-5 hover:shadow-elevated hover:border-primary/20 transition-all" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.03 }}>
                     <Link to={`/jobs/${job.id}`} className="block">
                       <div className="flex flex-col sm:flex-row sm:items-start gap-4">
@@ -188,7 +175,16 @@ const Jobs = () => {
                 ))}
               </div>
 
-              {filtered.length === 0 && (
+              {filtered.length > visible && (
+                <div className="text-center mt-8">
+                  <button onClick={() => setVisible((v) => v + 30)} className="text-sm font-semibold border border-border px-6 py-3 rounded-lg hover:bg-secondary transition-colors">
+                    Load more jobs ({filtered.length - visible} remaining)
+                  </button>
+                </div>
+              )}
+
+              {!loading && filtered.length === 0 && (
+
                 <div className="text-center py-16">
                   <SearchX size={44} className="mx-auto mb-4 text-primary" />
                   <h3 className="text-lg font-semibold text-foreground mb-2">No jobs found</h3>

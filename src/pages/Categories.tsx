@@ -3,20 +3,21 @@ import AdsBanner from "@/components/AdsBanner";
 import { motion } from "framer-motion";
 import { ArrowRight, Search, Briefcase, MapPin, Clock } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
-import { getJobCategoriesWithCounts, featuredJobs } from "@/lib/jobData";
 import { getCategoryIcon } from "@/lib/categoryIcons";
 import CompanyLogo from "@/components/CompanyLogo";
-
-const jobCategories = getJobCategoriesWithCounts();
+import { useLiveJobs, useJobCategories } from "@/hooks/useLiveJobs";
 import { useState } from "react";
 
 const Categories = () => {
   const { category } = useParams();
   const [search, setSearch] = useState("");
+  const { categories: jobCategories, loading } = useJobCategories();
+  const { jobs } = useLiveJobs();
 
   if (category) {
     const catData = jobCategories.find((c) => c.name.toLowerCase() === category.toLowerCase());
-    const catJobs = featuredJobs.filter((j) => j.category.toLowerCase() === category.toLowerCase());
+    const catJobs = jobs.filter((j) => j.category.toLowerCase() === category.toLowerCase()).slice(0, 60);
+
 
     return (
       <PageLayout>
@@ -32,7 +33,12 @@ const Categories = () => {
 
         <section className="py-8 md:py-12">
           <div className="container mx-auto px-4 md:px-8">
-            {catJobs.length > 0 ? (
+            {loading ? (
+              <div className="space-y-3">
+                {Array.from({ length: 5 }).map((_, i) => <div key={i} className="h-24 rounded-2xl border border-border bg-card animate-pulse" />)}
+              </div>
+            ) : catJobs.length > 0 ? (
+
               <div className="space-y-3">
                 {catJobs.map((job, i) => (
                   <Link key={job.id} to={`/jobs/${job.id}`} className="block">
