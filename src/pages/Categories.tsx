@@ -33,7 +33,12 @@ const Categories = () => {
 
         <section className="py-8 md:py-12">
           <div className="container mx-auto px-4 md:px-8">
-            {catJobs.length > 0 ? (
+            {loading ? (
+              <div className="space-y-3">
+                {Array.from({ length: 5 }).map((_, i) => <div key={i} className="h-24 rounded-2xl border border-border bg-card animate-pulse" />)}
+              </div>
+            ) : catJobs.length > 0 ? (
+
               <div className="space-y-3">
                 {catJobs.map((job, i) => (
                   <Link key={job.id} to={`/jobs/${job.id}`} className="block">
