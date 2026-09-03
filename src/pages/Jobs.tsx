@@ -3,11 +3,12 @@ import AdsBanner from "@/components/AdsBanner";
 import { motion } from "framer-motion";
 import { MapPin, Clock, Bookmark, Search, Briefcase, SlidersHorizontal, ExternalLink, SearchX } from "lucide-react";
 import CompanyLogo from "@/components/CompanyLogo";
-import { featuredJobs, Job } from "@/lib/jobData";
-import { useEffect, useState, useMemo } from "react";
+import { Job } from "@/lib/jobData";
+import { useState, useMemo } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import { useSavedJobs } from "@/contexts/SavedJobsContext";
-import { supabase } from "@/integrations/supabase/client";
+import { useLiveJobs } from "@/hooks/useLiveJobs";
+
 
 const jobTypes = ["All", "Full-time", "Part-time", "Contract", "Freelance", "Internship"];
 const locationFilters = ["All Locations", "Uganda", "Kenya", "Tanzania", "Rwanda", "South Sudan", "Ethiopia", "Ghana", "Remote"];
