@@ -1,10 +1,12 @@
 import { MapPin, Clock, Bookmark, ArrowUpRight } from "lucide-react";
 import { Link } from "react-router-dom";
-import { featuredJobs } from "@/lib/jobData";
 import { useSavedJobs } from "@/contexts/SavedJobsContext";
+import { useLiveJobs } from "@/hooks/useLiveJobs";
 
 const FeaturedJobs = () => {
   const { toggleSave, isSaved } = useSavedJobs();
+  const { jobs, loading } = useLiveJobs();
+  const featured = jobs.slice(0, 9);
 
   return (
     <section className="py-16 md:py-24 border-t border-border">
@@ -19,22 +21,30 @@ const FeaturedJobs = () => {
           </Link>
         </header>
 
+        {loading ? (
+          <div className="space-y-3">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="h-20 border border-border bg-card animate-pulse" />
+            ))}
+          </div>
+        ) : featured.length === 0 ? (
+          <p className="py-12 text-center text-sm text-muted-foreground">New openings coming up shortly.</p>
+        ) : (
         <ul className="divide-y divide-border border-b border-border">
-          {featuredJobs.slice(0, 9).map((job) => (
+          {featured.map((job) => (
             <li key={job.id}>
               <Link
                 to={`/jobs/${job.id}`}
                 className="group grid grid-cols-[auto_1fr_auto] md:grid-cols-[auto_1fr_auto_auto_auto] items-center gap-4 md:gap-6 py-5 hover:bg-secondary/40 transition-colors -mx-4 md:-mx-6 px-4 md:px-6"
               >
-                <div className="w-11 h-11 flex items-center justify-center text-lg border border-border bg-card shrink-0">
-                  {job.logo}
+                <div className="w-11 h-11 flex items-center justify-center text-sm font-semibold border border-border bg-card shrink-0">
+                  {job.company.slice(0, 2).toUpperCase()}
                 </div>
 
                 <div className="min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
                     <h3 className="serif text-lg md:text-xl text-foreground group-hover:text-primary transition-colors truncate">{job.title}</h3>
                     {job.featured && <span className="eyebrow text-primary">Featured</span>}
-                    {job.urgent && <span className="eyebrow" style={{ color: 'hsl(var(--warning))' }}>Urgent</span>}
                   </div>
                   <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground">
                     <span>{job.company}</span>
@@ -61,6 +71,7 @@ const FeaturedJobs = () => {
             </li>
           ))}
         </ul>
+        )}
 
         <div className="text-center mt-8 md:hidden">
           <Link to="/jobs" className="inline-flex items-center gap-2 text-sm font-medium text-foreground border-b border-foreground pb-0.5">

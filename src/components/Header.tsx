@@ -10,7 +10,7 @@ import MegaMenuCategories from "@/components/MegaMenuCategories";
 import MegaMenuCompanies from "@/components/MegaMenuCompanies";
 import MegaMenuResources from "@/components/MegaMenuResources";
 import PremiumBanner from "@/components/PremiumBanner";
-import { getJobStats } from "@/lib/jobData";
+import { useLiveJobStats } from "@/hooks/useLiveJobs";
 
 
 interface NavItem {
@@ -19,8 +19,6 @@ interface NavItem {
   megaType?: string;
   children?: { label: string; href: string; icon: string; desc: string }[];
 }
-
-const { totalJobs } = getJobStats();
 
 const navItems: NavItem[] = [
   { label: "Find Jobs", href: "/jobs", megaType: "jobs" },
@@ -65,6 +63,7 @@ const Header = () => {
   const megaTimeout = useRef<ReturnType<typeof setTimeout>>();
   const navigate = useNavigate();
   const { savedCount } = useSavedJobs();
+  const { totalJobs: liveTotalJobs } = useLiveJobStats();
   const { user, profile, signOut } = useAuth();
   const [unreadCount, setUnreadCount] = useState(0);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
@@ -85,7 +84,7 @@ const Header = () => {
     return () => { cancelled = true; supabase.removeChannel(ch); };
   }, [user]);
 
-  const newJobsCount = Math.min(totalJobs, 24);
+  const newJobsCount = Math.min(liveTotalJobs, 24);
 
   const handleMegaEnter = (label: string) => { clearTimeout(megaTimeout.current); setActiveMega(label); };
   const handleMegaLeave = () => { megaTimeout.current = setTimeout(() => setActiveMega(null), 200); };

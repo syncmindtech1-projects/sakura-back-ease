@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { Search, MapPin, ArrowRight, BadgeCheck, Sparkles, Globe2 } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getJobStats } from "@/lib/jobData";
+import { useLiveJobStats } from "@/hooks/useLiveJobs";
 import heroProfessional from "@/assets/hero-professional.jpg";
 
 const popularSearches = [
@@ -14,9 +14,8 @@ const popularSearches = [
   "Customer Care",
 ];
 
-const { totalJobs, countries } = getJobStats();
-
 const Hero = () => {
+  const { totalJobs, countries } = useLiveJobStats();
   const [query, setQuery] = useState("");
   const [location, setLocation] = useState("");
   const navigate = useNavigate();
