@@ -1,6 +1,6 @@
 import PageLayout from "@/components/PageLayout";
 import { useParams, Link } from "react-router-dom";
-import { featuredJobs } from "@/lib/jobData";
+import { useLiveJobs } from "@/hooks/useLiveJobs";
 import { motion } from "framer-motion";
 import { MapPin, Clock, Briefcase, Bookmark, ArrowLeft, Share2, Building2, DollarSign, Tag, ExternalLink, Loader2, Check, SearchX } from "lucide-react";
 import CompanyLogo from "@/components/CompanyLogo";
@@ -28,7 +28,8 @@ const JobDetail = () => {
   const { id: rawId } = useParams();
   const id = rawId ?? "";
   const isPosted = id.startsWith("posted-");
-  const staticJob = !isPosted ? featuredJobs.find((j) => j.id === id) : undefined;
+  const { jobs: liveJobs, loading: jobsLoading } = useLiveJobs();
+  const staticJob = liveJobs.find((j) => j.id === id);
   const { toggleSave, isSaved } = useSavedJobs();
   const { toast } = useToast();
 
@@ -82,7 +83,7 @@ const JobDetail = () => {
     });
   };
 
-  if (loading) {
+  if (loading || (!staticJob && jobsLoading)) {
     return (
       <PageLayout>
         <div className="container mx-auto px-4 py-20 text-center text-muted-foreground">
@@ -105,7 +106,7 @@ const JobDetail = () => {
     );
   }
 
-  const similarJobs = featuredJobs
+  const similarJobs = liveJobs
     .filter((j) => j.id !== job.id && j.category === job.category)
     .slice(0, 4);
 

@@ -3,13 +3,15 @@ import { motion } from "framer-motion";
 import { MapPin, Clock, Briefcase, Bookmark, Trash2 } from "lucide-react";
 import CompanyLogo from "@/components/CompanyLogo";
 import { Link } from "react-router-dom";
-import { featuredJobs, Job } from "@/lib/jobData";
+import { Job } from "@/lib/jobData";
+import { useLiveJobs } from "@/hooks/useLiveJobs";
 import { useSavedJobs } from "@/contexts/SavedJobsContext";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
 const SavedJobs = () => {
   const { savedJobs, toggleSave } = useSavedJobs();
+  const { jobs: liveJobs } = useLiveJobs();
   const [postedSaved, setPostedSaved] = useState<Job[]>([]);
 
   useEffect(() => {
@@ -36,7 +38,7 @@ const SavedJobs = () => {
     });
   }, [savedJobs]);
 
-  const saved = [...postedSaved, ...featuredJobs.filter((j) => savedJobs.has(j.id))];
+  const saved = [...postedSaved, ...liveJobs.filter((j) => !j.id.startsWith("posted-") && savedJobs.has(j.id))];
 
 
   return (
