@@ -1,14 +1,23 @@
 import { motion } from "framer-motion";
-import { stats } from "@/lib/jobData";
+import { useLiveJobStats } from "@/hooks/useLiveJobs";
 
 const statImages: Record<string, string> = {
-  "📋": "https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=80&h=80&fit=crop",
-  "🏢": "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=80&h=80&fit=crop",
-  "🌍": "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=80&h=80&fit=crop",
-  "✅": "https://images.unsplash.com/photo-1552664730-d307ca884978?w=80&h=80&fit=crop",
+  jobs: "https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=80&h=80&fit=crop",
+  companies: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=80&h=80&fit=crop",
+  countries: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=80&h=80&fit=crop",
+  free: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=80&h=80&fit=crop",
 };
 
 const Stats = () => {
+  const { totalJobs, companies, countries, loading } = useLiveJobStats();
+
+  const stats = [
+    { key: "jobs", label: "Live Job Listings", value: loading ? "—" : totalJobs.toLocaleString() },
+    { key: "companies", label: "Hiring Employers", value: loading ? "—" : companies.toLocaleString() },
+    { key: "countries", label: "Countries Covered", value: loading ? "—" : `${countries}` },
+    { key: "free", label: "Free To Apply", value: "100%" },
+  ];
+
   return (
     <section className="py-16 md:py-20">
       <div className="container mx-auto px-4 md:px-8">
@@ -24,8 +33,8 @@ const Stats = () => {
                 transition={{ delay: i * 0.1 }}
               >
                 <img
-                  src={statImages[stat.icon] || ""}
-                  alt={stat.label}
+                  src={statImages[stat.key]}
+                  alt={`${stat.label} on JobSphere — free job board for Uganda and East Africa`}
                   loading="lazy"
                   width={48}
                   height={48}
