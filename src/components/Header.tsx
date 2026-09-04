@@ -63,6 +63,7 @@ const Header = () => {
   const megaTimeout = useRef<ReturnType<typeof setTimeout>>();
   const navigate = useNavigate();
   const { savedCount } = useSavedJobs();
+  const { totalJobs: liveTotalJobs } = useLiveJobStats();
   const { user, profile, signOut } = useAuth();
   const [unreadCount, setUnreadCount] = useState(0);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
