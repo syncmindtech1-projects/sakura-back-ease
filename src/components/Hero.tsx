@@ -14,9 +14,8 @@ const popularSearches = [
   "Customer Care",
 ];
 
-const { totalJobs, countries } = getJobStats();
-
 const Hero = () => {
+  const { totalJobs, countries } = useLiveJobStats();
   const [query, setQuery] = useState("");
   const [location, setLocation] = useState("");
   const navigate = useNavigate();
