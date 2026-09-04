@@ -10,7 +10,7 @@ import MegaMenuCategories from "@/components/MegaMenuCategories";
 import MegaMenuCompanies from "@/components/MegaMenuCompanies";
 import MegaMenuResources from "@/components/MegaMenuResources";
 import PremiumBanner from "@/components/PremiumBanner";
-import { getJobStats } from "@/lib/jobData";
+import { useLiveJobStats } from "@/hooks/useLiveJobs";
 
 
 interface NavItem {
@@ -19,8 +19,6 @@ interface NavItem {
   megaType?: string;
   children?: { label: string; href: string; icon: string; desc: string }[];
 }
-
-const { totalJobs } = getJobStats();
 
 const navItems: NavItem[] = [
   { label: "Find Jobs", href: "/jobs", megaType: "jobs" },
