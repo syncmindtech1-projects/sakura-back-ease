@@ -83,7 +83,7 @@ const Header = () => {
     return () => { cancelled = true; supabase.removeChannel(ch); };
   }, [user]);
 
-  const newJobsCount = Math.min(totalJobs, 24);
+  const newJobsCount = Math.min(liveTotalJobs, 24);
 
   const handleMegaEnter = (label: string) => { clearTimeout(megaTimeout.current); setActiveMega(label); };
   const handleMegaLeave = () => { megaTimeout.current = setTimeout(() => setActiveMega(null), 200); };
