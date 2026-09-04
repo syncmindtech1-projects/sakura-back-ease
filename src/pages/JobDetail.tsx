@@ -1,9 +1,10 @@
 import PageLayout from "@/components/PageLayout";
 import { useParams, Link } from "react-router-dom";
-import { useLiveJobs } from "@/hooks/useLiveJobs";
+import { useLiveJobs, buildApplyLink, isEmailApply } from "@/hooks/useLiveJobs";
 import { motion } from "framer-motion";
 import { MapPin, Clock, Briefcase, Bookmark, ArrowLeft, Share2, Building2, DollarSign, Tag, ExternalLink, Loader2, Check, SearchX } from "lucide-react";
 import CompanyLogo from "@/components/CompanyLogo";
+import RichJobDescription from "@/components/RichJobDescription";
 import AdsBanner from "@/components/AdsBanner";
 import { useSavedJobs } from "@/contexts/SavedJobsContext";
 import { useToast } from "@/hooks/use-toast";
@@ -56,7 +57,7 @@ const JobDetail = () => {
     category: postedJob.category ?? "General",
     description: postedJob.description,
     tags: [postedJob.category ?? "General"].filter(Boolean) as string[],
-    applyUrl: postedJob.apply_url ?? `mailto:${postedJob.contact_email}`,
+    applyUrl: buildApplyLink({ applyUrl: postedJob.apply_url, contactEmail: postedJob.contact_email, title: postedJob.title, company: postedJob.company }),
     remote: /remote/i.test(postedJob.location ?? ""),
     urgent: false,
     featured: true,
@@ -138,7 +139,7 @@ const JobDetail = () => {
             <div className="flex flex-row md:flex-col gap-3 shrink-0">
               {job.applyUrl && (
                 <a href={job.applyUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 gradient-primary text-primary-foreground font-semibold text-sm px-4 py-3 rounded-xl hover:opacity-90 transition-opacity">
-                  <ExternalLink size={16} /> Apply Now
+                  <ExternalLink size={16} /> {isEmailApply(job.applyUrl) ? "Apply by Email" : "Apply Now"}
                 </a>
               )}
               <button onClick={handleSave} className={`inline-flex items-center gap-2 font-medium text-sm px-4 py-3 rounded-xl transition-colors ${isSaved(job.id) ? 'bg-primary/10 text-primary' : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'}`}>
@@ -158,7 +159,7 @@ const JobDetail = () => {
             <div className="flex-1 space-y-8">
               <motion.div className="bg-card rounded-2xl border border-border p-6" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
                 <h2 className="text-lg font-semibold text-foreground mb-4">Job Description</h2>
-                <p className="text-sm text-muted-foreground leading-relaxed">{job.description}</p>
+                <RichJobDescription text={job.description} />
               </motion.div>
 
               {job.requirements && job.requirements.length > 0 && (
@@ -202,7 +203,7 @@ const JobDetail = () => {
                 <div className="flex flex-wrap items-center justify-center gap-3">
                   {job.applyUrl && (
                     <a href={job.applyUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 gradient-primary text-primary-foreground font-semibold px-6 py-3 rounded-xl hover:opacity-90 transition-opacity">
-                      <ExternalLink size={16} /> Apply Now
+                      <ExternalLink size={16} /> {isEmailApply(job.applyUrl) ? "Apply by Email" : "Apply Now"}
                     </a>
                   )}
                   <button onClick={handleSave} className={`inline-flex items-center gap-2 font-semibold px-6 py-3 rounded-xl transition-colors ${isSaved(job.id) ? 'bg-primary/10 text-primary' : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'}`}>
