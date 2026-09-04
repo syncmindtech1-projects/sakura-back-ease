@@ -1,6 +1,6 @@
 import { ArrowUpRight } from "lucide-react";
 import { Link } from "react-router-dom";
-import { getJobCategoriesWithCounts } from "@/lib/jobData";
+import { useJobCategories } from "@/hooks/useLiveJobs";
 import catTech from "@/assets/cat-technology.jpg";
 import catHealth from "@/assets/cat-healthcare.jpg";
 import catFinance from "@/assets/cat-finance.jpg";
@@ -29,9 +29,8 @@ const categoryImages: Record<string, string> = {
   Legal: catLegal,
 };
 
-const jobCategories = getJobCategoriesWithCounts();
-
 const JobCategories = () => {
+  const { categories: jobCategories } = useJobCategories();
   return (
     <section className="py-16 md:py-24 border-t border-border bg-background">
       <div className="container mx-auto px-4 md:px-8">
