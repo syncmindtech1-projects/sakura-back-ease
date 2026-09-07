@@ -61,7 +61,20 @@ const Footer = () => {
         </div>
 
         <div className="border-t border-background/10 mt-12 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-sm text-background/40">© {new Date().getFullYear()} JobSphere. All rights reserved.</p>
+          <div className="text-center md:text-left">
+            <p className="text-sm text-background/40">© {new Date().getFullYear()} JobSphere. All rights reserved.</p>
+            <p className="text-sm text-background/40 mt-1">
+              Designed and developed by{" "}
+              <a
+                href="https://syncmindtech.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-background/70 hover:text-background underline underline-offset-2 transition-colors"
+              >
+                SyncMind Tech
+              </a>
+            </p>
+          </div>
           <nav aria-label="Legal" className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
             <Link to="/about" className="text-sm text-background/40 hover:text-background/70 transition-colors">About</Link>
             <Link to="/contact" className="text-sm text-background/40 hover:text-background/70 transition-colors">Contact</Link>
@@ -70,6 +83,7 @@ const Footer = () => {
             <Link to="/disclaimer" className="text-sm text-background/40 hover:text-background/70 transition-colors">Disclaimer</Link>
           </nav>
         </div>
+
       </div>
     </footer>
   );
