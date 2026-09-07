@@ -61,9 +61,17 @@ const ResumeBuilder = () => {
     <PageLayout>
       <style>{`
         @media print {
-          body * { visibility: hidden; }
-          .resume-print, .resume-print * { visibility: visible; }
-          .resume-print { position: absolute; left: 0; top: 0; width: 100%; padding: 0; margin: 0; box-shadow: none !important; border: none !important; }
+          @page { size: A4; margin: 14mm; }
+          html, body { background: #fff !important; }
+          body * { visibility: hidden !important; }
+          .resume-print, .resume-print * { visibility: visible !important; }
+          .resume-print {
+            position: absolute; left: 0; top: 0; width: 100%;
+            padding: 0 !important; margin: 0 !important;
+            border: none !important; border-radius: 0 !important; box-shadow: none !important;
+            position: static;
+          }
+          .resume-print section, .resume-print div { break-inside: avoid; page-break-inside: avoid; }
           .no-print { display: none !important; }
         }
       `}</style>
@@ -103,10 +111,10 @@ const ResumeBuilder = () => {
         </div>
       </section>
 
-      <section className="pb-16 no-print">
+      <section className="pb-16">
         <div className="container mx-auto px-4 md:px-8 grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Form */}
-          <div className="space-y-6">
+          <div className="space-y-6 no-print">
             <div className="bg-card border border-border rounded-2xl p-6">
               <h3 className="text-base font-bold font-display text-foreground mb-4">Personal Info</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -167,7 +175,7 @@ const ResumeBuilder = () => {
           </div>
 
           {/* Preview */}
-          <div className="lg:sticky lg:top-24 lg:self-start">
+          <div className="lg:sticky lg:top-24 lg:self-start print:static">
             <div className="resume-print bg-white border border-border rounded-2xl shadow-elevated p-8 md:p-10 text-[13px] text-gray-800">
               <div className="border-b-4 pb-4 mb-5" style={{ borderColor: template.accent }}>
                 <h1 className="text-3xl font-bold" style={{ color: template.accent }}>{profile.name || "Your Name"}</h1>

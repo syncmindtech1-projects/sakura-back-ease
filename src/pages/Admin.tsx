@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Briefcase, Megaphone, Inbox, LogOut, Plus, Pencil, Trash2, Check, X, Video, Loader2, LayoutDashboard, Users } from "lucide-react";
+import { Briefcase, Megaphone, Inbox, LogOut, Plus, Pencil, Trash2, Check, X, Video, Loader2, LayoutDashboard, Users, Archive, RotateCcw, Eye, Heading1, Heading2, List, ListOrdered, Bold, CornerDownLeft } from "lucide-react";
 
-type Tab = "overview" | "jobs" | "submissions" | "ads" | "leads" | "users";
+type Tab = "overview" | "jobs" | "submissions" | "deleted" | "ads" | "leads" | "users";
 
 
 const AD_SLOTS = [
@@ -27,9 +27,12 @@ const Admin = () => {
   const [ads, setAds] = useState<any[]>([]);
   const [leads, setLeads] = useState<any[]>([]);
   const [signups, setSignups] = useState<any[]>([]);
+  const [deleted, setDeleted] = useState<any[]>([]);
 
   const [editingJob, setEditingJob] = useState<any | null>(null);
   const [editingAd, setEditingAd] = useState<any | null>(null);
+  const [editingSub, setEditingSub] = useState<any | null>(null);
+  const [viewingDeleted, setViewingDeleted] = useState<any | null>(null);
 
   useEffect(() => {
     const raw = sessionStorage.getItem("jobsphere_admin");
@@ -50,10 +53,10 @@ const Admin = () => {
     if (!creds) return;
     setBusy(true);
     try {
-      const [j, s, a, l, u] = await Promise.all([
-        call("list_jobs"), call("list_submissions"), call("list_ads"), call("list_ad_submissions"), call("list_signups"),
+      const [j, s, a, l, u, d] = await Promise.all([
+        call("list_jobs"), call("list_submissions"), call("list_ads"), call("list_ad_submissions"), call("list_signups"), call("list_deleted_jobs"),
       ]);
-      setJobs(j || []); setSubs(s || []); setAds(a || []); setLeads(l || []); setSignups(u || []);
+      setJobs(j || []); setSubs(s || []); setAds(a || []); setLeads(l || []); setSignups(u || []); setDeleted(d || []);
 
     } catch (e: any) {
       if (/unauthor|invalid|credential|forbidden/i.test(e.message || "")) {
@@ -110,6 +113,7 @@ const Admin = () => {
             { id: "overview", label: "Overview", icon: LayoutDashboard, count: signups.filter((s: any) => !s.reviewed).length },
             { id: "jobs", label: "Live Jobs", icon: Briefcase, count: jobs.length },
             { id: "submissions", label: "Pending Submissions", icon: Inbox, count: subs.filter(s => s.status === "pending").length },
+            { id: "deleted", label: "Deleted Jobs", icon: Archive, count: deleted.length },
             { id: "ads", label: "Site Ads", icon: Megaphone, count: ads.length },
             { id: "leads", label: "Ad Leads", icon: Inbox, count: leads.length },
             { id: "users", label: "User Management", icon: Users, count: signups.length },
@@ -154,6 +158,29 @@ const Admin = () => {
               toast({ title: "Rejected", description: "The provider has been emailed the reason." });
             }}
             onDelete={async (id) => { if (confirm("Delete?")) { await call("delete_submission", { id }); await refresh(); } }}
+            onEdit={(s: any) => setEditingSub(s)}
+          />
+        )}
+
+        {tab === "deleted" && (
+          <DeletedPanel
+            deleted={deleted}
+            onView={setViewingDeleted}
+            onRestore={async (id: string) => {
+              await call("restore_deleted_job", { id });
+              await refresh();
+              toast({ title: "Job restored", description: "It is live on the site again." });
+            }}
+            onPurge={async (id: string) => {
+              if (!confirm("Permanently remove this job? This cannot be undone.")) return;
+              await call("purge_deleted_job", { id });
+              await refresh();
+            }}
+            onPurgeAll={async () => {
+              if (!confirm("Permanently empty the deleted jobs archive?")) return;
+              await call("purge_all_deleted_jobs");
+              await refresh();
+            }}
           />
         )}
 
@@ -186,6 +213,19 @@ const Admin = () => {
             toast({ title: "Saved" });
           } catch (e: any) { toast({ title: "Save failed", description: e.message, variant: "destructive" }); }
         }} />
+      )}
+      {editingSub && (
+        <SubmissionEditor sub={editingSub} onClose={() => setEditingSub(null)} onSave={async (payload: any) => {
+          try {
+            await call("update_submission", payload);
+            setEditingSub(null);
+            await refresh();
+            toast({ title: "Submission updated" });
+          } catch (e: any) { toast({ title: "Save failed", description: e.message, variant: "destructive" }); }
+        }} />
+      )}
+      {viewingDeleted && (
+        <DeletedViewer job={viewingDeleted} onClose={() => setViewingDeleted(null)} />
       )}
       {editingAd && (
         <AdEditor ad={editingAd} onClose={() => setEditingAd(null)} onSave={async (payload) => {

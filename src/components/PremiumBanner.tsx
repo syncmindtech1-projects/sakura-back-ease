@@ -46,11 +46,11 @@ const PremiumBanner = ({ user, displayName, newJobsCount, onLogout }: PremiumBan
       />
 
       <div
-        className="relative flex items-center gap-6 mx-auto min-h-[68px]"
+        className="relative flex items-center gap-3 md:gap-6 mx-auto min-h-[68px] w-full"
         style={{
           maxWidth: 1440,
-          paddingLeft: "clamp(16px, 3vw, 32px)",
-          paddingRight: "clamp(16px, 3vw, 32px)",
+          paddingLeft: "clamp(12px, 3vw, 32px)",
+          paddingRight: "clamp(12px, 3vw, 32px)",
         }}
       >
         {/* LEFT: FREE pill */}
@@ -111,7 +111,7 @@ const PremiumBanner = ({ user, displayName, newJobsCount, onLogout }: PremiumBan
         </div>
 
         {/* Mobile shrunken center */}
-        <div className="flex-1 xl:hidden text-center">
+        <div className="flex-1 min-w-0 xl:hidden text-left sm:text-center">
           <p
             className="m-0 truncate"
             style={{
@@ -137,23 +137,23 @@ const PremiumBanner = ({ user, displayName, newJobsCount, onLogout }: PremiumBan
         <Divider className="hidden md:block" />
 
         {/* RIGHT user area */}
-        <div className="flex items-center shrink-0" style={{ gap: 16 }}>
+        <div className="flex items-center shrink-0 gap-2 md:gap-4">
           {user ? (
             <>
-              <span className="hidden md:inline" style={{ fontSize: 16, fontWeight: 600, color: "#fff" }}>
+              <span
+                className="max-w-[90px] sm:max-w-[160px] truncate text-[13px] md:text-base"
+                style={{ fontWeight: 600, color: "#fff" }}
+              >
                 Hi, {displayName}
               </span>
               <button
                 onClick={onLogout}
-                className="inline-flex items-center gap-2 group"
+                className="inline-flex items-center gap-2 group shrink-0 h-9 md:h-[42px] px-3 md:px-[22px] text-[13px] md:text-[15px]"
                 style={{
-                  height: 42,
-                  padding: "0 22px",
                   borderRadius: 999,
                   background: "rgba(255,255,255,0.03)",
                   border: "1px solid rgba(255,255,255,0.28)",
                   color: "#fff",
-                  fontSize: 15,
                   fontWeight: 600,
                   transition: "all 0.25s ease",
                 }}
@@ -171,20 +171,17 @@ const PremiumBanner = ({ user, displayName, newJobsCount, onLogout }: PremiumBan
             </>
           ) : (
             <>
-              <a href="/auth" className="hidden md:inline" style={{ fontSize: 15, fontWeight: 600, color: "#fff" }}>
+              <a href="/auth" className="text-[13px] md:text-[15px] shrink-0" style={{ fontWeight: 600, color: "#fff" }}>
                 Login
               </a>
                <a
                 href="/auth?mode=register"
-                className="inline-flex items-center"
+                className="inline-flex items-center shrink-0 whitespace-nowrap h-9 md:h-[42px] px-3 md:px-[22px] text-[13px] md:text-[15px]"
                 style={{
-                  height: 42,
-                  padding: "0 22px",
                   borderRadius: 999,
                   background: "rgba(255,255,255,0.03)",
                   border: "1px solid rgba(255,255,255,0.28)",
                   color: "#fff",
-                  fontSize: 15,
                   fontWeight: 600,
                   transition: "all 0.25s ease",
                 }}

@@ -1,4 +1,5 @@
 import PageLayout from "@/components/PageLayout";
+import { Helmet } from "react-helmet-async";
 import { useParams, Link } from "react-router-dom";
 import { useLiveJobs, buildApplyLink, isEmailApply } from "@/hooks/useLiveJobs";
 import { motion } from "framer-motion";
@@ -68,7 +69,7 @@ const JobDetail = () => {
   const handleShare = async () => {
     const url = window.location.href;
     if (navigator.share) {
-      try { await navigator.share({ title: job?.title, text: `Check out this job: ${job?.title} at ${job?.company}`, url }); } catch {}
+      try { await navigator.share({ title: job?.title, text: `${job?.title} at ${job?.company} — on JobSphere`, url }); } catch {}
     } else {
       await navigator.clipboard.writeText(url);
       toast({ title: "Link copied!", description: "Job link copied to clipboard" });
@@ -112,8 +113,53 @@ const JobDetail = () => {
     .slice(0, 4);
 
 
+  const shareUrl = `https://jobsphere.net/jobs/${job.id}`;
+  const shareTitle = `${job.title} job at ${job.company} | JobSphere`;
+  const plainDescription = (job.description || "")
+    .replace(/[#*>_`-]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, 155);
+  const shareDescription =
+    plainDescription ||
+    `${job.company} is hiring a ${job.title} in ${job.location}. Apply free on JobSphere.`;
+  const shareImage = "https://jobsphere.net/og-job.jpg";
+
   return (
     <PageLayout>
+      <Helmet prioritizeSeoTags>
+        <title>{shareTitle}</title>
+        <meta name="description" content={shareDescription} />
+        <link rel="canonical" href={shareUrl} />
+        <meta property="og:site_name" content="JobSphere" />
+        <meta property="og:type" content="article" />
+        <meta property="og:title" content={shareTitle} />
+        <meta property="og:description" content={shareDescription} />
+        <meta property="og:url" content={shareUrl} />
+        <meta property="og:image" content={shareImage} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={shareTitle} />
+        <meta name="twitter:description" content={shareDescription} />
+        <meta name="twitter:image" content={shareImage} />
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "JobPosting",
+            title: job.title,
+            description: shareDescription,
+            hiringOrganization: { "@type": "Organization", name: job.company },
+            jobLocation: {
+              "@type": "Place",
+              address: { "@type": "PostalAddress", addressLocality: job.location },
+            },
+            employmentType: job.type,
+            directApply: false,
+            url: shareUrl,
+          })}
+        </script>
+      </Helmet>
       <section className="bg-gradient-to-br from-[hsl(var(--primary)/0.05)] via-background to-[hsl(var(--accent)/0.05)] py-8 md:py-12">
         <div className="container mx-auto px-4 md:px-8">
           <Link to="/jobs" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground mb-6 transition-colors">
