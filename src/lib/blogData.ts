@@ -1,6 +1,4 @@
-import avatarSyncmind1 from "@/assets/author-syncmind-1.jpg";
-import avatarSyncmind2 from "@/assets/author-syncmind-2.jpg";
-import avatarSyncmind3 from "@/assets/author-syncmind-3.jpg";
+import jobsphereLogo from "@/assets/jobsphere-logo.png";
 
 export const BLOG_CATEGORIES = [
   "Career Advice",
@@ -23,24 +21,24 @@ export interface Author {
 export const AUTHORS: Record<string, Author> = {
   aisha: {
     id: "aisha",
-    name: "SyncMind Tech Team",
+    name: "JobSphere Team",
     role: "Editorial Team, JobSphere",
-    bio: "The SyncMind Tech Team publishes JobSphere's editorial coverage of labour markets in Kampala, Nairobi and across East Africa — hiring, pay and the real work of finding a job.",
-    photo: avatarSyncmind1,
+    bio: "The JobSphere Team publishes JobSphere's editorial coverage of labour markets in Kampala, Nairobi and across East Africa — hiring, pay and the real work of finding a job.",
+    photo: jobsphereLogo,
   },
   daniel: {
     id: "daniel",
-    name: "SyncMind Tech Team — Recruitment Desk",
+    name: "JobSphere Team — Recruitment Desk",
     role: "Recruitment Desk, JobSphere",
-    bio: "The SyncMind Tech Team's recruitment desk draws on years of in-house hiring across logistics and fintech in Nairobi and Kampala, writing about what hiring managers actually look at when a CV lands in the inbox.",
-    photo: avatarSyncmind2,
+    bio: "The JobSphere Team's recruitment desk draws on years of in-house hiring across logistics and fintech in Nairobi and Kampala, writing about what hiring managers actually look at when a CV lands in the inbox.",
+    photo: jobsphereLogo,
   },
   grace: {
     id: "grace",
-    name: "SyncMind Tech Team — Remote & Business Desk",
+    name: "JobSphere Team — Remote & Business Desk",
     role: "Remote & Small Business Desk, JobSphere",
-    bio: "The SyncMind Tech Team's remote and small business desk covers freelancing, distributed teams and how small East African businesses grow online.",
-    photo: avatarSyncmind3,
+    bio: "The JobSphere Team's remote and small business desk covers freelancing, distributed teams and how small East African businesses grow online.",
+    photo: jobsphereLogo,
   },
 };
 
