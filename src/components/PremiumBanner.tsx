@@ -150,12 +150,10 @@ const PremiumBanner = ({ user, displayName, newJobsCount, onLogout }: PremiumBan
                 onClick={onLogout}
                 className="inline-flex items-center gap-2 group shrink-0 h-9 md:h-[42px] px-3 md:px-[22px] text-[13px] md:text-[15px]"
                 style={{
-                  padding: undefined,
                   borderRadius: 999,
                   background: "rgba(255,255,255,0.03)",
                   border: "1px solid rgba(255,255,255,0.28)",
                   color: "#fff",
-                  fontSize: 15,
                   fontWeight: 600,
                   transition: "all 0.25s ease",
                 }}
@@ -184,7 +182,6 @@ const PremiumBanner = ({ user, displayName, newJobsCount, onLogout }: PremiumBan
                   background: "rgba(255,255,255,0.03)",
                   border: "1px solid rgba(255,255,255,0.28)",
                   color: "#fff",
-                  fontSize: 15,
                   fontWeight: 600,
                   transition: "all 0.25s ease",
                 }}
