@@ -2,7 +2,9 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Briefcase, Megaphone, Inbox, LogOut, Plus, Pencil, Trash2, Check, X, Video, Loader2, LayoutDashboard, Users, Archive, RotateCcw, Eye, Heading1, Heading2, List, ListOrdered, Bold, CornerDownLeft } from "lucide-react";
+import { Briefcase, Megaphone, Inbox, LogOut, Plus, Pencil, Trash2, Check, X, Video, Loader2, LayoutDashboard, Users, Archive, RotateCcw, Eye, ChevronDown, ChevronUp } from "lucide-react";
+import DescriptionEditor from "@/components/admin/DescriptionEditor";
+import RichJobDescription from "@/components/RichJobDescription";
 
 type Tab = "overview" | "jobs" | "submissions" | "deleted" | "ads" | "leads" | "users";
 
@@ -274,38 +276,106 @@ const JobsPanel = ({ jobs, onEdit, onDelete, onNew }: any) => (
   </div>
 );
 
-const SubmissionsPanel = ({ subs, onApprove, onReject, onDelete }: any) => (
+const SubmissionsPanel = ({ subs, onApprove, onReject, onDelete, onEdit }: any) => {
+  const [open, setOpen] = useState<string | null>(null);
+  return (
   <div className="bg-card border border-border rounded-2xl overflow-hidden">
     <div className="p-4 border-b border-border">
       <h2 className="font-bold font-display">Pending Job Submissions</h2>
-      <p className="text-xs text-muted-foreground">Approve to publish live to the site.</p>
+      <p className="text-xs text-muted-foreground">View the full details, edit and format, then approve to publish live.</p>
     </div>
     <div className="divide-y divide-border">
       {subs.map((s: any) => (
-        <div key={s.id} className="p-4 flex flex-col md:flex-row md:items-center gap-3">
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2">
-              <p className="font-semibold truncate">{s.title}</p>
-              <span className={`text-[10px] px-2 py-0.5 rounded-full uppercase font-bold ${s.status === "pending" ? "bg-yellow-100 text-yellow-800" : s.status === "approved" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}>{s.status}</span>
+        <div key={s.id} className="p-4">
+          <div className="flex flex-col md:flex-row md:items-center gap-3">
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2">
+                <p className="font-semibold truncate">{s.title}</p>
+                <span className={`text-[10px] px-2 py-0.5 rounded-full uppercase font-bold ${s.status === "pending" ? "bg-yellow-100 text-yellow-800" : s.status === "approved" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}>{s.status}</span>
+              </div>
+              <p className="text-xs text-muted-foreground">{s.company} · {s.location || "—"} · {s.contact_email}</p>
+              <p className="text-xs text-muted-foreground mt-1">{s.job_type || "—"} · {s.category || "—"} · {s.salary || "Salary not stated"} · {fmt(s.created_at)}</p>
             </div>
-            <p className="text-xs text-muted-foreground">{s.company} · {s.location || "—"} · {s.contact_email}</p>
-            <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{s.description}</p>
+            <div className="flex flex-wrap gap-2 shrink-0">
+              <button onClick={() => setOpen(open === s.id ? null : s.id)} className="text-xs px-3 py-2 rounded-lg border border-border inline-flex items-center gap-1">
+                {open === s.id ? <ChevronUp size={12} /> : <ChevronDown size={12} />} {open === s.id ? "Hide" : "View full"}
+              </button>
+              <button onClick={() => onEdit(s)} className="text-xs px-3 py-2 rounded-lg border border-border inline-flex items-center gap-1"><Pencil size={12} /> Edit</button>
+              {s.status === "pending" && (
+                <>
+                  <button onClick={() => onApprove(s.id)} className="text-xs px-3 py-2 rounded-lg bg-green-600 text-white inline-flex items-center gap-1"><Check size={12} /> Approve</button>
+                  <button onClick={() => onReject(s.id)} className="text-xs px-3 py-2 rounded-lg bg-red-600 text-white inline-flex items-center gap-1"><X size={12} /> Reject</button>
+                </>
+              )}
+              <button onClick={() => onDelete(s.id)} className="text-xs px-3 py-2 rounded-lg border border-border"><Trash2 size={12} /></button>
+            </div>
           </div>
-          <div className="flex gap-2 shrink-0">
-            {s.status === "pending" && (
-              <>
-                <button onClick={() => onApprove(s.id)} className="text-xs px-3 py-2 rounded-lg bg-green-600 text-white inline-flex items-center gap-1"><Check size={12} /> Approve</button>
-                <button onClick={() => onReject(s.id)} className="text-xs px-3 py-2 rounded-lg bg-red-600 text-white inline-flex items-center gap-1"><X size={12} /> Reject</button>
-              </>
-            )}
-            <button onClick={() => onDelete(s.id)} className="text-xs px-3 py-2 rounded-lg border border-border"><Trash2 size={12} /></button>
-          </div>
+
+          {open === s.id && (
+            <div className="mt-4 rounded-xl border border-border bg-secondary/50 p-4">
+              <div className="grid sm:grid-cols-2 gap-x-6 gap-y-1 text-xs mb-3">
+                <p><span className="text-muted-foreground">Company:</span> <strong>{s.company}</strong></p>
+                <p><span className="text-muted-foreground">Contact:</span> <strong>{s.contact_email}</strong></p>
+                <p><span className="text-muted-foreground">Location:</span> {s.location || "—"}</p>
+                <p><span className="text-muted-foreground">Salary:</span> {s.salary || "—"}</p>
+                <p><span className="text-muted-foreground">Type:</span> {s.job_type || "—"}</p>
+                <p><span className="text-muted-foreground">Category:</span> {s.category || "—"}</p>
+                <p className="sm:col-span-2 break-all"><span className="text-muted-foreground">Apply URL:</span> {s.apply_url || "— (applications go to the contact email)"}</p>
+                {s.rejection_reason && <p className="sm:col-span-2 text-red-600"><span className="text-muted-foreground">Rejection reason:</span> {s.rejection_reason}</p>}
+              </div>
+              <div className="bg-card rounded-lg p-4 border border-border max-h-[420px] overflow-y-auto">
+                <RichJobDescription text={s.description || ""} />
+              </div>
+            </div>
+          )}
         </div>
       ))}
       {subs.length === 0 && <div className="p-8 text-center text-muted-foreground">No submissions yet.</div>}
     </div>
   </div>
+  );
+};
+
+const DeletedPanel = ({ deleted, onView, onRestore, onPurge, onPurgeAll }: any) => (
+  <div className="bg-card border border-border rounded-2xl overflow-hidden">
+    <div className="flex items-center justify-between p-4 border-b border-border">
+      <div>
+        <h2 className="font-bold font-display">Deleted Jobs ({deleted.length})</h2>
+        <p className="text-xs text-muted-foreground">Jobs removed from the site. Restore to publish again, or remove permanently.</p>
+      </div>
+      {deleted.length > 0 && (
+        <button onClick={onPurgeAll} className="text-xs px-3 py-2 rounded-lg border border-border text-red-600 inline-flex items-center gap-1">
+          <Trash2 size={12} /> Empty archive
+        </button>
+      )}
+    </div>
+    <div className="overflow-x-auto">
+      <table className="w-full text-sm">
+        <thead className="bg-secondary text-xs uppercase text-muted-foreground"><tr>
+          <th className="text-left p-3">Title</th><th className="text-left p-3">Company</th><th className="text-left p-3">Location</th>
+          <th className="text-left p-3">Deleted</th><th className="p-3"></th>
+        </tr></thead>
+        <tbody>
+          {deleted.map((j: any) => (
+            <tr key={j.id} className="border-t border-border hover:bg-secondary/50">
+              <td className="p-3 font-medium">{j.title}</td>
+              <td className="p-3">{j.company}</td>
+              <td className="p-3 text-muted-foreground">{j.location || "—"}</td>
+              <td className="p-3 text-muted-foreground">{fmt(j.deleted_at)}</td>
+              <td className="p-3 text-right whitespace-nowrap">
+                <button onClick={() => onView(j)} className="p-2 hover:bg-secondary rounded" title="View"><Eye size={14} /></button>
+                <button onClick={() => onRestore(j.id)} className="p-2 hover:bg-green-100 text-green-700 rounded" title="Restore"><RotateCcw size={14} /></button>
+                <button onClick={() => onPurge(j.id)} className="p-2 hover:bg-red-100 text-red-600 rounded" title="Remove permanently"><Trash2 size={14} /></button>
+              </td>
+            </tr>
+          ))}
+          {deleted.length === 0 && <tr><td colSpan={5} className="p-8 text-center text-muted-foreground">Archive is empty.</td></tr>}
+        </tbody>
+      </table>
+    </div>
+  </div>
 );
+
 
 const AdsPanel = ({ ads, onEdit, onNew, onDelete }: any) => (
   <div className="grid md:grid-cols-2 gap-4">
@@ -488,10 +558,9 @@ const JobEditor = ({ job, onClose, onSave }: any) => {
           <Field label="Category" value={f.category} onChange={(e: any) => setF({ ...f, category: e.target.value })} />
         </div>
         <div className="mt-3">
-          <label className="text-xs font-semibold mb-1 block">Description *</label>
-          <textarea rows={6} value={f.description} onChange={(e) => setF({ ...f, description: e.target.value })}
-            className="w-full px-3 py-2 rounded-lg bg-secondary border border-border text-sm outline-none focus:border-primary" />
+          <DescriptionEditor label="Description *" value={f.description} onChange={(v) => setF({ ...f, description: v })} />
         </div>
+
         <div className="flex justify-end gap-2 mt-5">
           <button onClick={onClose} className="px-4 py-2 text-sm border border-border rounded-lg">Cancel</button>
           <button onClick={() => onSave(f)} className="px-4 py-2 text-sm gradient-primary text-primary-foreground rounded-lg">Save</button>
@@ -540,4 +609,74 @@ const AdEditor = ({ ad, onClose, onSave }: any) => {
   );
 };
 
+const SubmissionEditor = ({ sub, onClose, onSave }: any) => {
+  const [f, setF] = useState({
+    id: sub.id,
+    title: sub.title || "",
+    company: sub.company || "",
+    contact_email: sub.contact_email || "",
+    location: sub.location || "",
+    salary: sub.salary || "",
+    apply_url: sub.apply_url || "",
+    job_type: sub.job_type || "Full-time",
+    category: sub.category || "",
+    description: sub.description || "",
+  });
+  return (
+    <div className="fixed inset-0 bg-black/60 z-50 flex items-start justify-center p-4 overflow-y-auto">
+      <div className="bg-card rounded-2xl w-full max-w-3xl p-6 my-8">
+        <h2 className="text-xl font-bold font-display mb-1">Edit submission</h2>
+        <p className="text-xs text-muted-foreground mb-4">Clean up the wording and formatting before approving — the site shows exactly this.</p>
+        <div className="grid sm:grid-cols-2 gap-3">
+          <Field label="Title *" value={f.title} onChange={(e: any) => setF({ ...f, title: e.target.value })} />
+          <Field label="Company *" value={f.company} onChange={(e: any) => setF({ ...f, company: e.target.value })} />
+          <Field label="Contact email *" value={f.contact_email} onChange={(e: any) => setF({ ...f, contact_email: e.target.value })} />
+          <Field label="Location" value={f.location} onChange={(e: any) => setF({ ...f, location: e.target.value })} />
+          <Field label="Salary" value={f.salary} onChange={(e: any) => setF({ ...f, salary: e.target.value })} />
+          <Field label="Apply URL" value={f.apply_url} onChange={(e: any) => setF({ ...f, apply_url: e.target.value })} />
+          <Field label="Type" value={f.job_type} onChange={(e: any) => setF({ ...f, job_type: e.target.value })} />
+          <Field label="Category" value={f.category} onChange={(e: any) => setF({ ...f, category: e.target.value })} />
+        </div>
+        <div className="mt-3">
+          <DescriptionEditor label="Description *" value={f.description} onChange={(v) => setF({ ...f, description: v })} />
+        </div>
+        <div className="flex justify-end gap-2 mt-5">
+          <button onClick={onClose} className="px-4 py-2 text-sm border border-border rounded-lg">Cancel</button>
+          <button onClick={() => onSave(f)} className="px-4 py-2 text-sm gradient-primary text-primary-foreground rounded-lg">Save changes</button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const DeletedViewer = ({ job, onClose }: any) => (
+  <div className="fixed inset-0 bg-black/60 z-50 flex items-start justify-center p-4 overflow-y-auto">
+    <div className="bg-card rounded-2xl w-full max-w-2xl p-6 my-8">
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <h2 className="text-xl font-bold font-display">{job.title}</h2>
+          <p className="text-sm text-muted-foreground">{job.company} · {job.location || "—"}</p>
+        </div>
+        <button onClick={onClose} className="p-2 rounded-lg hover:bg-secondary"><X size={16} /></button>
+      </div>
+      <div className="grid sm:grid-cols-2 gap-x-6 gap-y-1 text-xs mt-4 mb-4">
+        <p><span className="text-muted-foreground">Type:</span> {job.job_type || "—"}</p>
+        <p><span className="text-muted-foreground">Category:</span> {job.category || "—"}</p>
+        <p><span className="text-muted-foreground">Salary:</span> {job.salary || "—"}</p>
+        <p><span className="text-muted-foreground">Contact:</span> {job.contact_email || "—"}</p>
+        <p><span className="text-muted-foreground">Originally posted:</span> {fmt(job.original_created_at)}</p>
+        <p><span className="text-muted-foreground">Deleted:</span> {fmt(job.deleted_at)} by {job.deleted_by || "admin"}</p>
+        <p className="sm:col-span-2 break-all"><span className="text-muted-foreground">Apply URL:</span> {job.apply_url || "—"}</p>
+      </div>
+      <div className="rounded-lg border border-border bg-secondary/40 p-4 max-h-[45vh] overflow-y-auto">
+        <RichJobDescription text={job.description || ""} />
+      </div>
+      <div className="flex justify-end mt-5">
+        <button onClick={onClose} className="px-4 py-2 text-sm border border-border rounded-lg">Close</button>
+      </div>
+    </div>
+  </div>
+);
+
 export default Admin;
+
