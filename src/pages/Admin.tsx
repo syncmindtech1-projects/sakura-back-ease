@@ -609,4 +609,74 @@ const AdEditor = ({ ad, onClose, onSave }: any) => {
   );
 };
 
+const SubmissionEditor = ({ sub, onClose, onSave }: any) => {
+  const [f, setF] = useState({
+    id: sub.id,
+    title: sub.title || "",
+    company: sub.company || "",
+    contact_email: sub.contact_email || "",
+    location: sub.location || "",
+    salary: sub.salary || "",
+    apply_url: sub.apply_url || "",
+    job_type: sub.job_type || "Full-time",
+    category: sub.category || "",
+    description: sub.description || "",
+  });
+  return (
+    <div className="fixed inset-0 bg-black/60 z-50 flex items-start justify-center p-4 overflow-y-auto">
+      <div className="bg-card rounded-2xl w-full max-w-3xl p-6 my-8">
+        <h2 className="text-xl font-bold font-display mb-1">Edit submission</h2>
+        <p className="text-xs text-muted-foreground mb-4">Clean up the wording and formatting before approving — the site shows exactly this.</p>
+        <div className="grid sm:grid-cols-2 gap-3">
+          <Field label="Title *" value={f.title} onChange={(e: any) => setF({ ...f, title: e.target.value })} />
+          <Field label="Company *" value={f.company} onChange={(e: any) => setF({ ...f, company: e.target.value })} />
+          <Field label="Contact email *" value={f.contact_email} onChange={(e: any) => setF({ ...f, contact_email: e.target.value })} />
+          <Field label="Location" value={f.location} onChange={(e: any) => setF({ ...f, location: e.target.value })} />
+          <Field label="Salary" value={f.salary} onChange={(e: any) => setF({ ...f, salary: e.target.value })} />
+          <Field label="Apply URL" value={f.apply_url} onChange={(e: any) => setF({ ...f, apply_url: e.target.value })} />
+          <Field label="Type" value={f.job_type} onChange={(e: any) => setF({ ...f, job_type: e.target.value })} />
+          <Field label="Category" value={f.category} onChange={(e: any) => setF({ ...f, category: e.target.value })} />
+        </div>
+        <div className="mt-3">
+          <DescriptionEditor label="Description *" value={f.description} onChange={(v) => setF({ ...f, description: v })} />
+        </div>
+        <div className="flex justify-end gap-2 mt-5">
+          <button onClick={onClose} className="px-4 py-2 text-sm border border-border rounded-lg">Cancel</button>
+          <button onClick={() => onSave(f)} className="px-4 py-2 text-sm gradient-primary text-primary-foreground rounded-lg">Save changes</button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const DeletedViewer = ({ job, onClose }: any) => (
+  <div className="fixed inset-0 bg-black/60 z-50 flex items-start justify-center p-4 overflow-y-auto">
+    <div className="bg-card rounded-2xl w-full max-w-2xl p-6 my-8">
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <h2 className="text-xl font-bold font-display">{job.title}</h2>
+          <p className="text-sm text-muted-foreground">{job.company} · {job.location || "—"}</p>
+        </div>
+        <button onClick={onClose} className="p-2 rounded-lg hover:bg-secondary"><X size={16} /></button>
+      </div>
+      <div className="grid sm:grid-cols-2 gap-x-6 gap-y-1 text-xs mt-4 mb-4">
+        <p><span className="text-muted-foreground">Type:</span> {job.job_type || "—"}</p>
+        <p><span className="text-muted-foreground">Category:</span> {job.category || "—"}</p>
+        <p><span className="text-muted-foreground">Salary:</span> {job.salary || "—"}</p>
+        <p><span className="text-muted-foreground">Contact:</span> {job.contact_email || "—"}</p>
+        <p><span className="text-muted-foreground">Originally posted:</span> {fmt(job.original_created_at)}</p>
+        <p><span className="text-muted-foreground">Deleted:</span> {fmt(job.deleted_at)} by {job.deleted_by || "admin"}</p>
+        <p className="sm:col-span-2 break-all"><span className="text-muted-foreground">Apply URL:</span> {job.apply_url || "—"}</p>
+      </div>
+      <div className="rounded-lg border border-border bg-secondary/40 p-4 max-h-[45vh] overflow-y-auto">
+        <RichJobDescription text={job.description || ""} />
+      </div>
+      <div className="flex justify-end mt-5">
+        <button onClick={onClose} className="px-4 py-2 text-sm border border-border rounded-lg">Close</button>
+      </div>
+    </div>
+  </div>
+);
+
 export default Admin;
+
