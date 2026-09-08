@@ -2,7 +2,9 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Briefcase, Megaphone, Inbox, LogOut, Plus, Pencil, Trash2, Check, X, Video, Loader2, LayoutDashboard, Users, Archive, RotateCcw, Eye, Heading1, Heading2, List, ListOrdered, Bold, CornerDownLeft } from "lucide-react";
+import { Briefcase, Megaphone, Inbox, LogOut, Plus, Pencil, Trash2, Check, X, Video, Loader2, LayoutDashboard, Users, Archive, RotateCcw, Eye, ChevronDown, ChevronUp } from "lucide-react";
+import DescriptionEditor from "@/components/admin/DescriptionEditor";
+import RichJobDescription from "@/components/RichJobDescription";
 
 type Tab = "overview" | "jobs" | "submissions" | "deleted" | "ads" | "leads" | "users";
 
