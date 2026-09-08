@@ -558,10 +558,9 @@ const JobEditor = ({ job, onClose, onSave }: any) => {
           <Field label="Category" value={f.category} onChange={(e: any) => setF({ ...f, category: e.target.value })} />
         </div>
         <div className="mt-3">
-          <label className="text-xs font-semibold mb-1 block">Description *</label>
-          <textarea rows={6} value={f.description} onChange={(e) => setF({ ...f, description: e.target.value })}
-            className="w-full px-3 py-2 rounded-lg bg-secondary border border-border text-sm outline-none focus:border-primary" />
+          <DescriptionEditor label="Description *" value={f.description} onChange={(v) => setF({ ...f, description: v })} />
         </div>
+
         <div className="flex justify-end gap-2 mt-5">
           <button onClick={onClose} className="px-4 py-2 text-sm border border-border rounded-lg">Cancel</button>
           <button onClick={() => onSave(f)} className="px-4 py-2 text-sm gradient-primary text-primary-foreground rounded-lg">Save</button>
