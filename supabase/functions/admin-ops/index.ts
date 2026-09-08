@@ -77,6 +77,25 @@ Deno.serve(async (req) => {
       case 'restore_deleted_job': {
         const { data: arc, error: e1 } = await supabase.from('deleted_jobs').select('*').eq('id', payload.id).single()
         if (e1) throw e1
+
+        if (arc.source_table === 'job_submissions') {
+          const { data: sub, error: eS } = await supabase.from('job_submissions').insert({
+            title: arc.title,
+            company: arc.company,
+            contact_email: arc.contact_email ?? 'jobs@jobsphere.net',
+            location: arc.location,
+            salary: arc.salary,
+            job_type: arc.job_type,
+            category: arc.category,
+            description: arc.description ?? '',
+            apply_url: arc.apply_url,
+            status: 'pending',
+          }).select().single()
+          if (eS) throw eS
+          await supabase.from('deleted_jobs').delete().eq('id', payload.id)
+          return json({ data: sub, restored_to: 'pending' })
+        }
+
         const { data: job, error: e2 } = await supabase.from('posted_jobs').insert({
           title: arc.title,
           company: arc.company,
@@ -91,8 +110,9 @@ Deno.serve(async (req) => {
         }).select().single()
         if (e2) throw e2
         await supabase.from('deleted_jobs').delete().eq('id', payload.id)
-        return json({ data: job })
+        return json({ data: job, restored_to: 'live' })
       }
+
       case 'purge_deleted_job': {
         const { error } = await supabase.from('deleted_jobs').delete().eq('id', payload.id)
         if (error) throw error
