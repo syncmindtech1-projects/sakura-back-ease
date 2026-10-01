@@ -171,6 +171,17 @@ Deno.serve(async (req) => {
         return json({ data })
       }
       case 'delete_submission': {
+        const { data: sub, error: fErr } = await supabase.from('job_submissions').select('*').eq('id', payload.id).maybeSingle()
+        if (fErr) throw fErr
+        if (sub) {
+          const { error: aErr } = await supabase.from('deleted_jobs').insert({
+            original_id: sub.id, source_table: 'job_submissions', title: sub.title, company: sub.company,
+            contact_email: sub.contact_email, location: sub.location, salary: sub.salary, job_type: sub.job_type,
+            category: sub.category, description: sub.description, apply_url: sub.apply_url,
+            original_created_at: sub.created_at, deleted_by: 'admin',
+          })
+          if (aErr) throw aErr
+        }
         const { error } = await supabase.from('job_submissions').delete().eq('id', payload.id)
         if (error) throw error
         return json({ ok: true })
