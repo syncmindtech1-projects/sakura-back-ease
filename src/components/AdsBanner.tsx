@@ -11,15 +11,12 @@ interface Ad {
   link: string;
 }
 
+const SM = "https://syncmindtech.com";
 const ads: Ad[] = [
-  { id: "1", title: "Get certified in Data Science, AI & Cloud", blurb: "Industry credentials from Stanford, Google and IBM — audit for free, upgrade when ready.", sponsor: "Coursera", cta: "Start learning", link: "#" },
-  { id: "2", title: "A resume that gets you interviews", blurb: "Expert-written revisions and ATS-ready formatting. 95% of clients report more callbacks within 30 days.", sponsor: "TopResume", cta: "Request review", link: "#" },
-  { id: "3", title: "Hire across 900M+ professionals", blurb: "Reach vetted candidates on the world's largest professional network. First job post is on us.", sponsor: "LinkedIn Talent", cta: "Post a role", link: "#" },
-  { id: "4", title: "Remote work across Africa & beyond", blurb: "A curated board of remote roles from vetted, distributed-first companies hiring across the continent.", sponsor: "RemoteAfrica", cta: "Explore roles", link: "#" },
-  { id: "5", title: "Practise interviews with an AI coach", blurb: "Simulated rounds tailored to your role, with structured feedback on clarity, structure and delivery.", sponsor: "InterviewPro", cta: "Try a session", link: "#" },
-  { id: "6", title: "Certifications that pay off", blurb: "Verified programs that lift median salaries by up to 35%. Filter by industry, cost and time to complete.", sponsor: "CertifyNow", cta: "Browse programs", link: "#" },
-  { id: "7", title: "Free coding bootcamps for African talent", blurb: "Fully funded cohorts in Python, JavaScript and data engineering. Applications open on a rolling basis.", sponsor: "AfricanDevs", cta: "Apply now", link: "#" },
-  { id: "8", title: "Health cover built for freelancers", blurb: "Affordable, portable coverage from $15/month across East Africa. Underwritten and regulated.", sponsor: "CoverAfrica", cta: "See plans", link: "#" },
+  { id: "1", title: "Custom systems & websites that grow your business", blurb: "SyncMind Tech builds business systems, high-performance websites, AI agents, digital marketing and SEO for brands across Africa.", sponsor: "SyncMind Tech", cta: "Visit syncmindtech.com", link: SM },
+  { id: "2", title: "Put AI agents to work for your team", blurb: "Automate support, sales and operations with custom AI agents built and deployed by SyncMind Tech.", sponsor: "SyncMind Tech", cta: "Explore AI agents", link: SM },
+  { id: "3", title: "Rank higher. Get found. Win customers.", blurb: "SEO and performance marketing from SyncMind Tech — more traffic, more leads, measurable results.", sponsor: "SyncMind Tech", cta: "Boost your SEO", link: SM },
+  { id: "4", title: "Websites and systems, built to scale", blurb: "From company websites to full management systems — designed, developed and supported by SyncMind Tech.", sponsor: "SyncMind Tech", cta: "Start a project", link: SM },
 ];
 
 interface AdsBannerProps {

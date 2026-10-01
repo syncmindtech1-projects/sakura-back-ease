@@ -11,9 +11,6 @@ const FUZU = /fuzu\.com\/[a-z-]+\/jobs\/[a-z0-9-]+-\d+/i;
 const JA_UG = /jobadverts\.ug\/(\?post_type=jb-job&p=\d+|job\/[^/]+)/i;
 
 const JOB_SOURCES = [
-  { url: 'https://jobadverts.ug/', region: 'Uganda', name: 'JobAdverts UG', detail: JA_UG },
-  { url: 'https://jobadverts.ug/page/2/', region: 'Uganda', name: 'JobAdverts UG', detail: JA_UG },
-  { url: 'https://jobadverts.ug/page/3/', region: 'Uganda', name: 'JobAdverts UG', detail: JA_UG },
   { url: 'https://www.brightermonday.co.ug/jobs', region: 'Uganda', name: 'BrighterMonday Uganda', detail: BM_UG },
   { url: 'https://www.brightermonday.co.ug/jobs?page=2', region: 'Uganda', name: 'BrighterMonday Uganda', detail: BM_UG },
   { url: 'https://www.brightermonday.co.ug/jobs?page=3', region: 'Uganda', name: 'BrighterMonday Uganda', detail: BM_UG },
@@ -31,6 +28,13 @@ const JOB_SOURCES = [
   { url: 'https://www.fuzu.com/kenya/jobs', region: 'Kenya', name: 'Fuzu Kenya', detail: FUZU },
   { url: 'https://www.theugandanjobline.com/', region: 'Uganda', name: 'Ugandan Job Line', detail: /theugandanjobline\.com\/\d{4}\/\d{2}\/[a-z0-9-]+\.html/i },
   { url: 'https://www.theugandanjobline.com/page/2/', region: 'Uganda', name: 'Ugandan Job Line', detail: /theugandanjobline\.com\/\d{4}\/\d{2}\/[a-z0-9-]+\.html/i },
+  { url: 'https://www.brightermonday.co.ug/jobs?page=4', region: 'Uganda', name: 'BrighterMonday Uganda', detail: BM_UG },
+  { url: 'https://www.brightermonday.co.ug/jobs/ngo-npo-charity', region: 'Uganda', name: 'BrighterMonday Uganda', detail: BM_UG },
+  { url: 'https://www.brightermonday.co.ke/jobs?page=4', region: 'Kenya', name: 'BrighterMonday Kenya', detail: BM_KE },
+  { url: 'https://www.brightermonday.co.ke/jobs/healthcare', region: 'Kenya', name: 'BrighterMonday Kenya', detail: BM_KE },
+  { url: 'https://www.fuzu.com/rwanda/jobs', region: 'Rwanda', name: 'Fuzu Rwanda', detail: FUZU },
+  { url: 'https://www.fuzu.com/tanzania/jobs', region: 'Tanzania', name: 'Fuzu Tanzania', detail: FUZU },
+  { url: 'https://www.theugandanjobline.com/page/3/', region: 'Uganda', name: 'Ugandan Job Line', detail: /theugandanjobline\.com\/\d{4}\/\d{2}\/[a-z0-9-]+\.html/i },
   { url: 'https://wellfound.com/jobs', region: 'Global', name: 'Wellfound', detail: /wellfound\.com\/jobs\/\d+-[a-z0-9-]+/i },
   { url: 'https://web3.career/', region: 'Global', name: 'Web3.career', detail: /web3\.career\/[a-z0-9-]+\/\d+/i },
   { url: 'https://web3.career/remote-jobs', region: 'Global', name: 'Web3.career', detail: /web3\.career\/[a-z0-9-]+\/\d+/i },
