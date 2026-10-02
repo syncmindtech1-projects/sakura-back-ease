@@ -1,0 +1,1 @@
+Use Logo.dev's browser image endpoint for dynamic employer logos and retain generated initials as the failure fallback, because scraped companies change continuously.
