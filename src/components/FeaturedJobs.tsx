@@ -2,6 +2,7 @@ import { MapPin, Clock, Bookmark, ArrowUpRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useSavedJobs } from "@/contexts/SavedJobsContext";
 import { useLiveJobs } from "@/hooks/useLiveJobs";
+import CompanyLogo from "@/components/CompanyLogo";
 
 const FeaturedJobs = () => {
   const { toggleSave, isSaved } = useSavedJobs();
@@ -37,9 +38,7 @@ const FeaturedJobs = () => {
                 to={`/jobs/${job.id}`}
                 className="group grid grid-cols-[auto_1fr_auto] md:grid-cols-[auto_1fr_auto_auto_auto] items-center gap-4 md:gap-6 py-5 hover:bg-secondary/40 transition-colors -mx-4 md:-mx-6 px-4 md:px-6"
               >
-                <div className="w-11 h-11 flex items-center justify-center text-sm font-semibold border border-border bg-card shrink-0">
-                  {job.company.slice(0, 2).toUpperCase()}
-                </div>
+                <CompanyLogo name={job.company} size="md" className="w-11 h-11 rounded-none" />
 
                 <div className="min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
