@@ -327,6 +327,7 @@ export type Database = {
           id: string
           job_type: string | null
           location: string | null
+          logo_url: string | null
           posted_at: string | null
           region: string | null
           remote: boolean | null
@@ -345,6 +346,7 @@ export type Database = {
           id?: string
           job_type?: string | null
           location?: string | null
+          logo_url?: string | null
           posted_at?: string | null
           region?: string | null
           remote?: boolean | null
@@ -363,6 +365,7 @@ export type Database = {
           id?: string
           job_type?: string | null
           location?: string | null
+          logo_url?: string | null
           posted_at?: string | null
           region?: string | null
           remote?: boolean | null
