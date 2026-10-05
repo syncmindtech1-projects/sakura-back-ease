@@ -38,7 +38,35 @@ const JOB_SOURCES = [
   { url: 'https://wellfound.com/jobs', region: 'Global', name: 'Wellfound', detail: /wellfound\.com\/jobs\/\d+-[a-z0-9-]+/i },
   { url: 'https://web3.career/', region: 'Global', name: 'Web3.career', detail: /web3\.career\/[a-z0-9-]+\/\d+/i },
   { url: 'https://web3.career/remote-jobs', region: 'Global', name: 'Web3.career', detail: /web3\.career\/[a-z0-9-]+\/\d+/i },
+  // New countries (index 27+)
+  { url: 'https://www.jobberman.com.gh/jobs', region: 'Ghana', name: 'Jobberman Ghana', detail: /jobberman\.com\.gh\/listings\/[a-z0-9-]+/i },
+  { url: 'https://www.jobberman.com.gh/jobs?page=2', region: 'Ghana', name: 'Jobberman Ghana', detail: /jobberman\.com\.gh\/listings\/[a-z0-9-]+/i },
+  { url: 'https://www.ethiojobs.net/jobs', region: 'Ethiopia', name: 'Ethiojobs', detail: /ethiojobs\.net\/(job|jobs)\/[a-z0-9-]+/i },
+  { url: 'https://www.jobinrwanda.com/jobs/all', region: 'Rwanda', name: 'Job in Rwanda', detail: /jobinrwanda\.com\/job\/[a-z0-9-]+/i },
+  { url: 'https://reliefweb.int/jobs?search=country.exact%3A%22South%20Sudan%22', region: 'South Sudan', name: 'ReliefWeb South Sudan', detail: /reliefweb\.int\/job\/\d+/i },
+  { url: 'https://reliefweb.int/jobs?search=country.exact%3A%22Ethiopia%22', region: 'Ethiopia', name: 'ReliefWeb Ethiopia', detail: /reliefweb\.int\/job\/\d+/i },
+  { url: 'https://reliefweb.int/jobs?search=country.exact%3A%22United%20Republic%20of%20Tanzania%22', region: 'Tanzania', name: 'ReliefWeb Tanzania', detail: /reliefweb\.int\/job\/\d+/i },
+  { url: 'https://reliefweb.int/jobs?search=country.exact%3A%22Rwanda%22', region: 'Rwanda', name: 'ReliefWeb Rwanda', detail: /reliefweb\.int\/job\/\d+/i },
+  { url: 'https://reliefweb.int/jobs?search=country.exact%3A%22Ghana%22', region: 'Ghana', name: 'ReliefWeb Ghana', detail: /reliefweb\.int\/job\/\d+/i },
+  // Job-type sources
+  { url: 'https://www.brightermonday.co.ug/jobs/internship-graduate', region: 'Uganda', name: 'BrighterMonday Uganda', detail: BM_UG },
+  { url: 'https://www.brightermonday.co.ke/jobs/internship-graduate', region: 'Kenya', name: 'BrighterMonday Kenya', detail: BM_KE },
+  { url: 'https://www.brightermonday.co.ug/jobs?job_type=part-time', region: 'Uganda', name: 'BrighterMonday Uganda', detail: BM_UG },
+  { url: 'https://www.brightermonday.co.ug/jobs?job_type=contract', region: 'Uganda', name: 'BrighterMonday Uganda', detail: BM_UG },
+  { url: 'https://www.brightermonday.co.ke/jobs?job_type=part-time', region: 'Kenya', name: 'BrighterMonday Kenya', detail: BM_KE },
+  { url: 'https://www.brightermonday.co.ke/jobs?job_type=contract', region: 'Kenya', name: 'BrighterMonday Kenya', detail: BM_KE },
+  { url: 'https://web3.career/freelance-jobs', region: 'Global', name: 'Web3.career', detail: /web3\.career\/[a-z0-9-]+\/\d+/i },
+  { url: 'https://web3.career/internship-jobs', region: 'Global', name: 'Web3.career', detail: /web3\.career\/[a-z0-9-]+\/\d+/i },
 ];
+
+function inferJobType(title: string, sourceUrl: string): string {
+  const t = `${title} ${sourceUrl}`.toLowerCase();
+  if (/intern|graduate trainee|attachment/.test(t)) return 'Internship';
+  if (/freelance/.test(t)) return 'Freelance';
+  if (/part[- ]?time/.test(t)) return 'Part-time';
+  if (/contract|consultan|temporary|short[- ]term/.test(t)) return 'Contract';
+  return 'Full-time';
+}
 
 
 interface ParsedJob {
@@ -197,8 +225,9 @@ Deno.serve(async (req) => {
           const rows = parsed.map((j) => ({
             title: j.title,
             company: j.company || null,
-            location: j.location || null,
+            location: j.location || source.region,
             region: source.region,
+            job_type: inferJobType(j.title, source.url),
             apply_url: j.apply_url,
             source_name: source.name,
             source_url: source.url,
