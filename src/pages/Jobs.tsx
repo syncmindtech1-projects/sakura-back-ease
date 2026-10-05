@@ -1,7 +1,7 @@
 import PageLayout from "@/components/PageLayout";
 import AdsBanner from "@/components/AdsBanner";
 import { motion } from "framer-motion";
-import { MapPin, Clock, Bookmark, Search, Briefcase, SlidersHorizontal, ExternalLink, SearchX } from "lucide-react";
+import { MapPin, Clock, Bookmark, Search, Briefcase, SlidersHorizontal, ExternalLink, SearchX, ArrowRight } from "lucide-react";
 import CompanyLogo from "@/components/CompanyLogo";
 import { Job } from "@/lib/jobData";
 import { useState, useMemo } from "react";
@@ -19,6 +19,7 @@ const Jobs = () => {
   const initialQuery = searchParams.get("q") || "";
   const [typeFilter, setTypeFilter] = useState("All");
   const [searchQuery, setSearchQuery] = useState(initialQuery);
+  const [draftQuery, setDraftQuery] = useState(initialQuery);
   const [locationFilter, setLocationFilter] = useState("All Locations");
   const [sortBy, setSortBy] = useState("Most Recent");
   const [showFilters, setShowFilters] = useState(false);
@@ -59,15 +60,25 @@ const Jobs = () => {
             Browse All Jobs
           </motion.h1>
           <p className="text-primary-foreground/80 mb-6">Discover opportunities across every industry</p>
-          <motion.div className="bg-card text-foreground rounded-2xl shadow-card p-2 flex flex-col md:flex-row gap-2 max-w-3xl" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-            <div className="flex-1 flex items-center gap-3 px-4 py-3 rounded-xl bg-secondary/50">
-              <Search size={18} className="text-muted-foreground" />
-              <input type="text" placeholder="Search job title, company, or keyword..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="bg-transparent w-full text-sm text-foreground placeholder:text-muted-foreground outline-none" />
+          <motion.form onSubmit={(e) => { e.preventDefault(); setSearchQuery(draftQuery.trim()); setVisible(30); }} className="bg-card text-foreground rounded-2xl shadow-card p-2 flex flex-col md:flex-row gap-2 max-w-3xl" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
+            <div className="flex-1 flex items-center gap-2 pl-4 pr-1 py-1 rounded-xl bg-secondary/50">
+              <Search size={18} className="text-muted-foreground shrink-0" />
+              <input type="search" enterKeyHint="search" placeholder="Job title, company, or keyword..." value={draftQuery} onChange={(e) => { setDraftQuery(e.target.value); if (!e.target.value) setSearchQuery(""); }} className="bg-transparent w-full min-w-0 py-2 text-sm text-foreground placeholder:text-muted-foreground outline-none" />
+              <button type="submit" aria-label="Search jobs" className="shrink-0 h-10 w-10 inline-flex items-center justify-center rounded-lg bg-primary text-primary-foreground hover:opacity-90 active:scale-95 transition">
+                <ArrowRight size={18} />
+              </button>
             </div>
-            <button onClick={() => setShowFilters(!showFilters)} className="flex items-center gap-2 px-4 py-3 rounded-xl bg-secondary/50 text-sm text-muted-foreground hover:text-foreground transition-colors md:hidden">
+            <button type="button" onClick={() => setShowFilters(!showFilters)} className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-secondary/50 text-sm text-muted-foreground hover:text-foreground transition-colors lg:hidden">
               <SlidersHorizontal size={16} /> Filters
             </button>
-          </motion.div>
+          </motion.form>
+          <div className="flex gap-2 overflow-x-auto mt-3 max-w-3xl pb-1 -mx-1 px-1">
+            {jobTypes.map((t) => (
+              <button key={t} type="button" onClick={() => { setTypeFilter(t); setVisible(30); }} className={`shrink-0 text-xs font-semibold px-3 py-1.5 rounded-full border transition-colors ${typeFilter === t ? 'bg-card text-primary border-card' : 'border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10'}`}>
+                {t}
+              </button>
+            ))}
+          </div>
         </div>
       </section>
 
