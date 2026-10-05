@@ -61,7 +61,7 @@ const JOB_SOURCES = [
 
 function inferJobType(title: string, sourceUrl: string): string {
   const t = `${title} ${sourceUrl}`.toLowerCase();
-  if (/intern|graduate trainee|attachment/.test(t)) return 'Internship';
+  if (/\bintern(ship)?s?\b|graduate trainee|attachment/.test(t)) return 'Internship';
   if (/freelance/.test(t)) return 'Freelance';
   if (/part[- ]?time/.test(t)) return 'Part-time';
   if (/contract|consultan|temporary|short[- ]term/.test(t)) return 'Contract';
