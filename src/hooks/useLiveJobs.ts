@@ -138,11 +138,24 @@ export const useLiveJobs = () => {
   return { jobs, loading };
 };
 
+/** Countries JobSphere actively lists; anything else (Global, etc.) is excluded from the count. */
+const SUPPORTED_COUNTRIES = new Set([
+  "Uganda",
+  "Kenya",
+  "Tanzania",
+  "Rwanda",
+  "South Sudan",
+  "Ethiopia",
+  "Ghana",
+]);
+
 export const useLiveJobStats = () => {
   const { jobs, loading } = useLiveJobs();
   const companies = new Set(jobs.map((j) => j.company)).size;
   const countries = new Set(
-    jobs.map((j) => j.location.split(",").pop()?.trim()).filter(Boolean)
+    jobs
+      .map((j) => j.location.split(",").pop()?.trim())
+      .filter((c): c is string => !!c && SUPPORTED_COUNTRIES.has(c))
   ).size;
   return { totalJobs: jobs.length, companies, countries, loading };
 };

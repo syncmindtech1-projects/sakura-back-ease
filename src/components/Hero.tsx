@@ -59,7 +59,7 @@ const Hero = () => {
             <p className="mt-6 text-base md:text-lg leading-relaxed text-muted-foreground max-w-lg">
               JobSphere is a free, human-curated index of {totalJobs.toLocaleString()}+ open
               roles across {countries} countries — Uganda, Kenya, Tanzania, Rwanda, South
-              Sudan, Ethiopia and Ghana. No paywalls, no noise.
+              Sudan, Ethiopia and Ghana — plus remote roles worldwide. No paywalls, no noise.
             </p>
 
             {/* Search */}
