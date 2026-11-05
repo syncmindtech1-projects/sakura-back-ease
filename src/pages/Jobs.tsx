@@ -3,15 +3,13 @@ import AdsBanner from "@/components/AdsBanner";
 import { motion } from "framer-motion";
 import { MapPin, Clock, Bookmark, Search, Briefcase, SlidersHorizontal, ExternalLink, SearchX, ArrowRight } from "lucide-react";
 import CompanyLogo from "@/components/CompanyLogo";
-import { Job } from "@/lib/jobData";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import { useSavedJobs } from "@/contexts/SavedJobsContext";
-import { useLiveJobs } from "@/hooks/useLiveJobs";
+import { useJobFeed, useJobCountries, PAGE_SIZE } from "@/hooks/useJobFeed";
 
 
 const jobTypes = ["All", "Full-time", "Part-time", "Contract", "Freelance", "Internship"];
-const locationFilters = ["All Locations", "Uganda", "Kenya", "Tanzania", "Rwanda", "South Sudan", "Ethiopia", "Ghana", "Remote"];
 const sortOptions = ["Most Recent", "Salary: High to Low", "Salary: Low to High"];
 
 const Jobs = () => {
@@ -20,37 +18,24 @@ const Jobs = () => {
   const [typeFilter, setTypeFilter] = useState("All");
   const [searchQuery, setSearchQuery] = useState(initialQuery);
   const [draftQuery, setDraftQuery] = useState(initialQuery);
-  const [locationFilter, setLocationFilter] = useState("All Locations");
+  const [country, setCountry] = useState("Uganda");
   const [sortBy, setSortBy] = useState("Most Recent");
   const [showFilters, setShowFilters] = useState(false);
-  const [visible, setVisible] = useState(30);
-  const { jobs: allJobs, loading } = useLiveJobs();
+  const [page, setPage] = useState(1);
+  const countries = useJobCountries();
+  const { jobs: pageJobs, total, loading } = useJobFeed({ country, query: searchQuery, type: typeFilter, page });
   const { toggleSave, isSaved } = useSavedJobs();
-
-
+  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+  useEffect(() => { setPage(1); }, [country, searchQuery, typeFilter]);
+  useEffect(() => { window.scrollTo({ top: 0, behavior: "smooth" }); }, [page]);
+  const setVisible = (_: number) => setPage(1);
 
   const filtered = useMemo(() => {
-    let jobs = allJobs.filter((job) => {
-      if (typeFilter !== "All" && job.type !== typeFilter) return false;
-      if (locationFilter !== "All Locations") {
-        if (locationFilter === "Remote") { if (!job.remote) return false; }
-        else if (!job.location.toLowerCase().includes(locationFilter.toLowerCase())) return false;
-      }
-      if (searchQuery) {
-        const q = searchQuery.toLowerCase();
-        return job.title.toLowerCase().includes(q) || job.company.toLowerCase().includes(q) || job.tags.some(t => t.toLowerCase().includes(q)) || job.description.toLowerCase().includes(q);
-      }
-      return true;
-    });
-
-    if (sortBy === "Salary: High to Low") {
-      jobs = [...jobs].sort((a, b) => parseInt(b.salary.replace(/\D/g, "") || "0") - parseInt(a.salary.replace(/\D/g, "") || "0"));
-    } else if (sortBy === "Salary: Low to High") {
-      jobs = [...jobs].sort((a, b) => parseInt(a.salary.replace(/\D/g, "") || "0") - parseInt(b.salary.replace(/\D/g, "") || "0"));
-    }
-    return jobs;
-  }, [allJobs, typeFilter, searchQuery, locationFilter, sortBy]);
-
+    const num = (v: string) => parseInt(v.replace(/\D/g, "") || "0");
+    if (sortBy === "Salary: High to Low") return [...pageJobs].sort((a, b) => num(b.salary) - num(a.salary));
+    if (sortBy === "Salary: Low to High") return [...pageJobs].sort((a, b) => num(a.salary) - num(b.salary));
+    return pageJobs;
+  }, [pageJobs, sortBy]);
 
   return (
     <PageLayout>
@@ -98,10 +83,10 @@ const Jobs = () => {
               </div>
 
               <div className="bg-card rounded-2xl border border-border p-5">
-                <h3 className="text-sm font-semibold text-foreground mb-3">Location</h3>
+                <h3 className="text-sm font-semibold text-foreground mb-3">Country</h3>
                 <div className="space-y-2">
-                  {locationFilters.map((l) => (
-                    <button key={l} onClick={() => setLocationFilter(l)} className={`w-full text-left text-sm px-3 py-2 rounded-lg transition-colors ${locationFilter === l ? 'bg-primary/10 text-primary font-semibold' : 'text-muted-foreground hover:text-foreground hover:bg-secondary'}`}>
+                  {countries.map((l) => (
+                    <button key={l} onClick={() => setCountry(l)} className={`w-full text-left text-sm px-3 py-2 rounded-lg transition-colors ${country === l ? 'bg-primary/10 text-primary font-semibold' : 'text-muted-foreground hover:text-foreground hover:bg-secondary'}`}>
                       {l}
                     </button>
                   ))}
@@ -111,10 +96,17 @@ const Jobs = () => {
               <AdsBanner variant="sidebar" adIndex={1} />
             </aside>
 
-            <div className="flex-1">
+            <div className="flex-1 min-w-0">
+              <div role="tablist" aria-label="Filter by country" className="flex gap-2 overflow-x-auto pb-2 mb-4 -mx-1 px-1">
+                {countries.map((c) => (
+                  <button key={c} role="tab" aria-selected={country === c} type="button" onClick={() => setCountry(c)} className={`shrink-0 text-xs font-semibold px-3 py-1.5 rounded-full border transition-colors ${country === c ? 'bg-primary text-primary-foreground border-primary' : 'border-border text-muted-foreground hover:text-foreground hover:bg-secondary'}`}>
+                    {c}
+                  </button>
+                ))}
+              </div>
               <div className="flex items-center justify-between mb-6">
                 <p className="text-sm text-muted-foreground">
-                  {loading ? "Loading live jobs…" : (<><span className="font-semibold text-foreground">{filtered.length}</span> jobs found</>)}
+                  {loading ? "Loading live jobs…" : (<><span className="font-semibold text-foreground">{total}</span> jobs in {country}</>)}
                 </p>
                 <div className="flex items-center gap-2">
                   <span className="text-xs text-muted-foreground hidden sm:inline">Sort by:</span>
@@ -127,37 +119,43 @@ const Jobs = () => {
               {loading && (
                 <div className="space-y-3">
                   {Array.from({ length: 6 }).map((_, i) => (
-                    <div key={i} className="h-32 rounded-2xl border border-border bg-card animate-pulse" />
+                    <div key={i} className="bg-card rounded-2xl border border-border p-5 animate-pulse">
+                      <div className="flex flex-col sm:flex-row sm:items-start gap-4">
+                        <div className="w-12 h-12 rounded-xl bg-secondary shrink-0" />
+                        <div className="flex-1 space-y-2">
+                          <div className="h-4 w-2/3 rounded bg-secondary" />
+                          <div className="h-3 w-1/3 rounded bg-secondary" />
+                          <div className="h-3 w-full rounded bg-secondary" />
+                          <div className="h-3 w-5/6 rounded bg-secondary" />
+                          <div className="h-3 w-1/2 rounded bg-secondary" />
+                        </div>
+                        <div className="h-8 w-20 rounded-lg bg-secondary shrink-0" />
+                      </div>
+                    </div>
                   ))}
                 </div>
               )}
 
               <div className="space-y-3">
-                {filtered.slice(0, visible).map((job, i) => (
+                {!loading && filtered.map((job, i) => (
 
                   <motion.div key={job.id} className="group bg-card rounded-2xl border border-border p-5 hover:shadow-elevated hover:border-primary/20 transition-all" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.03 }}>
-                    <Link to={`/jobs/${job.id}`} className="block">
+                    <Link to={`/jobs/sc-${job.id}`} className="block">
                       <div className="flex flex-col sm:flex-row sm:items-start gap-4">
-                        <CompanyLogo name={job.company} size="md" />
+                        <CompanyLogo name={job.employer} size="md" />
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 flex-wrap mb-1">
                             {job.remote && <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded-md bg-accent/10 text-accent">Remote</span>}
-                            {job.urgent && <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded-md gradient-warm text-highlight-foreground">Urgent</span>}
-                            {job.featured && <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded-md gradient-primary text-primary-foreground">Featured</span>}
-                          </div>
+                                                      </div>
                           <h3 className="text-base font-semibold text-foreground group-hover:text-primary transition-colors">{job.title}</h3>
-                          <p className="text-sm text-muted-foreground">{job.company}</p>
-                          <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{job.description}</p>
+                          <p className="text-sm text-muted-foreground">{job.employer}</p>
+                          <p className="text-xs text-muted-foreground mt-1 line-clamp-3">{job.description}</p>
                           <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground mt-2">
                             <span className="flex items-center gap-1"><MapPin size={12} />{job.location}</span>
-                            <span className="flex items-center gap-1"><Clock size={12} />{job.posted}</span>
-                            <span className="flex items-center gap-1"><Briefcase size={12} />{job.type}</span>
+                            <span className="flex items-center gap-1"><Clock size={12} />{job.timeAgo}</span>
+                            <span className="flex items-center gap-1"><Briefcase size={12} />{job.jobType}</span>
                           </div>
-                          <div className="flex flex-wrap gap-1.5 mt-2">
-                            {job.tags.map((tag) => (
-                              <span key={tag} className="text-[11px] px-2 py-0.5 rounded-md bg-secondary text-secondary-foreground font-medium">{tag}</span>
-                            ))}
-                          </div>
+
                         </div>
                         <div className="flex sm:flex-col items-center sm:items-end gap-3 sm:gap-2 shrink-0" onClick={(e) => e.preventDefault()}>
                           <span className="text-sm font-bold text-foreground">{job.salary}</span>
@@ -167,11 +165,11 @@ const Jobs = () => {
                           >
                             <Bookmark size={16} className={isSaved(job.id) ? 'fill-primary' : ''} />
                           </button>
-                          <Link to={`/jobs/${job.id}`} onClick={(e) => e.stopPropagation()} className="inline-flex items-center gap-1 text-xs font-semibold border border-border text-foreground px-3 py-2 rounded-lg hover:bg-secondary transition-colors">
+                          <Link to={`/jobs/sc-${job.id}`} onClick={(e) => e.stopPropagation()} className="inline-flex items-center gap-1 text-xs font-semibold border border-border text-foreground px-3 py-2 rounded-lg hover:bg-secondary transition-colors">
                             Details
                           </Link>
                           <a
-                            href={job.applyUrl}
+                            href={job.urlLink}
                             target="_blank"
                             rel="noopener noreferrer"
                             onClick={(e) => e.stopPropagation()}
@@ -186,12 +184,12 @@ const Jobs = () => {
                 ))}
               </div>
 
-              {filtered.length > visible && (
-                <div className="text-center mt-8">
-                  <button onClick={() => setVisible((v) => v + 30)} className="text-sm font-semibold border border-border px-6 py-3 rounded-lg hover:bg-secondary transition-colors">
-                    Load more jobs ({filtered.length - visible} remaining)
-                  </button>
-                </div>
+              {!loading && totalPages > 1 && (
+                <nav aria-label="Pagination" className="flex items-center justify-center gap-2 mt-8">
+                  <button disabled={page <= 1} onClick={() => setPage((p) => p - 1)} className="text-sm font-semibold border border-border px-4 py-2 rounded-lg hover:bg-secondary transition-colors disabled:opacity-40">Previous</button>
+                  <span className="text-sm text-muted-foreground px-2">Page {page} of {totalPages}</span>
+                  <button disabled={page >= totalPages} onClick={() => setPage((p) => p + 1)} className="text-sm font-semibold border border-border px-4 py-2 rounded-lg hover:bg-secondary transition-colors disabled:opacity-40">Next</button>
+                </nav>
               )}
 
               {!loading && filtered.length === 0 && (
@@ -200,7 +198,7 @@ const Jobs = () => {
                   <SearchX size={44} className="mx-auto mb-4 text-primary" />
                   <h3 className="text-lg font-semibold text-foreground mb-2">No jobs found</h3>
                   <p className="text-sm text-muted-foreground">Try adjusting your filters or search terms</p>
-                  <button onClick={() => { setSearchQuery(""); setTypeFilter("All"); setLocationFilter("All Locations"); }} className="mt-4 text-sm font-semibold text-primary hover:underline">
+                  <button onClick={() => { setSearchQuery(""); setTypeFilter("All");  }} className="mt-4 text-sm font-semibold text-primary hover:underline">
                     Clear all filters
                   </button>
                 </div>
