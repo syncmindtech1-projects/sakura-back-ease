@@ -3,4 +3,4 @@ Allow: /
 Disallow: /admin
 Disallow: /admin-login
 
-Sitemap: https://jobsphere.net/sitemap.xml
+Sitemap: https://jobsphere-east-africa.lovable.app/sitemap.xml
