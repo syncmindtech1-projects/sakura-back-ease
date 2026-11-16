@@ -1,11 +1,10 @@
-// @vitest-environment node
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
 describe("AdSense publisher authorization", () => {
   it("contains only the authorized publisher record", () => {
     const contents = readFileSync("public/ads.txt", "utf8");
-    expect(contents).toBe("google.com, pub-4419312922428541, DIRECT, f08c47fec0942fa0\n");
+    expect(contents).toBe("google.com, pub-4419312922428541, DIRECT, f08c47fec0942fa0");
   });
 
   it("excludes ads.txt from the HTML fallback while retaining page routing", () => {
