@@ -1,1 +1,3 @@
 Use Logo.dev's browser image endpoint for dynamic employer logos and retain generated initials as the failure fallback, because scraped companies change continuously.
+Keep profile reads scoped to the signed-in owner and public job/ad inserts bounded and pending-only; this protects personal data and prevents clients bypassing approval.
+Apply database access changes through the Lovable Database migration workflow and retain its generated migration files; this keeps deployed policies reproducible.
