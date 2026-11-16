@@ -231,6 +231,7 @@ Deno.serve(async (req) => {
             apply_url: j.apply_url,
             source_name: source.name,
             source_url: source.url,
+            is_published: true,
             scraped_at: new Date().toISOString(),
           }));
           const { data: upserted, error: upErr } = await supabase

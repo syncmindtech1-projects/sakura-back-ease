@@ -254,6 +254,7 @@ export type Database = {
           created_at: string
           description: string
           id: string
+          is_published: boolean
           job_type: string | null
           location: string | null
           posted_by: string | null
@@ -269,6 +270,7 @@ export type Database = {
           created_at?: string
           description: string
           id?: string
+          is_published?: boolean
           job_type?: string | null
           location?: string | null
           posted_by?: string | null
@@ -284,6 +286,7 @@ export type Database = {
           created_at?: string
           description?: string
           id?: string
+          is_published?: boolean
           job_type?: string | null
           location?: string | null
           posted_by?: string | null
@@ -325,6 +328,7 @@ export type Database = {
           created_at: string
           description: string | null
           id: string
+          is_published: boolean
           job_type: string | null
           location: string | null
           logo_url: string | null
@@ -344,6 +348,7 @@ export type Database = {
           created_at?: string
           description?: string | null
           id?: string
+          is_published?: boolean
           job_type?: string | null
           location?: string | null
           logo_url?: string | null
@@ -363,6 +368,7 @@ export type Database = {
           created_at?: string
           description?: string | null
           id?: string
+          is_published?: boolean
           job_type?: string | null
           location?: string | null
           logo_url?: string | null

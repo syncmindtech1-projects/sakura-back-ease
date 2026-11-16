@@ -32,7 +32,7 @@ Deno.serve(async (req) => {
         return json({ data })
       }
       case 'create_job': {
-        const { data, error } = await supabase.from('posted_jobs').insert(payload).select().single()
+        const { data, error } = await supabase.from('posted_jobs').insert({ ...payload, is_published: true }).select().single()
         if (error) throw error
         return json({ data })
       }
@@ -107,6 +107,7 @@ Deno.serve(async (req) => {
           description: arc.description ?? '',
           apply_url: arc.apply_url,
           posted_by: arc.posted_by,
+          is_published: true,
         }).select().single()
         if (e2) throw e2
         await supabase.from('deleted_jobs').delete().eq('id', payload.id)
@@ -143,6 +144,7 @@ Deno.serve(async (req) => {
           job_type: sub.job_type,
           category: sub.category,
           description: sub.description,
+          is_published: true,
         }).select().single()
         if (e2) throw e2
         await supabase.from('job_submissions').update({ status: 'approved' }).eq('id', payload.id)

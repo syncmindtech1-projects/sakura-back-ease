@@ -8,6 +8,13 @@
       "when": 1794846316297,
       "tag": "0000_restrict_profiles_and_pending_submissions",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1794846446101,
+      "tag": "0001_scope_public_jobs_to_published",
+      "breakpoints": true
     }
   ]
 }
