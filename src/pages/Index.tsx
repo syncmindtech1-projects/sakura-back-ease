@@ -8,9 +8,7 @@ import Testimonials from "@/components/Testimonials";
 import Newsletter from "@/components/Newsletter";
 import CTASection from "@/components/CTASection";
 import Footer from "@/components/Footer";
-import AdsBanner from "@/components/AdsBanner";
 import VideoShowcase from "@/components/VideoShowcase";
-import LiveJobs from "@/components/LiveJobs";
 import SiteChatbot from "@/components/SiteChatbot";
 
 
@@ -19,15 +17,11 @@ const Index = () => {
     <div className="min-h-screen">
       <Header />
       <Hero />
-      <LiveJobs limit={9} />
       <Stats />
-      <AdsBanner variant="banner" adIndex={0} />
       <VideoShowcase />
       <JobCategories />
       <Features />
-      <AdsBanner variant="banner" adIndex={1} />
       <Audience />
-      <AdsBanner variant="banner" adIndex={2} />
       <Testimonials />
       <Newsletter />
       <CTASection />

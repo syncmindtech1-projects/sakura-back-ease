@@ -99,6 +99,6 @@ export const topCompanies = [
 export const stats = [
   { label: "Free Job Listings", value: "900+", icon: "\u{1F4CB}" },
   { label: "Companies", value: "400+", icon: "\u{1F3E2}" },
-  { label: "Countries Covered", value: "8+", icon: "\u{1F30D}" },
+  { label: "Countries Covered", value: "7", icon: "\u{1F30D}" },
   { label: "Successful Placements", value: "1.5M+", icon: "\u2705" },
 ];

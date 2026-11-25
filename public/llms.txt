@@ -1,0 +1,16 @@
+# JobSphere
+
+> JobSphere is a free job board listing current job openings in Uganda, Kenya, Tanzania, Rwanda, South Sudan, Ethiopia and Ghana, plus remote jobs. Job seekers browse and apply free; employers can post jobs free after review.
+
+## Main pages
+- [All jobs](https://www.jobsphere.net/jobs): Current listings, filterable by country, job type and keyword
+- [Remote jobs](https://www.jobsphere.net/remote-jobs): Remote roles open to African applicants
+- [Job categories](https://www.jobsphere.net/categories): Jobs grouped by industry
+- [Post a job](https://www.jobsphere.net/post-job): Free employer job posting, reviewed before going live
+- [Career blog](https://www.jobsphere.net/blog): East African job-market and career guides
+- [Resume builder](https://www.jobsphere.net/resume-builder): Free CV builder
+- [Contact](https://www.jobsphere.net/contact): Kagoma, Kampala, Uganda · +256 757 330656
+
+## Notes
+- Countries covered: 7 (Uganda, Kenya, Tanzania, Rwanda, South Sudan, Ethiopia, Ghana) plus remote.
+- Listings expire and are removed when outdated.

@@ -98,7 +98,7 @@ const fetchJobs = async (): Promise<Job[]> => {
       return {
         id: `sc-${s.id}`,
         title,
-        company: s.company ?? `Employer via ${s.source_name}`,
+        company: s.company ?? "Employer",
         location: s.location ?? region,
         type: normaliseType(s.job_type),
         category,
@@ -152,11 +152,7 @@ const SUPPORTED_COUNTRIES = new Set([
 export const useLiveJobStats = () => {
   const { jobs, loading } = useLiveJobs();
   const companies = new Set(jobs.map((j) => j.company)).size;
-  const countries = new Set(
-    jobs
-      .map((j) => j.location.split(",").pop()?.trim())
-      .filter((c): c is string => !!c && SUPPORTED_COUNTRIES.has(c))
-  ).size;
+  const countries = SUPPORTED_COUNTRIES.size;
   return { totalJobs: jobs.length, companies, countries, loading };
 };
 

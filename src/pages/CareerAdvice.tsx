@@ -58,7 +58,7 @@ const articles: Article[] = [
     author: "Emily Chen", date: "Mar 10, 2026",
     excerpt: "Most people leave thousands on the table. Learn when to negotiate, what to say, and how to research your market value.",
     content: [
-      { heading: "Research your market", body: "Check Payscale, BrighterMonday salary reports, and ask 2–3 people in your network. Get a range, not a number." },
+      { heading: "Research your market", body: "Check published salary surveys, and ask 2–3 people in your network. Get a range, not a number." },
       { heading: "Never give the first number", body: "If asked, say: 'Based on the scope, I'm expecting between X and Y — but I'd love to hear the range you've budgeted.'" },
       { heading: "Negotiate the full package", body: "Base salary, bonus, medical, transport, remote days, learning budget, extra leave. Anything is on the table." },
       { heading: "Script for the counter", body: "'Thank you for the offer. Based on my [X years] of experience in [Y] and the results I brought at [Z], I was hoping for [target]. Can we get there?'" },

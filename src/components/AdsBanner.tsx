@@ -31,7 +31,9 @@ const Meta = ({ sponsor }: { sponsor: string }) => (
   </div>
 );
 
-const AdsBanner = ({ variant = "inline", adIndex = 0 }: AdsBannerProps) => {
+// House ads removed site-wide; slots intentionally render nothing.
+const AdsBanner = (_props: AdsBannerProps) => null;
+const _UnusedAdsBanner = ({ variant = "inline", adIndex = 0 }: AdsBannerProps) => {
   const [dismissed, setDismissed] = useState(false);
   const slotKey = `banner-${adIndex}`;
   const fallback = ads[adIndex % ads.length];

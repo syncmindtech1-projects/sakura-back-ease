@@ -116,7 +116,7 @@ export const useJobFeed = (opts: { country: string; query: string; type: string;
         (data ?? []).map((r: any) => ({
           id: r.id,
           title: r.title,
-          employer: r.company || `Employer via ${r.source_name}`,
+          employer: r.company || "Employer",
           location: r.location || r.region || "",
           country: r.region || "",
           description: stripHtml(r.description),

@@ -117,7 +117,7 @@ const Hero = () => {
             <dl className="mt-10 grid grid-cols-3 gap-6 md:gap-8 pt-8 border-t border-border">
               {[
                 { v: `${totalJobs}+`, k: "Jobs" },
-                { v: `${countries}+`, k: "Countries" },
+                { v: `${countries}`, k: "Countries" },
                 { v: "100%", k: "Free" },
               ].map((it) => (
                 <div key={it.k}>
