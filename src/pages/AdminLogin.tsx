@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Lock, User, Loader2, Shield } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
@@ -10,6 +10,14 @@ const AdminLogin = () => {
   const [busy, setBusy] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
+
+  useEffect(() => {
+    const meta = document.createElement("meta");
+    meta.name = "robots";
+    meta.content = "noindex, nofollow, noarchive";
+    document.head.appendChild(meta);
+    return () => { document.head.removeChild(meta); };
+  }, []);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();

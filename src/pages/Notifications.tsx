@@ -75,7 +75,7 @@ const Notifications = () => {
             <div className="flex justify-center py-12"><Loader2 className="animate-spin text-muted-foreground" /></div>
           ) : items.length === 0 ? (
             <div className="text-center py-16 bg-card border border-border rounded-2xl">
-              <span className="text-5xl block mb-3">🔔</span>
+              <Bell size={40} className="mx-auto mb-3 text-primary" />
               <p className="text-foreground font-semibold">No notifications yet</p>
               <p className="text-sm text-muted-foreground mt-1">You'll be notified when new jobs are posted.</p>
               <Link to="/jobs" className="mt-4 inline-block text-primary font-semibold text-sm hover:underline">Browse jobs →</Link>

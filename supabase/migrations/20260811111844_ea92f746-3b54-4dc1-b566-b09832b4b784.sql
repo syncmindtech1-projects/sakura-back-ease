@@ -1,0 +1,1 @@
+DELETE FROM public.scraped_jobs WHERE scraped_at < now() - interval '30 days';

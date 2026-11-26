@@ -1,7 +1,32 @@
 import { motion } from "framer-motion";
 import { Mail, ArrowRight } from "lucide-react";
+import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 const Newsletter = () => {
+  const [email, setEmail] = useState("");
+  const [sending, setSending] = useState(false);
+  const { toast } = useToast();
+
+  const subscribe = async () => {
+    if (!email) {
+      toast({ title: "Email required", description: "Enter your email to subscribe.", variant: "destructive" });
+      return;
+    }
+    setSending(true);
+    const { data, error } = await supabase.functions.invoke("submit-contact", {
+      body: { form_type: "newsletter", email, subject: "Newsletter subscription", message: "New newsletter subscriber from the homepage." },
+    });
+    setSending(false);
+    if (error || (data as any)?.error) {
+      toast({ title: "Could not subscribe", description: (data as any)?.error || error?.message, variant: "destructive" });
+      return;
+    }
+    toast({ title: "You're subscribed", description: "Job matches are on the way." });
+    setEmail("");
+  };
+
   return (
     <section className="py-16 md:py-24">
       <div className="container mx-auto px-4 md:px-8">
@@ -28,10 +53,12 @@ const Newsletter = () => {
               <input
                 type="email"
                 placeholder="Enter your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className="flex-1 px-5 py-3.5 rounded-xl bg-white/10 border border-white/20 text-primary-foreground placeholder:text-primary-foreground/50 text-sm outline-none focus:border-white/40"
               />
-              <button className="px-6 py-3.5 rounded-xl bg-card text-foreground font-semibold text-sm hover:bg-card/90 transition-colors flex items-center gap-2 justify-center">
-                Subscribe <ArrowRight size={16} />
+              <button onClick={subscribe} disabled={sending} className="px-6 py-3.5 rounded-xl bg-card text-foreground font-semibold text-sm hover:bg-card/90 transition-colors flex items-center gap-2 justify-center disabled:opacity-60">
+                {sending ? "Subscribing…" : "Subscribe"} <ArrowRight size={16} />
               </button>
             </div>
           </div>

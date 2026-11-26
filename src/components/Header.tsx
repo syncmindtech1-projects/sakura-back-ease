@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Menu, X, ChevronDown, ChevronRight, Search, Bell, Heart, LogOut, User as UserIcon } from "lucide-react";
+import { Menu, X, ChevronDown, ChevronRight, Search, Bell, Heart, LogOut, User as UserIcon, Globe, Clock, Briefcase, GraduationCap, FileText, Laptop, HeartPulse, HardHat, Landmark, BookOpen, LayoutGrid, PenLine, Target, Brain, type LucideIcon } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSavedJobs } from "@/contexts/SavedJobsContext";
 import { useAuth } from "@/hooks/useAuth";
@@ -10,7 +10,7 @@ import MegaMenuCategories from "@/components/MegaMenuCategories";
 import MegaMenuCompanies from "@/components/MegaMenuCompanies";
 import MegaMenuResources from "@/components/MegaMenuResources";
 import PremiumBanner from "@/components/PremiumBanner";
-import { getJobStats } from "@/lib/jobData";
+import { useLiveJobStats } from "@/hooks/useLiveJobs";
 
 
 interface NavItem {
@@ -20,8 +20,6 @@ interface NavItem {
   children?: { label: string; href: string; icon: string; desc: string }[];
 }
 
-const { totalJobs } = getJobStats();
-
 const navItems: NavItem[] = [
   { label: "Find Jobs", href: "/jobs", megaType: "jobs" },
   { label: "Categories", href: "/categories", megaType: "categories" },
@@ -30,29 +28,29 @@ const navItems: NavItem[] = [
   { label: "About Us", href: "/about" },
 ];
 
-const mobileSubMenus: Record<string, { label: string; href: string; icon: string }[]> = {
+const mobileSubMenus: Record<string, { label: string; href: string; icon: LucideIcon }[]> = {
   "Find Jobs": [
-    { label: "Browse All Jobs", href: "/jobs", icon: "🔍" },
-    { label: "Remote Jobs", href: "/remote-jobs", icon: "🌍" },
-    { label: "Part-time", href: "/jobs?type=part-time", icon: "⏰" },
-    { label: "Full-time", href: "/jobs?type=full-time", icon: "💼" },
-    { label: "Internships", href: "/jobs?type=internship", icon: "🎓" },
-    { label: "Contract", href: "/jobs?type=contract", icon: "📄" },
+    { label: "Browse All Jobs", href: "/jobs", icon: Search },
+    { label: "Remote Jobs", href: "/remote-jobs", icon: Globe },
+    { label: "Part-time", href: "/jobs?type=part-time", icon: Clock },
+    { label: "Full-time", href: "/jobs?type=full-time", icon: Briefcase },
+    { label: "Internships", href: "/jobs?type=internship", icon: GraduationCap },
+    { label: "Contract", href: "/jobs?type=contract", icon: FileText },
   ],
   Categories: [
-    { label: "Technology", href: "/categories/technology", icon: "💻" },
-    { label: "Healthcare", href: "/categories/healthcare", icon: "🏥" },
-    { label: "Construction", href: "/categories/construction", icon: "🏗️" },
-    { label: "Finance", href: "/categories/finance", icon: "💰" },
-    { label: "Education", href: "/categories/education", icon: "📚" },
-    { label: "All Categories", href: "/categories", icon: "📂" },
+    { label: "Technology", href: "/categories/technology", icon: Laptop },
+    { label: "Healthcare", href: "/categories/healthcare", icon: HeartPulse },
+    { label: "Construction", href: "/categories/construction", icon: HardHat },
+    { label: "Finance", href: "/categories/finance", icon: Landmark },
+    { label: "Education", href: "/categories/education", icon: BookOpen },
+    { label: "All Categories", href: "/categories", icon: LayoutGrid },
   ],
   Resources: [
-    { label: "Career Advice", href: "/career-advice", icon: "📖" },
-    { label: "Resume Builder", href: "/resume-builder", icon: "📝" },
-    { label: "Interview Prep", href: "/interview-prep", icon: "🎯" },
-    { label: "Skills Assessment", href: "/skills-assessment", icon: "🧠" },
-    { label: "Learning Paths", href: "/learning-paths", icon: "🎓" },
+    { label: "Career Advice", href: "/career-advice", icon: BookOpen },
+    { label: "Resume Builder", href: "/resume-builder", icon: PenLine },
+    { label: "Interview Prep", href: "/interview-prep", icon: Target },
+    { label: "Skills Assessment", href: "/skills-assessment", icon: Brain },
+    { label: "Learning Paths", href: "/learning-paths", icon: GraduationCap },
   ],
 };
 
@@ -65,6 +63,7 @@ const Header = () => {
   const megaTimeout = useRef<ReturnType<typeof setTimeout>>();
   const navigate = useNavigate();
   const { savedCount } = useSavedJobs();
+  const { totalJobs: liveTotalJobs } = useLiveJobStats();
   const { user, profile, signOut } = useAuth();
   const [unreadCount, setUnreadCount] = useState(0);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
@@ -85,7 +84,7 @@ const Header = () => {
     return () => { cancelled = true; supabase.removeChannel(ch); };
   }, [user]);
 
-  const newJobsCount = Math.min(totalJobs, 24);
+  const newJobsCount = Math.min(liveTotalJobs, 24);
 
   const handleMegaEnter = (label: string) => { clearTimeout(megaTimeout.current); setActiveMega(label); };
   const handleMegaLeave = () => { megaTimeout.current = setTimeout(() => setActiveMega(null), 200); };
@@ -315,7 +314,7 @@ const Header = () => {
                                     onClick={() => setMenuOpen(false)}
                                     className="flex items-center gap-3 p-3 rounded-xl hover:bg-secondary/80 transition-colors"
                                   >
-                                    <span className="text-lg">{sub.icon}</span>
+                                    <sub.icon size={18} className="text-primary" />
                                     <span className="text-sm font-medium text-muted-foreground">{sub.label}</span>
                                   </Link>
                                 ))}

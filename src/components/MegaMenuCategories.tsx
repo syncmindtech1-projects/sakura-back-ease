@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { getJobCategoriesWithCounts } from "@/lib/jobData";
+import { useJobCategories } from "@/hooks/useLiveJobs";
 import catTech from "@/assets/cat-technology.jpg";
 import catHealth from "@/assets/cat-healthcare.jpg";
 import catConstruction from "@/assets/cat-construction.jpg";
@@ -9,6 +9,10 @@ import catEducation from "@/assets/cat-education.jpg";
 import catManufacturing from "@/assets/cat-manufacturing.jpg";
 import catMarketing from "@/assets/cat-marketing.jpg";
 import catHospitality from "@/assets/cat-hospitality.jpg";
+import catTransportation from "@/assets/cat-transportation.jpg";
+import catRetail from "@/assets/cat-retail.jpg";
+import catEngineering from "@/assets/cat-engineering.jpg";
+import catLegal from "@/assets/cat-legal.jpg";
 
 const imageMap: Record<string, string> = {
   Technology: catTech,
@@ -19,10 +23,10 @@ const imageMap: Record<string, string> = {
   Manufacturing: catManufacturing,
   Marketing: catMarketing,
   Hospitality: catHospitality,
-  Transportation: catManufacturing,
-  Retail: catMarketing,
-  Engineering: catConstruction,
-  Legal: catFinance,
+  Transportation: catTransportation,
+  Retail: catRetail,
+  Engineering: catEngineering,
+  Legal: catLegal,
 };
 
 const colorMap: Record<string, string> = {
@@ -31,17 +35,19 @@ const colorMap: Record<string, string> = {
   Transportation: "#0EA5E9", Retail: "#EF4444", Engineering: "#22C55E", Legal: "#A855F7",
 };
 
-const categories = getJobCategoriesWithCounts().map((c) => ({
-  name: c.name,
-  count: `${c.count}+`,
-  href: `/categories/${c.name.toLowerCase()}`,
-  image: imageMap[c.name] || catTech,
-  color: colorMap[c.name] || "#6366f1",
-}));
-
 interface Props { onClose: () => void; }
 
-const MegaMenuCategories = ({ onClose }: Props) => (
+const MegaMenuCategories = ({ onClose }: Props) => {
+  const { categories: liveCats } = useJobCategories();
+  const categories = liveCats.map((c) => ({
+    name: c.name,
+    count: `${c.count}`,
+    href: `/categories/${c.name.toLowerCase()}`,
+    image: imageMap[c.name] || catTech,
+    color: colorMap[c.name] || "#6366f1",
+  }));
+
+  return (
   <motion.div
     initial={{ opacity: 0, y: 10, scale: 0.98 }}
     animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -89,6 +95,7 @@ const MegaMenuCategories = ({ onClose }: Props) => (
       </div>
     </div>
   </motion.div>
-);
+  );
+};
 
 export default MegaMenuCategories;

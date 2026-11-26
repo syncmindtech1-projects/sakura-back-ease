@@ -1,5 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import RouteTransition from "./components/RouteTransition";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -27,6 +28,12 @@ import Notifications from "./pages/Notifications";
 import NotFound from "./pages/NotFound";
 import Admin from "./pages/Admin";
 import AdminLogin from "./pages/AdminLogin";
+import AuthCallback from "./pages/AuthCallback";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsOfService from "./pages/TermsOfService";
+import Disclaimer from "./pages/Disclaimer";
+import Blog from "./pages/Blog";
+import BlogPost from "./pages/BlogPost";
 
 const queryClient = new QueryClient();
 
@@ -38,6 +45,7 @@ const App = () => (
           <SavedJobsProvider>
             <Toaster />
             <Sonner />
+            <RouteTransition />
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/jobs" element={<Jobs />} />
@@ -58,6 +66,12 @@ const App = () => (
               <Route path="/post-job" element={<PostJob />} />
               <Route path="/saved-jobs" element={<SavedJobs />} />
               <Route path="/auth" element={<Auth />} />
+              <Route path="/auth/callback" element={<AuthCallback />} />
+              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+              <Route path="/terms-of-service" element={<TermsOfService />} />
+              <Route path="/disclaimer" element={<Disclaimer />} />
+              <Route path="/blog" element={<Blog />} />
+              <Route path="/blog/:slug" element={<BlogPost />} />
               <Route path="/notifications" element={<Notifications />} />
               <Route path="/admin-login" element={<AdminLogin />} />
               <Route path="/admin" element={<Admin />} />

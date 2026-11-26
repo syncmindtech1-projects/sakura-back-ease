@@ -11,11 +11,8 @@ const team = [
 ];
 
 const milestones = [
-  { year: "2021", event: "JobSphere founded with a mission to unite white and blue collar job markets" },
-  { year: "2022", event: "Reached 500K registered users and 5,000 employer partnerships" },
-  { year: "2023", event: "Launched AI-powered job matching and salary insights" },
-  { year: "2024", event: "Expanded to 15 countries with multilingual support" },
-  { year: "2025", event: "Hit 3.2M users and 24,500+ daily active job listings" },
+  { year: "2025", event: "JobSphere launched as a free job board for East Africa" },
+  { year: "2026", event: "Listings cover Uganda, Kenya, Tanzania, Rwanda, South Sudan, Ethiopia, Ghana and remote roles" },
 ];
 
 const About = () => (
@@ -27,7 +24,7 @@ const About = () => (
             About JobSphere
           </motion.h1>
           <motion.p className="text-lg text-muted-foreground leading-relaxed" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-            We believe everyone deserves access to quality job opportunities — whether you're coding software or wiring buildings. JobSphere is the all-in-one platform that curates jobs from thousands of sources across every industry.
+            We believe everyone deserves access to quality job opportunities — whether you're coding software or wiring buildings. JobSphere is the all-in-one platform that gathers current openings from public job listings across every industry.
           </motion.p>
         </div>
       </div>
@@ -40,7 +37,7 @@ const About = () => (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {[
             { icon: Globe, title: "Inclusive Access", desc: "Jobs for every worker — white collar, blue collar, and everything in between." },
-            { icon: Zap, title: "Real-time Curation", desc: "Thousands of sources scraped and verified every hour." },
+            { icon: Zap, title: "Real-time Curation", desc: "Listings are refreshed regularly and expired jobs removed." },
             { icon: Shield, title: "Trust & Safety", desc: "Verified employers. No scams. Data privacy first." },
             { icon: Heart, title: "Community First", desc: "Built by job seekers, for job seekers. Your feedback shapes our product." },
           ].map((item, i) => (

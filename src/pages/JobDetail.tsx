@@ -1,8 +1,11 @@
 import PageLayout from "@/components/PageLayout";
+import { Helmet } from "react-helmet-async";
 import { useParams, Link } from "react-router-dom";
-import { featuredJobs } from "@/lib/jobData";
+import { useLiveJobs, buildApplyLink, isEmailApply } from "@/hooks/useLiveJobs";
 import { motion } from "framer-motion";
-import { MapPin, Clock, Briefcase, Bookmark, ArrowLeft, Share2, Building2, DollarSign, Tag, ExternalLink, Loader2 } from "lucide-react";
+import { MapPin, Clock, Briefcase, Bookmark, ArrowLeft, Share2, Building2, DollarSign, Tag, ExternalLink, Loader2, Check, SearchX } from "lucide-react";
+import CompanyLogo from "@/components/CompanyLogo";
+import RichJobDescription from "@/components/RichJobDescription";
 import AdsBanner from "@/components/AdsBanner";
 import { useSavedJobs } from "@/contexts/SavedJobsContext";
 import { useToast } from "@/hooks/use-toast";
@@ -27,7 +30,8 @@ const JobDetail = () => {
   const { id: rawId } = useParams();
   const id = rawId ?? "";
   const isPosted = id.startsWith("posted-");
-  const staticJob = !isPosted ? featuredJobs.find((j) => j.id === id) : undefined;
+  const { jobs: liveJobs, loading: jobsLoading } = useLiveJobs();
+  const staticJob = liveJobs.find((j) => j.id === id);
   const { toggleSave, isSaved } = useSavedJobs();
   const { toast } = useToast();
 
@@ -54,8 +58,7 @@ const JobDetail = () => {
     category: postedJob.category ?? "General",
     description: postedJob.description,
     tags: [postedJob.category ?? "General"].filter(Boolean) as string[],
-    applyUrl: postedJob.apply_url ?? `mailto:${postedJob.contact_email}`,
-    logo: "💼",
+    applyUrl: buildApplyLink({ applyUrl: postedJob.apply_url, contactEmail: postedJob.contact_email, title: postedJob.title, company: postedJob.company }),
     remote: /remote/i.test(postedJob.location ?? ""),
     urgent: false,
     featured: true,
@@ -66,7 +69,7 @@ const JobDetail = () => {
   const handleShare = async () => {
     const url = window.location.href;
     if (navigator.share) {
-      try { await navigator.share({ title: job?.title, text: `Check out this job: ${job?.title} at ${job?.company}`, url }); } catch {}
+      try { await navigator.share({ title: job?.title, text: `${job?.title} at ${job?.company} — on JobSphere`, url }); } catch {}
     } else {
       await navigator.clipboard.writeText(url);
       toast({ title: "Link copied!", description: "Job link copied to clipboard" });
@@ -82,7 +85,7 @@ const JobDetail = () => {
     });
   };
 
-  if (loading) {
+  if (loading || (!staticJob && jobsLoading)) {
     return (
       <PageLayout>
         <div className="container mx-auto px-4 py-20 text-center text-muted-foreground">
@@ -96,7 +99,7 @@ const JobDetail = () => {
     return (
       <PageLayout>
         <div className="container mx-auto px-4 py-20 text-center">
-          <span className="text-6xl block mb-4">😕</span>
+          <SearchX size={52} className="mx-auto mb-4 text-primary" />
           <h1 className="text-2xl font-bold text-foreground mb-2">Job Not Found</h1>
           <p className="text-muted-foreground mb-6">This job listing may have been removed or expired.</p>
           <Link to="/jobs" className="text-sm font-semibold text-primary hover:underline">← Back to all jobs</Link>
@@ -105,20 +108,65 @@ const JobDetail = () => {
     );
   }
 
-  const similarJobs = featuredJobs
+  const similarJobs = liveJobs
     .filter((j) => j.id !== job.id && j.category === job.category)
     .slice(0, 4);
 
 
+  const shareUrl = `https://jobsphere.net/jobs/${job.id}`;
+  const shareTitle = `${job.title} job at ${job.company} | JobSphere`;
+  const plainDescription = (job.description || "")
+    .replace(/[#*>_`-]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, 155);
+  const shareDescription =
+    plainDescription ||
+    `${job.company} is hiring a ${job.title} in ${job.location}. Apply free on JobSphere.`;
+  const shareImage = "https://jobsphere.net/og-job.jpg";
+
   return (
     <PageLayout>
+      <Helmet prioritizeSeoTags>
+        <title>{shareTitle}</title>
+        <meta name="description" content={shareDescription} />
+        <link rel="canonical" href={shareUrl} />
+        <meta property="og:site_name" content="JobSphere" />
+        <meta property="og:type" content="article" />
+        <meta property="og:title" content={shareTitle} />
+        <meta property="og:description" content={shareDescription} />
+        <meta property="og:url" content={shareUrl} />
+        <meta property="og:image" content={shareImage} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={shareTitle} />
+        <meta name="twitter:description" content={shareDescription} />
+        <meta name="twitter:image" content={shareImage} />
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "JobPosting",
+            title: job.title,
+            description: shareDescription,
+            hiringOrganization: { "@type": "Organization", name: job.company },
+            jobLocation: {
+              "@type": "Place",
+              address: { "@type": "PostalAddress", addressLocality: job.location },
+            },
+            employmentType: job.type,
+            directApply: false,
+            url: shareUrl,
+          })}
+        </script>
+      </Helmet>
       <section className="bg-gradient-to-br from-[hsl(var(--primary)/0.05)] via-background to-[hsl(var(--accent)/0.05)] py-8 md:py-12">
         <div className="container mx-auto px-4 md:px-8">
           <Link to="/jobs" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground mb-6 transition-colors">
             <ArrowLeft size={16} /> Back to jobs
           </Link>
           <motion.div className="flex flex-col md:flex-row md:items-start gap-6" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-            <div className="w-16 h-16 rounded-2xl bg-secondary flex items-center justify-center text-3xl shrink-0">{job.logo}</div>
+            <CompanyLogo name={job.company} size="lg" />
             <div className="flex-1 min-w-0">
               <div className="flex flex-wrap items-center gap-2 mb-2">
                 {job.remote && <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded-md bg-accent/10 text-accent">Remote</span>}
@@ -137,7 +185,7 @@ const JobDetail = () => {
             <div className="flex flex-row md:flex-col gap-3 shrink-0">
               {job.applyUrl && (
                 <a href={job.applyUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 gradient-primary text-primary-foreground font-semibold text-sm px-4 py-3 rounded-xl hover:opacity-90 transition-opacity">
-                  <ExternalLink size={16} /> Apply Now
+                  <ExternalLink size={16} /> {isEmailApply(job.applyUrl) ? "Apply by Email" : "Apply Now"}
                 </a>
               )}
               <button onClick={handleSave} className={`inline-flex items-center gap-2 font-medium text-sm px-4 py-3 rounded-xl transition-colors ${isSaved(job.id) ? 'bg-primary/10 text-primary' : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'}`}>
@@ -157,7 +205,7 @@ const JobDetail = () => {
             <div className="flex-1 space-y-8">
               <motion.div className="bg-card rounded-2xl border border-border p-6" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
                 <h2 className="text-lg font-semibold text-foreground mb-4">Job Description</h2>
-                <p className="text-sm text-muted-foreground leading-relaxed">{job.description}</p>
+                <RichJobDescription text={job.description} />
               </motion.div>
 
               {job.requirements && job.requirements.length > 0 && (
@@ -179,7 +227,7 @@ const JobDetail = () => {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     {job.benefits.map((benefit, i) => (
                       <div key={i} className="flex items-center gap-2 text-sm text-muted-foreground bg-secondary/50 px-3 py-2 rounded-lg">
-                        <span className="text-accent">✓</span>{benefit}
+                        <Check size={14} className="text-accent shrink-0 mt-1" />{benefit}
                       </div>
                     ))}
                   </div>
@@ -201,7 +249,7 @@ const JobDetail = () => {
                 <div className="flex flex-wrap items-center justify-center gap-3">
                   {job.applyUrl && (
                     <a href={job.applyUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 gradient-primary text-primary-foreground font-semibold px-6 py-3 rounded-xl hover:opacity-90 transition-opacity">
-                      <ExternalLink size={16} /> Apply Now
+                      <ExternalLink size={16} /> {isEmailApply(job.applyUrl) ? "Apply by Email" : "Apply Now"}
                     </a>
                   )}
                   <button onClick={handleSave} className={`inline-flex items-center gap-2 font-semibold px-6 py-3 rounded-xl transition-colors ${isSaved(job.id) ? 'bg-primary/10 text-primary' : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'}`}>
@@ -231,7 +279,7 @@ const JobDetail = () => {
                     {similarJobs.map((sj) => (
                       <Link key={sj.id} to={`/jobs/${sj.id}`} className="block p-3 rounded-xl hover:bg-secondary transition-colors group">
                         <div className="flex items-start gap-2">
-                          <span className="text-lg">{sj.logo}</span>
+                          <CompanyLogo name={sj.company} size="sm" />
                           <div className="min-w-0">
                             <p className="text-sm font-medium text-foreground group-hover:text-primary transition-colors truncate">{sj.title}</p>
                             <p className="text-xs text-muted-foreground">{sj.company}</p>

@@ -132,7 +132,7 @@ const SkillsAssessment = () => {
       <section className="bg-gradient-to-br from-[hsl(45,40%,96%)] to-[hsl(160,25%,95%)] py-10 md:py-14">
         <div className="container mx-auto px-4 md:px-8">
           <motion.h1 className="text-3xl md:text-5xl font-bold font-display text-foreground mb-2" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-            🧠 Skills Assessment
+            Skills Assessment
           </motion.h1>
           <p className="text-muted-foreground max-w-2xl">Take a free assessment, measure your skill level against industry benchmarks, and unlock personalised job recommendations.</p>
         </div>
@@ -158,8 +158,8 @@ const SkillsAssessment = () => {
                 <h3 className="text-base font-semibold font-display text-foreground mt-3">{a.title}</h3>
                 <div className="flex flex-wrap gap-3 text-xs text-muted-foreground mt-2">
                   <span>⏱ {a.duration}</span>
-                  <span>📝 {a.questions.length} questions</span>
-                  <span>📊 {a.level}</span>
+                  <span>{a.questions.length} questions</span>
+                  <span>{a.level}</span>
                 </div>
                 <button onClick={() => start(a)} className="mt-4 w-full gradient-primary text-primary-foreground font-semibold py-2.5 rounded-xl text-sm inline-flex items-center justify-center gap-2 hover:opacity-90 transition-opacity active:scale-[0.97]">
                   Start Free Assessment <ArrowRight size={14} />

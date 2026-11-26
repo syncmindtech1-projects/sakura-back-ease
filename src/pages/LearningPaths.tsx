@@ -119,7 +119,7 @@ const LearningPaths = () => {
       <section className="bg-gradient-to-br from-[hsl(45,40%,96%)] to-[hsl(210,40%,96%)] py-10 md:py-14">
         <div className="container mx-auto px-4 md:px-8">
           <motion.h1 className="text-3xl md:text-5xl font-bold font-display text-foreground mb-2" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-            🎓 Learning Paths
+            Learning Paths
           </motion.h1>
           <p className="text-muted-foreground max-w-2xl">Curated, step-by-step roadmaps that take you from beginner to job-ready in the most in-demand careers across Africa. Click a path to see modules and track progress.</p>
         </div>

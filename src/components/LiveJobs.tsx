@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { ExternalLink, MapPin, Building2, Loader2 } from "lucide-react";
+import { ExternalLink, MapPin, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Link } from "react-router-dom";
+import CompanyLogo from "@/components/CompanyLogo";
 
 interface ScrapedJob {
   id: string;
@@ -83,8 +84,9 @@ const LiveJobs = ({ limit = 12, region, compact = false }: LiveJobsProps) => {
                       {j.title}
                     </h3>
                     {j.company && (
-                      <div className="mt-1.5 flex items-center gap-1.5 text-xs text-muted-foreground">
-                        <Building2 size={12} /> {j.company}
+                      <div className="mt-1.5 flex items-center gap-2 text-xs text-muted-foreground">
+                        <CompanyLogo name={j.company} size="sm" />
+                        <span>{j.company}</span>
                       </div>
                     )}
                   </div>

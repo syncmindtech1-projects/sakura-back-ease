@@ -5,18 +5,69 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version',
 };
 
+const BM_UG = /brightermonday\.co\.ug\/listings\/[a-z0-9-]+/i;
+const BM_KE = /brightermonday\.co\.ke\/listings\/[a-z0-9-]+/i;
+const FUZU = /fuzu\.com\/[a-z-]+\/jobs\/[a-z0-9-]+-\d+/i;
+const JA_UG = /jobadverts\.ug\/(\?post_type=jb-job&p=\d+|job\/[^/]+)/i;
+
 const JOB_SOURCES = [
-  { url: 'https://jobadverts.ug/', region: 'Uganda', name: 'JobAdverts UG' },
-  { url: 'https://www.brightermonday.co.ug/jobs', region: 'Uganda', name: 'BrighterMonday Uganda' },
-  { url: 'https://www.brightermonday.co.ke/jobs', region: 'Kenya', name: 'BrighterMonday Kenya' },
-  { url: 'https://www.fuzu.com/uganda/jobs', region: 'Uganda', name: 'Fuzu Uganda' },
-  { url: 'https://www.fuzu.com/kenya/jobs', region: 'Kenya', name: 'Fuzu Kenya' },
-  { url: 'https://www.theugandanjobline.com/', region: 'Uganda', name: 'Ugandan Job Line' },
-  { url: 'https://ugjobsonline.com/', region: 'Uganda', name: 'UG Jobs Online' },
-  { url: 'https://wellfound.com/jobs', region: 'Global', name: 'Wellfound' },
-  { url: 'https://web3.career/', region: 'Global', name: 'Web3.career' },
-  { url: 'https://www.linkedin.com/jobs/search/?location=Uganda', region: 'Uganda', name: 'LinkedIn Uganda' },
+  { url: 'https://www.brightermonday.co.ug/jobs', region: 'Uganda', name: 'BrighterMonday Uganda', detail: BM_UG },
+  { url: 'https://www.brightermonday.co.ug/jobs?page=2', region: 'Uganda', name: 'BrighterMonday Uganda', detail: BM_UG },
+  { url: 'https://www.brightermonday.co.ug/jobs?page=3', region: 'Uganda', name: 'BrighterMonday Uganda', detail: BM_UG },
+  { url: 'https://www.brightermonday.co.ug/jobs/accounting-auditing-finance', region: 'Uganda', name: 'BrighterMonday Uganda', detail: BM_UG },
+  { url: 'https://www.brightermonday.co.ug/jobs/sales-marketing', region: 'Uganda', name: 'BrighterMonday Uganda', detail: BM_UG },
+  { url: 'https://www.brightermonday.co.ug/jobs/software-data', region: 'Uganda', name: 'BrighterMonday Uganda', detail: BM_UG },
+  { url: 'https://www.brightermonday.co.ug/jobs/healthcare', region: 'Uganda', name: 'BrighterMonday Uganda', detail: BM_UG },
+  { url: 'https://www.brightermonday.co.ug/jobs/admin-office', region: 'Uganda', name: 'BrighterMonday Uganda', detail: BM_UG },
+  { url: 'https://www.brightermonday.co.ke/jobs', region: 'Kenya', name: 'BrighterMonday Kenya', detail: BM_KE },
+  { url: 'https://www.brightermonday.co.ke/jobs?page=2', region: 'Kenya', name: 'BrighterMonday Kenya', detail: BM_KE },
+  { url: 'https://www.brightermonday.co.ke/jobs?page=3', region: 'Kenya', name: 'BrighterMonday Kenya', detail: BM_KE },
+  { url: 'https://www.brightermonday.co.ke/jobs/sales-marketing', region: 'Kenya', name: 'BrighterMonday Kenya', detail: BM_KE },
+  { url: 'https://www.brightermonday.co.ke/jobs/software-data', region: 'Kenya', name: 'BrighterMonday Kenya', detail: BM_KE },
+  { url: 'https://www.fuzu.com/uganda/jobs', region: 'Uganda', name: 'Fuzu Uganda', detail: FUZU },
+  { url: 'https://www.fuzu.com/kenya/jobs', region: 'Kenya', name: 'Fuzu Kenya', detail: FUZU },
+  { url: 'https://www.theugandanjobline.com/', region: 'Uganda', name: 'Ugandan Job Line', detail: /theugandanjobline\.com\/\d{4}\/\d{2}\/[a-z0-9-]+\.html/i },
+  { url: 'https://www.theugandanjobline.com/page/2/', region: 'Uganda', name: 'Ugandan Job Line', detail: /theugandanjobline\.com\/\d{4}\/\d{2}\/[a-z0-9-]+\.html/i },
+  { url: 'https://www.brightermonday.co.ug/jobs?page=4', region: 'Uganda', name: 'BrighterMonday Uganda', detail: BM_UG },
+  { url: 'https://www.brightermonday.co.ug/jobs/ngo-npo-charity', region: 'Uganda', name: 'BrighterMonday Uganda', detail: BM_UG },
+  { url: 'https://www.brightermonday.co.ke/jobs?page=4', region: 'Kenya', name: 'BrighterMonday Kenya', detail: BM_KE },
+  { url: 'https://www.brightermonday.co.ke/jobs/healthcare', region: 'Kenya', name: 'BrighterMonday Kenya', detail: BM_KE },
+  { url: 'https://www.fuzu.com/rwanda/jobs', region: 'Rwanda', name: 'Fuzu Rwanda', detail: FUZU },
+  { url: 'https://www.fuzu.com/tanzania/jobs', region: 'Tanzania', name: 'Fuzu Tanzania', detail: FUZU },
+  { url: 'https://www.theugandanjobline.com/page/3/', region: 'Uganda', name: 'Ugandan Job Line', detail: /theugandanjobline\.com\/\d{4}\/\d{2}\/[a-z0-9-]+\.html/i },
+  { url: 'https://wellfound.com/jobs', region: 'Global', name: 'Wellfound', detail: /wellfound\.com\/jobs\/\d+-[a-z0-9-]+/i },
+  { url: 'https://web3.career/', region: 'Global', name: 'Web3.career', detail: /web3\.career\/[a-z0-9-]+\/\d+/i },
+  { url: 'https://web3.career/remote-jobs', region: 'Global', name: 'Web3.career', detail: /web3\.career\/[a-z0-9-]+\/\d+/i },
+  // New countries (index 27+)
+  { url: 'https://www.jobberman.com.gh/jobs', region: 'Ghana', name: 'Jobberman Ghana', detail: /jobberman\.com\.gh\/listings\/[a-z0-9-]+/i },
+  { url: 'https://www.jobberman.com.gh/jobs?page=2', region: 'Ghana', name: 'Jobberman Ghana', detail: /jobberman\.com\.gh\/listings\/[a-z0-9-]+/i },
+  { url: 'https://www.ethiojobs.net/jobs', region: 'Ethiopia', name: 'Ethiojobs', detail: /ethiojobs\.net\/(job|jobs)\/[a-z0-9-]+/i },
+  { url: 'https://www.jobinrwanda.com/jobs/all', region: 'Rwanda', name: 'Job in Rwanda', detail: /jobinrwanda\.com\/job\/[a-z0-9-]+/i },
+  { url: 'https://reliefweb.int/jobs?search=country.exact%3A%22South%20Sudan%22', region: 'South Sudan', name: 'ReliefWeb South Sudan', detail: /reliefweb\.int\/job\/\d+/i },
+  { url: 'https://reliefweb.int/jobs?search=country.exact%3A%22Ethiopia%22', region: 'Ethiopia', name: 'ReliefWeb Ethiopia', detail: /reliefweb\.int\/job\/\d+/i },
+  { url: 'https://reliefweb.int/jobs?search=country.exact%3A%22United%20Republic%20of%20Tanzania%22', region: 'Tanzania', name: 'ReliefWeb Tanzania', detail: /reliefweb\.int\/job\/\d+/i },
+  { url: 'https://reliefweb.int/jobs?search=country.exact%3A%22Rwanda%22', region: 'Rwanda', name: 'ReliefWeb Rwanda', detail: /reliefweb\.int\/job\/\d+/i },
+  { url: 'https://reliefweb.int/jobs?search=country.exact%3A%22Ghana%22', region: 'Ghana', name: 'ReliefWeb Ghana', detail: /reliefweb\.int\/job\/\d+/i },
+  // Job-type sources
+  { url: 'https://www.brightermonday.co.ug/jobs/internship-graduate', region: 'Uganda', name: 'BrighterMonday Uganda', detail: BM_UG },
+  { url: 'https://www.brightermonday.co.ke/jobs/internship-graduate', region: 'Kenya', name: 'BrighterMonday Kenya', detail: BM_KE },
+  { url: 'https://www.brightermonday.co.ug/jobs?job_type=part-time', region: 'Uganda', name: 'BrighterMonday Uganda', detail: BM_UG },
+  { url: 'https://www.brightermonday.co.ug/jobs?job_type=contract', region: 'Uganda', name: 'BrighterMonday Uganda', detail: BM_UG },
+  { url: 'https://www.brightermonday.co.ke/jobs?job_type=part-time', region: 'Kenya', name: 'BrighterMonday Kenya', detail: BM_KE },
+  { url: 'https://www.brightermonday.co.ke/jobs?job_type=contract', region: 'Kenya', name: 'BrighterMonday Kenya', detail: BM_KE },
+  { url: 'https://web3.career/freelance-jobs', region: 'Global', name: 'Web3.career', detail: /web3\.career\/[a-z0-9-]+\/\d+/i },
+  { url: 'https://web3.career/internship-jobs', region: 'Global', name: 'Web3.career', detail: /web3\.career\/[a-z0-9-]+\/\d+/i },
 ];
+
+function inferJobType(title: string, sourceUrl: string): string {
+  const t = `${title} ${sourceUrl}`.toLowerCase();
+  if (/\bintern(ship)?s?\b|graduate trainee|attachment/.test(t)) return 'Internship';
+  if (/freelance/.test(t)) return 'Freelance';
+  if (/part[- ]?time/.test(t)) return 'Part-time';
+  if (/contract|consultan|temporary|short[- ]term/.test(t)) return 'Contract';
+  return 'Full-time';
+}
+
 
 interface ParsedJob {
   title: string;
@@ -25,26 +76,35 @@ interface ParsedJob {
   location?: string;
 }
 
-// Heuristic extraction from markdown links: [Job Title at Company](url)
-function extractJobsFromMarkdown(markdown: string, sourceOrigin: string): ParsedJob[] {
+const ASSET_RE = /\.(png|jpe?g|gif|svg|webp|css|js|ico|pdf)(\?|$)|\/cdn-cgi\/|\/static-assets\/|\/assets\/|active_storage/i;
+
+function cleanTitle(raw: string): string {
+  return raw
+    .replace(/!\[[^\]]*\]/g, '')
+    .replace(/[*_`]+/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+// Extract job-detail links from markdown: [Job Title at Company](url)
+function extractJobsFromMarkdown(markdown: string, detail: RegExp): ParsedJob[] {
   const jobs: ParsedJob[] = [];
   const seen = new Set<string>();
-  const linkRegex = /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g;
+  const linkRegex = /\[([^\]]*)\]\((https?:\/\/[^\s)]+)\)/g;
   let m;
   while ((m = linkRegex.exec(markdown)) !== null) {
-    const text = m[1].trim();
-    const href = m[2];
-    if (text.length < 8 || text.length > 160) continue;
-    // filter obvious nav links
-    const nav = /^(home|about|contact|login|register|sign up|apply|categories|next|previous|read more|view all|jobs|search|menu|share|facebook|twitter|linkedin|whatsapp|comments?|reply)$/i;
+    const text = cleanTitle(m[1]);
+    const href = m[2].split('#')[0];
+    if (ASSET_RE.test(href)) continue;
+    // Only accept true job-detail URLs for this source
+    if (!detail.test(href)) continue;
+    if (text.length < 6 || text.length > 160) continue;
+    const nav = /^(home|about|contact|login|register|sign up|apply|apply now|categories|next|previous|read more|view all|jobs|search|menu|share|facebook|twitter|linkedin|whatsapp|comments?|reply|view job|details)$/i;
     if (nav.test(text)) continue;
-    if (!/[A-Z]/.test(text)) continue;
+    if (!/[A-Za-z]{3}/.test(text)) continue;
     if (seen.has(href)) continue;
-    // Prefer links that look like job posts (contain 'job' or 'career' or hosted on same origin)
-    if (!href.includes(sourceOrigin) && !/job|career|vacan|hiring/i.test(href)) continue;
     seen.add(href);
 
-    // Try to split "Title at Company" or "Title - Company"
     let title = text;
     let company: string | undefined;
     const atMatch = text.match(/^(.+?)\s+(?:at|@)\s+(.+)$/i);
@@ -53,10 +113,43 @@ function extractJobsFromMarkdown(markdown: string, sourceOrigin: string): Parsed
     else if (dashMatch) { title = dashMatch[1].trim(); company = dashMatch[2].trim(); }
 
     jobs.push({ title, apply_url: href, company });
-    if (jobs.length >= 40) break;
+    if (jobs.length >= 60) break;
   }
   return jobs;
 }
+
+// Direct HTML fallback: parse anchors straight from the page source
+async function extractJobsFromHtml(pageUrl: string, detail: RegExp): Promise<ParsedJob[]> {
+  const res = await fetch(pageUrl, {
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36',
+      'Accept': 'text/html,application/xhtml+xml',
+    },
+  });
+  if (!res.ok) return [];
+  const html = await res.text();
+  const base = new URL(pageUrl);
+  const jobs: ParsedJob[] = [];
+  const seen = new Set<string>();
+  const anchorRe = /<a\b[^>]*href=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/gi;
+  let m;
+  while ((m = anchorRe.exec(html)) !== null) {
+    let href: string;
+    try { href = new URL(m[1], base).toString().split('#')[0]; } catch { continue; }
+    if (ASSET_RE.test(href) || !detail.test(href) || seen.has(href)) continue;
+    seen.add(href);
+    let title = cleanTitle(m[2].replace(/<[^>]+>/g, ' '));
+    if (title.length < 6 || title.length > 160) {
+      const slug = href.replace(/\/$/, '').split('/').pop() || '';
+      title = slug.replace(/-[a-z0-9]{5,8}$/i, '').replace(/[-_]+/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+    }
+    if (title.length < 6) continue;
+    jobs.push({ title, apply_url: href });
+    if (jobs.length >= 60) break;
+  }
+  return jobs;
+}
+
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -100,32 +193,45 @@ Deno.serve(async (req) => {
     for (const source of sourcesToScrape) {
       console.log('Scraping:', source.name);
       try {
-        const response = await fetch('https://api.firecrawl.dev/v1/scrape', {
-          method: 'POST',
-          headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
-          body: JSON.stringify({ url: source.url, formats: ['markdown', 'links'], onlyMainContent: true }),
-        });
-
-        const data = await response.json();
-        if (!response.ok) {
-          results.push({ source: source.name, region: source.region, error: data.error });
-          continue;
+        let parsed: ParsedJob[] = [];
+        // 1) Direct HTML pass (most reliable for real job-detail links)
+        try {
+          parsed = await extractJobsFromHtml(source.url, source.detail);
+        } catch (e) {
+          console.log('HTML pass failed for', source.name, String(e));
         }
 
-        const markdown = data.data?.markdown || data.markdown || '';
-        const origin = new URL(source.url).host;
-        const parsed = extractJobsFromMarkdown(markdown, origin);
+        // 2) Firecrawl fallback when the page is JS-rendered / blocked
+        if (parsed.length === 0) {
+          const response = await fetch('https://api.firecrawl.dev/v1/scrape', {
+            method: 'POST',
+            headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
+            body: JSON.stringify({ url: source.url, formats: ['markdown', 'links'], onlyMainContent: true }),
+          });
+          const data = await response.json();
+          if (!response.ok) {
+            results.push({ source: source.name, region: source.region, error: data.error });
+            continue;
+          }
+          const markdown = data.data?.markdown || data.markdown || '';
+          parsed = extractJobsFromMarkdown(markdown, source.detail);
+        }
+
+
+
 
         let inserted = 0;
         if (persist && parsed.length > 0) {
           const rows = parsed.map((j) => ({
             title: j.title,
             company: j.company || null,
-            location: j.location || null,
+            location: j.location || source.region,
             region: source.region,
+            job_type: inferJobType(j.title, source.url),
             apply_url: j.apply_url,
             source_name: source.name,
             source_url: source.url,
+            is_published: true,
             scraped_at: new Date().toISOString(),
           }));
           const { data: upserted, error: upErr } = await supabase

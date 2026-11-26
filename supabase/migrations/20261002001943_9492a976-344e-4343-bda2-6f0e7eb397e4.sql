@@ -1,0 +1,1 @@
+ALTER TABLE public.scraped_jobs ADD COLUMN IF NOT EXISTS logo_url TEXT;

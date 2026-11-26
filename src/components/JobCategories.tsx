@@ -1,6 +1,6 @@
 import { ArrowUpRight } from "lucide-react";
 import { Link } from "react-router-dom";
-import { getJobCategoriesWithCounts } from "@/lib/jobData";
+import { useJobCategories } from "@/hooks/useLiveJobs";
 import catTech from "@/assets/cat-technology.jpg";
 import catHealth from "@/assets/cat-healthcare.jpg";
 import catFinance from "@/assets/cat-finance.jpg";
@@ -9,6 +9,10 @@ import catEducation from "@/assets/cat-education.jpg";
 import catMarketing from "@/assets/cat-marketing.jpg";
 import catManufacturing from "@/assets/cat-manufacturing.jpg";
 import catHospitality from "@/assets/cat-hospitality.jpg";
+import catTransportation from "@/assets/cat-transportation.jpg";
+import catRetail from "@/assets/cat-retail.jpg";
+import catEngineering from "@/assets/cat-engineering.jpg";
+import catLegal from "@/assets/cat-legal.jpg";
 
 const categoryImages: Record<string, string> = {
   Technology: catTech,
@@ -19,11 +23,14 @@ const categoryImages: Record<string, string> = {
   Marketing: catMarketing,
   Manufacturing: catManufacturing,
   Hospitality: catHospitality,
+  Transportation: catTransportation,
+  Retail: catRetail,
+  Engineering: catEngineering,
+  Legal: catLegal,
 };
 
-const jobCategories = getJobCategoriesWithCounts();
-
 const JobCategories = () => {
+  const { categories: jobCategories } = useJobCategories();
   return (
     <section className="py-16 md:py-24 border-t border-border bg-background">
       <div className="container mx-auto px-4 md:px-8">
@@ -47,7 +54,7 @@ const JobCategories = () => {
                 <div className="relative aspect-[16/10] overflow-hidden border-b border-border">
                   <img
                     src={categoryImages[cat.name] || catTech}
-                    alt=""
+                    alt={`${cat.name} jobs in Uganda and East Africa on JobSphere`}
                     loading="lazy"
                     width={480}
                     height={300}

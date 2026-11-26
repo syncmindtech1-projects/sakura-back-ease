@@ -2,9 +2,12 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Briefcase, Megaphone, Inbox, LogOut, Plus, Pencil, Trash2, Check, X, Video, Loader2 } from "lucide-react";
+import { Briefcase, Megaphone, Inbox, LogOut, Plus, Pencil, Trash2, Check, X, Video, Loader2, LayoutDashboard, Users, Archive, RotateCcw, Eye, ChevronDown, ChevronUp } from "lucide-react";
+import DescriptionEditor from "@/components/admin/DescriptionEditor";
+import RichJobDescription from "@/components/RichJobDescription";
 
-type Tab = "jobs" | "submissions" | "ads" | "leads";
+type Tab = "overview" | "jobs" | "submissions" | "deleted" | "ads" | "leads" | "users";
+
 
 const AD_SLOTS = [
   { key: "banner-0", label: "Text ad – slot 1", kind: "text" },
@@ -18,15 +21,20 @@ const AD_SLOTS = [
 const Admin = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [tab, setTab] = useState<Tab>("jobs");
+  const [tab, setTab] = useState<Tab>("overview");
   const [busy, setBusy] = useState(false);
   const [creds, setCreds] = useState<{ username: string; password: string } | null>(null);
   const [jobs, setJobs] = useState<any[]>([]);
   const [subs, setSubs] = useState<any[]>([]);
   const [ads, setAds] = useState<any[]>([]);
   const [leads, setLeads] = useState<any[]>([]);
+  const [signups, setSignups] = useState<any[]>([]);
+  const [deleted, setDeleted] = useState<any[]>([]);
+
   const [editingJob, setEditingJob] = useState<any | null>(null);
   const [editingAd, setEditingAd] = useState<any | null>(null);
+  const [editingSub, setEditingSub] = useState<any | null>(null);
+  const [viewingDeleted, setViewingDeleted] = useState<any | null>(null);
 
   useEffect(() => {
     const raw = sessionStorage.getItem("jobsphere_admin");
@@ -47,16 +55,42 @@ const Admin = () => {
     if (!creds) return;
     setBusy(true);
     try {
-      const [j, s, a, l] = await Promise.all([
-        call("list_jobs"), call("list_submissions"), call("list_ads"), call("list_ad_submissions"),
+      const [j, s, a, l, u, d] = await Promise.all([
+        call("list_jobs"), call("list_submissions"), call("list_ads"), call("list_ad_submissions"), call("list_signups"), call("list_deleted_jobs"),
       ]);
-      setJobs(j || []); setSubs(s || []); setAds(a || []); setLeads(l || []);
+      setJobs(j || []); setSubs(s || []); setAds(a || []); setLeads(l || []); setSignups(u || []); setDeleted(d || []);
+
     } catch (e: any) {
+      if (/unauthor|invalid|credential|forbidden/i.test(e.message || "")) {
+        sessionStorage.removeItem("jobsphere_admin");
+        navigate("/admin-login", { replace: true });
+        return;
+      }
       toast({ title: "Load failed", description: e.message, variant: "destructive" });
     } finally { setBusy(false); }
   };
 
+
+  useEffect(() => {
+    const meta = document.createElement("meta");
+    meta.name = "robots";
+    meta.content = "noindex, nofollow, noarchive";
+    document.head.appendChild(meta);
+    return () => { document.head.removeChild(meta); };
+  }, []);
+
   useEffect(() => { if (creds) refresh(); /* eslint-disable-next-line */ }, [creds]);
+
+  // Keep signups near real time.
+  useEffect(() => {
+    if (!creds) return;
+    const t = setInterval(() => {
+      call("list_signups").then((u) => setSignups(u || [])).catch(() => {});
+    }, 20000);
+    return () => clearInterval(t);
+    /* eslint-disable-next-line */
+  }, [creds]);
+
 
   const logout = () => { sessionStorage.removeItem("jobsphere_admin"); navigate("/admin-login"); };
 
@@ -78,10 +112,13 @@ const Admin = () => {
       <div className="container mx-auto px-4 md:px-8 py-6">
         <nav className="flex flex-wrap gap-2 mb-6">
           {[
+            { id: "overview", label: "Overview", icon: LayoutDashboard, count: signups.filter((s: any) => !s.reviewed).length },
             { id: "jobs", label: "Live Jobs", icon: Briefcase, count: jobs.length },
             { id: "submissions", label: "Pending Submissions", icon: Inbox, count: subs.filter(s => s.status === "pending").length },
+            { id: "deleted", label: "Deleted Jobs", icon: Archive, count: deleted.length },
             { id: "ads", label: "Site Ads", icon: Megaphone, count: ads.length },
             { id: "leads", label: "Ad Leads", icon: Inbox, count: leads.length },
+            { id: "users", label: "User Management", icon: Users, count: signups.length },
           ].map((t: any) => (
             <button key={t.id} onClick={() => setTab(t.id)}
               className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold border ${tab === t.id ? "bg-primary text-primary-foreground border-primary" : "bg-card border-border hover:bg-secondary"}`}>
@@ -94,6 +131,17 @@ const Admin = () => {
           </button>
         </nav>
 
+        {tab === "overview" && (
+          <OverviewPanel signups={signups} jobs={jobs} subs={subs} leads={leads} onViewAll={() => setTab("users")} />
+        )}
+
+        {tab === "users" && (
+          <UsersPanel signups={signups} onReview={async (uid: string, reviewed: boolean) => {
+            await call("mark_signup_reviewed", { user_id: uid, reviewed });
+            setSignups((prev) => prev.map((s) => (s.user_id === uid ? { ...s, reviewed } : s)));
+          }} />
+        )}
+
         {tab === "jobs" && (
           <JobsPanel jobs={jobs} onEdit={setEditingJob} onDelete={async (id) => {
             if (!confirm("Delete this job?")) return;
@@ -103,9 +151,38 @@ const Admin = () => {
 
         {tab === "submissions" && (
           <SubmissionsPanel subs={subs}
-            onApprove={async (id) => { await call("approve_submission", { id }); await refresh(); toast({ title: "Approved and published" }); }}
-            onReject={async (id) => { await call("reject_submission", { id }); await refresh(); }}
+            onApprove={async (id) => { await call("approve_submission", { id }); await refresh(); toast({ title: "Approved and published", description: "The provider has been emailed." }); }}
+            onReject={async (id) => {
+              const reason = prompt("Reason for rejection (emailed to the provider):");
+              if (!reason) return;
+              await call("reject_submission", { id, reason });
+              await refresh();
+              toast({ title: "Rejected", description: "The provider has been emailed the reason." });
+            }}
             onDelete={async (id) => { if (confirm("Delete?")) { await call("delete_submission", { id }); await refresh(); } }}
+            onEdit={(s: any) => setEditingSub(s)}
+          />
+        )}
+
+        {tab === "deleted" && (
+          <DeletedPanel
+            deleted={deleted}
+            onView={setViewingDeleted}
+            onRestore={async (id: string) => {
+              await call("restore_deleted_job", { id });
+              await refresh();
+              toast({ title: "Job restored", description: "It is live on the site again." });
+            }}
+            onPurge={async (id: string) => {
+              if (!confirm("Permanently remove this job? This cannot be undone.")) return;
+              await call("purge_deleted_job", { id });
+              await refresh();
+            }}
+            onPurgeAll={async () => {
+              if (!confirm("Permanently empty the deleted jobs archive?")) return;
+              await call("purge_all_deleted_jobs");
+              await refresh();
+            }}
           />
         )}
 
@@ -114,7 +191,18 @@ const Admin = () => {
             onDelete={async (id) => { if (confirm("Remove ad?")) { await call("delete_ad", { id }); await refresh(); } }} />
         )}
 
-        {tab === "leads" && <LeadsPanel leads={leads} />}
+        {tab === "leads" && (
+          <LeadsPanel leads={leads}
+            onApprove={async (id: string) => { await call("approve_ad_submission", { id }); await refresh(); toast({ title: "Ad approved", description: "The advertiser has been emailed." }); }}
+            onReject={async (id: string) => {
+              const reason = prompt("Reason for rejection (emailed to the advertiser):");
+              if (!reason) return;
+              await call("reject_ad_submission", { id, reason });
+              await refresh();
+              toast({ title: "Ad rejected" });
+            }} />
+        )}
+
       </div>
 
       {editingJob && (
@@ -127,6 +215,19 @@ const Admin = () => {
             toast({ title: "Saved" });
           } catch (e: any) { toast({ title: "Save failed", description: e.message, variant: "destructive" }); }
         }} />
+      )}
+      {editingSub && (
+        <SubmissionEditor sub={editingSub} onClose={() => setEditingSub(null)} onSave={async (payload: any) => {
+          try {
+            await call("update_submission", payload);
+            setEditingSub(null);
+            await refresh();
+            toast({ title: "Submission updated" });
+          } catch (e: any) { toast({ title: "Save failed", description: e.message, variant: "destructive" }); }
+        }} />
+      )}
+      {viewingDeleted && (
+        <DeletedViewer job={viewingDeleted} onClose={() => setViewingDeleted(null)} />
       )}
       {editingAd && (
         <AdEditor ad={editingAd} onClose={() => setEditingAd(null)} onSave={async (payload) => {
@@ -175,38 +276,106 @@ const JobsPanel = ({ jobs, onEdit, onDelete, onNew }: any) => (
   </div>
 );
 
-const SubmissionsPanel = ({ subs, onApprove, onReject, onDelete }: any) => (
+const SubmissionsPanel = ({ subs, onApprove, onReject, onDelete, onEdit }: any) => {
+  const [open, setOpen] = useState<string | null>(null);
+  return (
   <div className="bg-card border border-border rounded-2xl overflow-hidden">
     <div className="p-4 border-b border-border">
       <h2 className="font-bold font-display">Pending Job Submissions</h2>
-      <p className="text-xs text-muted-foreground">Approve to publish live to the site.</p>
+      <p className="text-xs text-muted-foreground">View the full details, edit and format, then approve to publish live.</p>
     </div>
     <div className="divide-y divide-border">
       {subs.map((s: any) => (
-        <div key={s.id} className="p-4 flex flex-col md:flex-row md:items-center gap-3">
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2">
-              <p className="font-semibold truncate">{s.title}</p>
-              <span className={`text-[10px] px-2 py-0.5 rounded-full uppercase font-bold ${s.status === "pending" ? "bg-yellow-100 text-yellow-800" : s.status === "approved" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}>{s.status}</span>
+        <div key={s.id} className="p-4">
+          <div className="flex flex-col md:flex-row md:items-center gap-3">
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2">
+                <p className="font-semibold truncate">{s.title}</p>
+                <span className={`text-[10px] px-2 py-0.5 rounded-full uppercase font-bold ${s.status === "pending" ? "bg-yellow-100 text-yellow-800" : s.status === "approved" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}>{s.status}</span>
+              </div>
+              <p className="text-xs text-muted-foreground">{s.company} · {s.location || "—"} · {s.contact_email}</p>
+              <p className="text-xs text-muted-foreground mt-1">{s.job_type || "—"} · {s.category || "—"} · {s.salary || "Salary not stated"} · {fmt(s.created_at)}</p>
             </div>
-            <p className="text-xs text-muted-foreground">{s.company} · {s.location || "—"} · {s.contact_email}</p>
-            <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{s.description}</p>
+            <div className="flex flex-wrap gap-2 shrink-0">
+              <button onClick={() => setOpen(open === s.id ? null : s.id)} className="text-xs px-3 py-2 rounded-lg border border-border inline-flex items-center gap-1">
+                {open === s.id ? <ChevronUp size={12} /> : <ChevronDown size={12} />} {open === s.id ? "Hide" : "View full"}
+              </button>
+              <button onClick={() => onEdit(s)} className="text-xs px-3 py-2 rounded-lg border border-border inline-flex items-center gap-1"><Pencil size={12} /> Edit</button>
+              {s.status === "pending" && (
+                <>
+                  <button onClick={() => onApprove(s.id)} className="text-xs px-3 py-2 rounded-lg bg-green-600 text-white inline-flex items-center gap-1"><Check size={12} /> Approve</button>
+                  <button onClick={() => onReject(s.id)} className="text-xs px-3 py-2 rounded-lg bg-red-600 text-white inline-flex items-center gap-1"><X size={12} /> Reject</button>
+                </>
+              )}
+              <button onClick={() => onDelete(s.id)} className="text-xs px-3 py-2 rounded-lg border border-border"><Trash2 size={12} /></button>
+            </div>
           </div>
-          <div className="flex gap-2 shrink-0">
-            {s.status === "pending" && (
-              <>
-                <button onClick={() => onApprove(s.id)} className="text-xs px-3 py-2 rounded-lg bg-green-600 text-white inline-flex items-center gap-1"><Check size={12} /> Approve</button>
-                <button onClick={() => onReject(s.id)} className="text-xs px-3 py-2 rounded-lg bg-red-600 text-white inline-flex items-center gap-1"><X size={12} /> Reject</button>
-              </>
-            )}
-            <button onClick={() => onDelete(s.id)} className="text-xs px-3 py-2 rounded-lg border border-border"><Trash2 size={12} /></button>
-          </div>
+
+          {open === s.id && (
+            <div className="mt-4 rounded-xl border border-border bg-secondary/50 p-4">
+              <div className="grid sm:grid-cols-2 gap-x-6 gap-y-1 text-xs mb-3">
+                <p><span className="text-muted-foreground">Company:</span> <strong>{s.company}</strong></p>
+                <p><span className="text-muted-foreground">Contact:</span> <strong>{s.contact_email}</strong></p>
+                <p><span className="text-muted-foreground">Location:</span> {s.location || "—"}</p>
+                <p><span className="text-muted-foreground">Salary:</span> {s.salary || "—"}</p>
+                <p><span className="text-muted-foreground">Type:</span> {s.job_type || "—"}</p>
+                <p><span className="text-muted-foreground">Category:</span> {s.category || "—"}</p>
+                <p className="sm:col-span-2 break-all"><span className="text-muted-foreground">Apply URL:</span> {s.apply_url || "— (applications go to the contact email)"}</p>
+                {s.rejection_reason && <p className="sm:col-span-2 text-red-600"><span className="text-muted-foreground">Rejection reason:</span> {s.rejection_reason}</p>}
+              </div>
+              <div className="bg-card rounded-lg p-4 border border-border max-h-[420px] overflow-y-auto">
+                <RichJobDescription text={s.description || ""} />
+              </div>
+            </div>
+          )}
         </div>
       ))}
       {subs.length === 0 && <div className="p-8 text-center text-muted-foreground">No submissions yet.</div>}
     </div>
   </div>
+  );
+};
+
+const DeletedPanel = ({ deleted, onView, onRestore, onPurge, onPurgeAll }: any) => (
+  <div className="bg-card border border-border rounded-2xl overflow-hidden">
+    <div className="flex items-center justify-between p-4 border-b border-border">
+      <div>
+        <h2 className="font-bold font-display">Deleted Jobs ({deleted.length})</h2>
+        <p className="text-xs text-muted-foreground">Jobs removed from the site. Restore to publish again, or remove permanently.</p>
+      </div>
+      {deleted.length > 0 && (
+        <button onClick={onPurgeAll} className="text-xs px-3 py-2 rounded-lg border border-border text-red-600 inline-flex items-center gap-1">
+          <Trash2 size={12} /> Empty archive
+        </button>
+      )}
+    </div>
+    <div className="overflow-x-auto">
+      <table className="w-full text-sm">
+        <thead className="bg-secondary text-xs uppercase text-muted-foreground"><tr>
+          <th className="text-left p-3">Title</th><th className="text-left p-3">Company</th><th className="text-left p-3">Location</th>
+          <th className="text-left p-3">Deleted</th><th className="p-3"></th>
+        </tr></thead>
+        <tbody>
+          {deleted.map((j: any) => (
+            <tr key={j.id} className="border-t border-border hover:bg-secondary/50">
+              <td className="p-3 font-medium">{j.title}</td>
+              <td className="p-3">{j.company}</td>
+              <td className="p-3 text-muted-foreground">{j.location || "—"}</td>
+              <td className="p-3 text-muted-foreground">{fmt(j.deleted_at)}</td>
+              <td className="p-3 text-right whitespace-nowrap">
+                <button onClick={() => onView(j)} className="p-2 hover:bg-secondary rounded" title="View"><Eye size={14} /></button>
+                <button onClick={() => onRestore(j.id)} className="p-2 hover:bg-green-100 text-green-700 rounded" title="Restore"><RotateCcw size={14} /></button>
+                <button onClick={() => onPurge(j.id)} className="p-2 hover:bg-red-100 text-red-600 rounded" title="Remove permanently"><Trash2 size={14} /></button>
+              </td>
+            </tr>
+          ))}
+          {deleted.length === 0 && <tr><td colSpan={5} className="p-8 text-center text-muted-foreground">Archive is empty.</td></tr>}
+        </tbody>
+      </table>
+    </div>
+  </div>
 );
+
 
 const AdsPanel = ({ ads, onEdit, onNew, onDelete }: any) => (
   <div className="grid md:grid-cols-2 gap-4">
@@ -229,7 +398,7 @@ const AdsPanel = ({ ads, onEdit, onNew, onDelete }: any) => (
             <>
               <p className="font-semibold text-sm">{ad.title}</p>
               <p className="text-xs text-muted-foreground line-clamp-2 mt-1">{ad.blurb}</p>
-              {ad.video_url && <p className="text-[11px] mt-2 text-primary truncate">🎬 {ad.video_url}</p>}
+              {ad.video_url && <p className="text-[11px] mt-2 text-primary truncate">{ad.video_url}</p>}
               <div className="flex gap-2 mt-3">
                 <button onClick={() => onEdit(ad)} className="text-xs px-3 py-2 rounded-lg border border-border inline-flex items-center gap-1"><Pencil size={12} /> Edit</button>
                 <button onClick={() => onDelete(ad.id)} className="text-xs px-3 py-2 rounded-lg border border-border text-red-600 inline-flex items-center gap-1"><Trash2 size={12} /> Remove</button>
@@ -246,18 +415,114 @@ const AdsPanel = ({ ads, onEdit, onNew, onDelete }: any) => (
   </div>
 );
 
-const LeadsPanel = ({ leads }: any) => (
+const fmt = (d: string) => (d ? new Date(d).toLocaleString() : "—");
+
+const RoleBadge = ({ role }: { role?: string }) => (
+  <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold uppercase ${role === "Job Provider" ? "bg-primary/10 text-primary" : "bg-secondary text-muted-foreground"}`}>
+    {role || "Job Seeker"}
+  </span>
+);
+
+const OverviewPanel = ({ signups, jobs, subs, leads, onViewAll }: any) => (
+  <div className="space-y-5">
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+      {[
+        { label: "Total users", value: signups.length },
+        { label: "New (unreviewed)", value: signups.filter((s: any) => !s.reviewed).length },
+        { label: "Live jobs", value: jobs.length },
+        { label: "Pending approvals", value: subs.filter((s: any) => s.status === "pending").length + leads.filter((l: any) => (l.status ?? "pending") === "pending").length },
+      ].map((c) => (
+        <div key={c.label} className="bg-card border border-border rounded-2xl p-4">
+          <p className="text-2xl font-bold font-display">{c.value}</p>
+          <p className="text-xs text-muted-foreground">{c.label}</p>
+        </div>
+      ))}
+    </div>
+
+    <div className="bg-card border border-border rounded-2xl overflow-hidden">
+      <div className="flex items-center justify-between p-4 border-b border-border">
+        <div>
+          <h2 className="font-bold font-display">New signups</h2>
+          <p className="text-xs text-muted-foreground">10 most recent registrations</p>
+        </div>
+        <button onClick={onViewAll} className="text-xs font-semibold px-3 py-2 rounded-lg border border-border hover:bg-secondary">View all in User Management</button>
+      </div>
+      <div className="divide-y divide-border">
+        {signups.slice(0, 10).map((s: any) => (
+          <div key={s.user_id} className={`p-4 flex flex-wrap items-center gap-2 ${s.reviewed ? "" : "bg-primary/5"}`}>
+            <div className="flex-1 min-w-[200px]">
+              <p className="font-semibold text-sm flex items-center gap-2">
+                {s.full_name || "—"} {!s.reviewed && <span className="w-2 h-2 rounded-full bg-primary" />}
+              </p>
+              <p className="text-xs text-muted-foreground">{s.email}</p>
+            </div>
+            <RoleBadge role={s.role} />
+            <p className="text-xs text-muted-foreground w-40 text-right">{fmt(s.notified_at)}</p>
+          </div>
+        ))}
+        {signups.length === 0 && <div className="p-8 text-center text-muted-foreground">No signups yet.</div>}
+      </div>
+    </div>
+  </div>
+);
+
+const UsersPanel = ({ signups, onReview }: any) => (
+  <div className="bg-card border border-border rounded-2xl overflow-hidden">
+    <div className="p-4 border-b border-border">
+      <h2 className="font-bold font-display">User Management ({signups.length})</h2>
+      <p className="text-xs text-muted-foreground">Every registration on JobSphere, newest first.</p>
+    </div>
+    <div className="overflow-x-auto">
+      <table className="w-full text-sm">
+        <thead className="bg-secondary text-xs uppercase text-muted-foreground"><tr>
+          <th className="text-left p-3">Full name</th><th className="text-left p-3">Email</th><th className="text-left p-3">Role</th>
+          <th className="text-left p-3">Method</th><th className="text-left p-3">Signed up</th><th className="p-3"></th>
+        </tr></thead>
+        <tbody>
+          {signups.map((s: any) => (
+            <tr key={s.user_id} className={`border-t border-border ${s.reviewed ? "" : "bg-primary/5"}`}>
+              <td className="p-3 font-medium">{s.full_name || "—"}</td>
+              <td className="p-3 text-muted-foreground">{s.email}</td>
+              <td className="p-3"><RoleBadge role={s.role} /></td>
+              <td className="p-3 text-muted-foreground">{s.method || "Email/Password"}</td>
+              <td className="p-3 text-muted-foreground">{fmt(s.notified_at)}</td>
+              <td className="p-3 text-right">
+                <button onClick={() => onReview(s.user_id, !s.reviewed)}
+                  className="text-xs px-3 py-1.5 rounded-lg border border-border hover:bg-secondary">
+                  {s.reviewed ? "Mark new" : "Mark reviewed"}
+                </button>
+              </td>
+            </tr>
+          ))}
+          {signups.length === 0 && <tr><td colSpan={6} className="p-8 text-center text-muted-foreground">No users yet.</td></tr>}
+        </tbody>
+      </table>
+    </div>
+  </div>
+);
+
+const LeadsPanel = ({ leads, onApprove, onReject }: any) => (
   <div className="bg-card border border-border rounded-2xl overflow-hidden">
     <div className="p-4 border-b border-border"><h2 className="font-bold font-display">Advertiser Leads</h2></div>
     <div className="divide-y divide-border">
       {leads.map((l: any) => (
         <div key={l.id} className="p-4">
-          <p className="font-semibold">{l.advertiser_name} <span className="text-xs text-muted-foreground">· {l.contact_email}</span></p>
+          <p className="font-semibold flex items-center gap-2">
+            {l.advertiser_name} <span className="text-xs text-muted-foreground">· {l.contact_email}</span>
+            <span className={`text-[10px] px-2 py-0.5 rounded-full uppercase font-bold ${(l.status ?? "pending") === "pending" ? "bg-yellow-100 text-yellow-800" : l.status === "approved" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}>{l.status ?? "pending"}</span>
+          </p>
           <p className="text-xs text-muted-foreground">{l.company || "—"} · Budget: {l.budget || "—"} · Type: {l.ad_type || "—"}</p>
-          {l.video_url && <p className="text-xs text-primary">🎬 {l.video_url}</p>}
+          {l.video_url && <p className="text-xs text-primary">{l.video_url}</p>}
           <p className="text-sm mt-1">{l.message}</p>
+          {(l.status ?? "pending") === "pending" && (
+            <div className="flex gap-2 mt-3">
+              <button onClick={() => onApprove(l.id)} className="text-xs px-3 py-2 rounded-lg bg-green-600 text-white inline-flex items-center gap-1"><Check size={12} /> Approve</button>
+              <button onClick={() => onReject(l.id)} className="text-xs px-3 py-2 rounded-lg bg-red-600 text-white inline-flex items-center gap-1"><X size={12} /> Reject</button>
+            </div>
+          )}
         </div>
       ))}
+
       {leads.length === 0 && <div className="p-8 text-center text-muted-foreground">No leads yet.</div>}
     </div>
   </div>
@@ -293,10 +558,9 @@ const JobEditor = ({ job, onClose, onSave }: any) => {
           <Field label="Category" value={f.category} onChange={(e: any) => setF({ ...f, category: e.target.value })} />
         </div>
         <div className="mt-3">
-          <label className="text-xs font-semibold mb-1 block">Description *</label>
-          <textarea rows={6} value={f.description} onChange={(e) => setF({ ...f, description: e.target.value })}
-            className="w-full px-3 py-2 rounded-lg bg-secondary border border-border text-sm outline-none focus:border-primary" />
+          <DescriptionEditor label="Description *" value={f.description} onChange={(v) => setF({ ...f, description: v })} />
         </div>
+
         <div className="flex justify-end gap-2 mt-5">
           <button onClick={onClose} className="px-4 py-2 text-sm border border-border rounded-lg">Cancel</button>
           <button onClick={() => onSave(f)} className="px-4 py-2 text-sm gradient-primary text-primary-foreground rounded-lg">Save</button>
@@ -345,4 +609,74 @@ const AdEditor = ({ ad, onClose, onSave }: any) => {
   );
 };
 
+const SubmissionEditor = ({ sub, onClose, onSave }: any) => {
+  const [f, setF] = useState({
+    id: sub.id,
+    title: sub.title || "",
+    company: sub.company || "",
+    contact_email: sub.contact_email || "",
+    location: sub.location || "",
+    salary: sub.salary || "",
+    apply_url: sub.apply_url || "",
+    job_type: sub.job_type || "Full-time",
+    category: sub.category || "",
+    description: sub.description || "",
+  });
+  return (
+    <div className="fixed inset-0 bg-black/60 z-50 flex items-start justify-center p-4 overflow-y-auto">
+      <div className="bg-card rounded-2xl w-full max-w-3xl p-6 my-8">
+        <h2 className="text-xl font-bold font-display mb-1">Edit submission</h2>
+        <p className="text-xs text-muted-foreground mb-4">Clean up the wording and formatting before approving — the site shows exactly this.</p>
+        <div className="grid sm:grid-cols-2 gap-3">
+          <Field label="Title *" value={f.title} onChange={(e: any) => setF({ ...f, title: e.target.value })} />
+          <Field label="Company *" value={f.company} onChange={(e: any) => setF({ ...f, company: e.target.value })} />
+          <Field label="Contact email *" value={f.contact_email} onChange={(e: any) => setF({ ...f, contact_email: e.target.value })} />
+          <Field label="Location" value={f.location} onChange={(e: any) => setF({ ...f, location: e.target.value })} />
+          <Field label="Salary" value={f.salary} onChange={(e: any) => setF({ ...f, salary: e.target.value })} />
+          <Field label="Apply URL" value={f.apply_url} onChange={(e: any) => setF({ ...f, apply_url: e.target.value })} />
+          <Field label="Type" value={f.job_type} onChange={(e: any) => setF({ ...f, job_type: e.target.value })} />
+          <Field label="Category" value={f.category} onChange={(e: any) => setF({ ...f, category: e.target.value })} />
+        </div>
+        <div className="mt-3">
+          <DescriptionEditor label="Description *" value={f.description} onChange={(v) => setF({ ...f, description: v })} />
+        </div>
+        <div className="flex justify-end gap-2 mt-5">
+          <button onClick={onClose} className="px-4 py-2 text-sm border border-border rounded-lg">Cancel</button>
+          <button onClick={() => onSave(f)} className="px-4 py-2 text-sm gradient-primary text-primary-foreground rounded-lg">Save changes</button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const DeletedViewer = ({ job, onClose }: any) => (
+  <div className="fixed inset-0 bg-black/60 z-50 flex items-start justify-center p-4 overflow-y-auto">
+    <div className="bg-card rounded-2xl w-full max-w-2xl p-6 my-8">
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <h2 className="text-xl font-bold font-display">{job.title}</h2>
+          <p className="text-sm text-muted-foreground">{job.company} · {job.location || "—"}</p>
+        </div>
+        <button onClick={onClose} className="p-2 rounded-lg hover:bg-secondary"><X size={16} /></button>
+      </div>
+      <div className="grid sm:grid-cols-2 gap-x-6 gap-y-1 text-xs mt-4 mb-4">
+        <p><span className="text-muted-foreground">Type:</span> {job.job_type || "—"}</p>
+        <p><span className="text-muted-foreground">Category:</span> {job.category || "—"}</p>
+        <p><span className="text-muted-foreground">Salary:</span> {job.salary || "—"}</p>
+        <p><span className="text-muted-foreground">Contact:</span> {job.contact_email || "—"}</p>
+        <p><span className="text-muted-foreground">Originally posted:</span> {fmt(job.original_created_at)}</p>
+        <p><span className="text-muted-foreground">Deleted:</span> {fmt(job.deleted_at)} by {job.deleted_by || "admin"}</p>
+        <p className="sm:col-span-2 break-all"><span className="text-muted-foreground">Apply URL:</span> {job.apply_url || "—"}</p>
+      </div>
+      <div className="rounded-lg border border-border bg-secondary/40 p-4 max-h-[45vh] overflow-y-auto">
+        <RichJobDescription text={job.description || ""} />
+      </div>
+      <div className="flex justify-end mt-5">
+        <button onClick={onClose} className="px-4 py-2 text-sm border border-border rounded-lg">Close</button>
+      </div>
+    </div>
+  </div>
+);
+
 export default Admin;
+

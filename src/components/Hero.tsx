@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { Search, MapPin, ArrowRight, BadgeCheck, Sparkles, Globe2 } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getJobStats } from "@/lib/jobData";
+import { useLiveJobStats } from "@/hooks/useLiveJobs";
 import heroProfessional from "@/assets/hero-professional.jpg";
 
 const popularSearches = [
@@ -14,9 +14,8 @@ const popularSearches = [
   "Customer Care",
 ];
 
-const { totalJobs, countries } = getJobStats();
-
 const Hero = () => {
+  const { totalJobs, countries } = useLiveJobStats();
   const [query, setQuery] = useState("");
   const [location, setLocation] = useState("");
   const navigate = useNavigate();
@@ -60,7 +59,7 @@ const Hero = () => {
             <p className="mt-6 text-base md:text-lg leading-relaxed text-muted-foreground max-w-lg">
               JobSphere is a free, human-curated index of {totalJobs.toLocaleString()}+ open
               roles across {countries} countries — Uganda, Kenya, Tanzania, Rwanda, South
-              Sudan, Ethiopia and Ghana. No paywalls, no noise.
+              Sudan, Ethiopia and Ghana — plus remote roles worldwide. No paywalls, no noise.
             </p>
 
             {/* Search */}
@@ -118,7 +117,7 @@ const Hero = () => {
             <dl className="mt-10 grid grid-cols-3 gap-6 md:gap-8 pt-8 border-t border-border">
               {[
                 { v: `${totalJobs}+`, k: "Jobs" },
-                { v: `${countries}+`, k: "Countries" },
+                { v: `${countries}`, k: "Countries" },
                 { v: "100%", k: "Free" },
               ].map((it) => (
                 <div key={it.k}>

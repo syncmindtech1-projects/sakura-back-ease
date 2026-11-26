@@ -1,14 +1,17 @@
 import PageLayout from "@/components/PageLayout";
 import AdsBanner from "@/components/AdsBanner";
 import { motion } from "framer-motion";
-import { featuredJobs } from "@/lib/jobData";
-import { MapPin, Clock, Briefcase, Bookmark, Globe, Wifi } from "lucide-react";
+import { MapPin, Clock, Briefcase, Bookmark, Globe, Wifi, ExternalLink } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useSavedJobs } from "@/contexts/SavedJobsContext";
+import { useLiveJobs } from "@/hooks/useLiveJobs";
+import CompanyLogo from "@/components/CompanyLogo";
 
 const RemoteJobs = () => {
-  const remoteJobs = featuredJobs.filter((j) => j.remote);
+  const { jobs, loading } = useLiveJobs();
+  const remoteJobs = jobs.filter((j) => j.remote).slice(0, 60);
   const { toggleSave, isSaved } = useSavedJobs();
+
 
   return (
     <PageLayout>
@@ -44,40 +47,57 @@ const RemoteJobs = () => {
 
       <section className="py-8 md:py-12">
         <div className="container mx-auto px-4 md:px-8">
+          {loading ? (
+            <div className="space-y-3">
+              {Array.from({ length: 5 }).map((_, i) => <div key={i} className="h-28 rounded-2xl border border-border bg-card animate-pulse" />)}
+            </div>
+          ) : remoteJobs.length === 0 ? (
+            <div className="text-center py-16">
+              <Globe size={44} className="mx-auto mb-4 text-accent" />
+              <h3 className="text-lg font-semibold text-foreground mb-2">Remote roles coming up</h3>
+              <p className="text-sm text-muted-foreground">We're curating new remote listings right now.</p>
+              <Link to="/jobs" className="mt-4 inline-block text-sm font-semibold text-primary hover:underline">Browse all jobs →</Link>
+            </div>
+          ) : (
           <div className="space-y-3">
             {remoteJobs.map((job, i) => (
-              <motion.div key={job.id} className="group bg-card rounded-2xl border border-border p-5 hover:shadow-elevated hover:border-accent/20 transition-all" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
+              <motion.div key={job.id} className="group bg-card rounded-2xl border border-border p-5 hover:shadow-elevated hover:border-accent/20 transition-all" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: Math.min(i, 10) * 0.04 }}>
                 <Link to={`/jobs/${job.id}`} className="block">
-                  <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-secondary flex items-center justify-center text-xl shrink-0">{job.logo}</div>
-                    <div className="flex-1">
+                  <div className="flex flex-col sm:flex-row items-start gap-4">
+                    <CompanyLogo name={job.company} size="md" />
+                    <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1">
                         <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded-md bg-accent/10 text-accent">Remote</span>
-                        {job.urgent && <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded-md gradient-warm text-highlight-foreground">Urgent</span>}
                         {job.featured && <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded-md gradient-primary text-primary-foreground">Featured</span>}
                       </div>
                       <h3 className="text-base font-semibold text-foreground group-hover:text-accent transition-colors">{job.title}</h3>
                       <p className="text-sm text-muted-foreground">{job.company}</p>
                       <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{job.description}</p>
-                      <div className="flex items-center gap-3 text-xs text-muted-foreground mt-2">
+                      <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground mt-2">
+                        <span className="flex items-center gap-1"><MapPin size={12} />{job.location}</span>
                         <span className="flex items-center gap-1"><Clock size={12} />{job.posted}</span>
                         <span className="flex items-center gap-1"><Briefcase size={12} />{job.type}</span>
                       </div>
                     </div>
-                    <div className="flex flex-col items-end gap-2 shrink-0" onClick={(e) => e.preventDefault()}>
+                    <div className="flex sm:flex-col items-center sm:items-end gap-2 shrink-0" onClick={(e) => e.preventDefault()}>
                       <span className="text-sm font-bold text-foreground">{job.salary}</span>
                       <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggleSave(job.id); }} className={`p-2 rounded-lg transition-colors ${isSaved(job.id) ? 'bg-accent/10 text-accent' : 'hover:bg-secondary text-muted-foreground'}`}>
                         <Bookmark size={16} className={isSaved(job.id) ? 'fill-accent' : ''} />
                       </button>
-                      <Link to={`/jobs/${job.id}`} onClick={(e) => e.stopPropagation()} className="inline-flex items-center gap-1 text-xs font-semibold gradient-accent text-accent-foreground px-4 py-2 rounded-lg hover:opacity-90 transition-opacity active:scale-95">
-                        View Details
+                      <Link to={`/jobs/${job.id}`} onClick={(e) => e.stopPropagation()} className="inline-flex items-center gap-1 text-xs font-semibold border border-border px-3 py-2 rounded-lg hover:bg-secondary transition-colors">
+                        Details
                       </Link>
+                      <a href={job.applyUrl} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="inline-flex items-center gap-1.5 text-xs font-semibold gradient-accent text-accent-foreground px-4 py-2 rounded-lg hover:opacity-90 transition-opacity active:scale-95">
+                        Apply <ExternalLink size={12} />
+                      </a>
                     </div>
                   </div>
                 </Link>
               </motion.div>
             ))}
           </div>
+          )}
+
           <div className="mt-8">
             <AdsBanner variant="banner" adIndex={2} />
           </div>

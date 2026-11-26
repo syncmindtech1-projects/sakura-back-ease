@@ -44,7 +44,7 @@ const AdvertiseModal = ({ open, onClose, source = "popup", requireVideoUrl = fal
     try {
       await supabase.functions.invoke("submit-ad", { body: { ...form, source } });
       setSent(true);
-      toast({ title: "Request sent ✓", description: "Our team will reach out via email shortly." });
+      toast({ title: "Request sent", description: "Our team will reach out via email shortly." });
     } catch (e: any) {
       toast({ title: "Could not send", description: e?.message ?? "Try again", variant: "destructive" });
     } finally {

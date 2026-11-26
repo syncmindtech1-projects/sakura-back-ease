@@ -1,30 +1,33 @@
 import { motion } from "framer-motion";
 import { Star, Quote } from "lucide-react";
-import avatarSarah from "@/assets/avatar-sarah.jpg";
-import avatarMarcus from "@/assets/avatar-marcus.jpg";
-import avatarEmily from "@/assets/avatar-emily.jpg";
+import reviewNakato from "@/assets/review-ug-1.jpg";
+import reviewOtieno from "@/assets/review-ke-1.jpg";
+import reviewMugisha from "@/assets/review-ug-2.jpg";
 
 const testimonials = [
   {
-    name: "Sarah Mitchell",
-    role: "Software Engineer",
-    text: "I found my dream remote job within a week. The search filters are incredible — I could narrow down by tech stack, salary, and company culture.",
+    name: "Sarah Nakato",
+    role: "Accounts Assistant, Kampala",
+    text: "I applied for three jobs on JobSphere in one evening and got a call from a Kampala firm two days later. Every listing linked straight to the real application page.",
     rating: 5,
-    avatar: avatarSarah,
+    avatar: reviewNakato,
+    alt: "Sarah Nakato, an accounts assistant in Kampala who found a job on JobSphere",
   },
   {
-    name: "Marcus Johnson",
-    role: "Licensed Electrician",
-    text: "As a skilled tradesperson, most job sites ignore us. JobSphere actually has listings for skilled trades. Got hired in 3 days!",
+    name: "Brian Otieno",
+    role: "Software Developer, Nairobi",
+    text: "Most Kenyan job boards charge or repost old adverts. JobSphere is free and the listings are fresh — I landed a developer role in Nairobi within two weeks.",
     rating: 5,
-    avatar: avatarMarcus,
+    avatar: reviewOtieno,
+    alt: "Brian Otieno, a software developer in Nairobi hired through JobSphere",
   },
   {
-    name: "Emily Chen",
-    role: "Product Manager",
-    text: "The salary guide helped me negotiate a 30% raise. The career advice section is pure gold for anyone looking to level up.",
+    name: "Joel Mugisha",
+    role: "Logistics Officer, Entebbe",
+    text: "The salary information and the interview prep section helped me negotiate properly. I moved from casual work to a full-time logistics job in Entebbe.",
     rating: 5,
-    avatar: avatarEmily,
+    avatar: reviewMugisha,
+    alt: "Joel Mugisha, a logistics officer in Entebbe who used JobSphere to find work",
   },
 ];
 
@@ -69,7 +72,7 @@ const Testimonials = () => {
               </div>
               <p className="text-sm text-muted-foreground leading-relaxed mb-6">"{t.text}"</p>
               <div className="flex items-center gap-3 pt-4 border-t border-border">
-                <img src={t.avatar} alt={t.name} loading="lazy" width={40} height={40} className="w-10 h-10 rounded-full object-cover" />
+                <img src={t.avatar} alt={t.alt} loading="lazy" width={40} height={40} className="w-10 h-10 rounded-full object-cover" />
                 <div>
                   <div className="text-sm font-semibold text-foreground">{t.name}</div>
                   <div className="text-xs text-muted-foreground">{t.role}</div>

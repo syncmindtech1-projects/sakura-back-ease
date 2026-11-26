@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Bell, CheckCircle, Mail, Briefcase, MapPin, Zap } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 const alertExamples = [
   { title: "React Developer", location: "Remote", frequency: "Daily" },
@@ -18,12 +19,29 @@ const JobAlerts = () => {
   const [frequency, setFrequency] = useState("daily");
   const { toast } = useToast();
 
-  const handleSubscribe = () => {
+  const [sending, setSending] = useState(false);
+
+  const handleSubscribe = async () => {
     if (!email) {
       toast({ title: "Email required", description: "Please enter your email address.", variant: "destructive" });
       return;
     }
-    toast({ title: "Alert created! ✅", description: `We'll send ${frequency} job alerts to ${email}` });
+    setSending(true);
+    const { data, error } = await supabase.functions.invoke("submit-contact", {
+      body: {
+        form_type: "job_alert",
+        email,
+        subject: `Job alert: ${jobTitle || "All jobs"}`,
+        message: `New job alert request for "${jobTitle || "All jobs"}" in ${location || "any location"} (${frequency}).`,
+        meta: { job_title: jobTitle, location, frequency },
+      },
+    });
+    setSending(false);
+    if (error || (data as any)?.error) {
+      toast({ title: "Could not create alert", description: (data as any)?.error || error?.message, variant: "destructive" });
+      return;
+    }
+    toast({ title: "Alert created!", description: `We'll send ${frequency} job alerts to ${email}` });
     setEmail("");
     setJobTitle("");
     setLocation("");
@@ -34,7 +52,7 @@ const JobAlerts = () => {
       <section className="bg-gradient-to-br from-[hsl(45,40%,96%)] to-[hsl(160,25%,95%)] py-10 md:py-14">
         <div className="container mx-auto px-4 md:px-8">
           <motion.div className="max-w-2xl" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-            <h1 className="text-3xl md:text-5xl font-bold font-display text-foreground mb-4">🔔 Job Alerts</h1>
+            <h1 className="text-3xl md:text-5xl font-bold font-display text-foreground mb-4">Job Alerts</h1>
             <p className="text-lg text-muted-foreground">Never miss an opportunity — get personalized job alerts delivered to your inbox.</p>
           </motion.div>
         </div>
@@ -78,8 +96,8 @@ const JobAlerts = () => {
                     ))}
                   </div>
                 </div>
-                <button onClick={handleSubscribe} className="w-full gradient-primary text-primary-foreground font-semibold py-3.5 rounded-xl hover:opacity-90 transition-opacity active:scale-[0.97]">
-                  Create Job Alert
+                <button onClick={handleSubscribe} disabled={sending} className="w-full gradient-primary text-primary-foreground font-semibold py-3.5 rounded-xl hover:opacity-90 transition-opacity active:scale-[0.97] disabled:opacity-60">
+                  {sending ? "Creating…" : "Create Job Alert"}
                 </button>
               </div>
             </motion.div>
