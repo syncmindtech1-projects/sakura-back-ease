@@ -2,9 +2,10 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
 /**
- * Server-side paginated job feed backed by the `scraped_jobs` table.
- * Column mapping: employer = company, url_link = apply_url,
- * time_added = posted_at (falls back to scraped_at), country = region.
+ * Server-side paginated job feed backed by the `jobs` table.
+ * Column mapping: employer = employer, url_link = apply link,
+ * time = posted_at (falls back to first_seen_at), country = country,
+ * salary = amount, job type = type. Only rows with status = 'active' are shown.
  */
 export const PAGE_SIZE = 20;
 
@@ -48,6 +49,12 @@ export const timeAgo = (iso?: string | null, now = Date.now()) => {
   return `${months} month${months > 1 ? "s" : ""} ago`;
 };
 
+/** The database stores "Not Specified" / "Not Disclosed" as defaults; treat them as empty. */
+const clean = (v?: string | null) => {
+  const s = (v ?? "").trim();
+  return !s || /^not (specified|disclosed)$/i.test(s) ? "" : s;
+};
+
 const typeLabel = (t?: string | null) => {
   const v = (t || "").toLowerCase();
   if (v.includes("part")) return "Part-time";
@@ -73,11 +80,20 @@ export const useJobCountries = () => {
     (async () => {
       const set = new Map<string, number>();
       for (let from = 0; from < 10000; from += 1000) {
-        const { data } = await supabase.from("scraped_jobs").select("region").range(from, from + 999);
-        (data ?? []).forEach((r: any) => r.region && set.set(r.region, (set.get(r.region) ?? 0) + 1));
+        const { data } = await supabase
+          .from("jobs")
+          .select("country")
+          .eq("status", "active")
+          .range(from, from + 999);
+        (data ?? []).forEach(
+          (r: any) =>
+            r.country && set.set(r.country, (set.get(r.country) ?? 0) + 1),
+        );
         if (!data || data.length < 1000) break;
       }
-      const list = [...set.entries()].sort((a, b) => b[1] - a[1]).map(([c]) => c);
+      const list = [...set.entries()]
+        .sort((a, b) => b[1] - a[1])
+        .map(([c]) => c);
       countryCache = list;
       setCountries(list);
     })();
@@ -85,7 +101,12 @@ export const useJobCountries = () => {
   return countries;
 };
 
-export const useJobFeed = (opts: { country: string; query: string; type: string; page: number }) => {
+export const useJobFeed = (opts: {
+  country: string;
+  query: string;
+  type: string;
+  page: number;
+}) => {
   const { country, query, type, page } = opts;
   const [jobs, setJobs] = useState<FeedJob[]>([]);
   const [total, setTotal] = useState(0);
@@ -96,42 +117,51 @@ export const useJobFeed = (opts: { country: string; query: string; type: string;
     setLoading(true);
     (async () => {
       let q = supabase
-        .from("scraped_jobs")
-        .select("id,title,company,location,region,description,apply_url,posted_at,scraped_at,job_type,salary,remote,logo_url,source_name", { count: "exact" })
-        .not("apply_url", "is", null);
-      if (country && country !== "All") q = q.eq("region", country);
+        .from("jobs")
+        .select(
+          "id,title,employer,location,country,description,url_link,posted_at,first_seen_at,type,amount,source",
+          { count: "exact" },
+        )
+        .eq("status", "active")
+        .not("url_link", "is", null);
+      if (country && country !== "All") q = q.eq("country", country);
       const s = query.trim().replace(/[%,()]/g, " ");
-      if (s) q = q.or(`title.ilike.%${s}%,company.ilike.%${s}%`);
+      if (s) q = q.or(`title.ilike.%${s}%,employer.ilike.%${s}%`);
       if (type !== "All") {
-        if (type === "Full-time") q = q.or("job_type.is.null,job_type.ilike.%full%");
-        else q = q.ilike("job_type", typePattern[type]);
+        if (type === "Full-time")
+          q = q.or("type.is.null,type.ilike.%full%,type.ilike.%not specified%");
+        else q = q.ilike("type", typePattern[type]);
       }
       const from = (page - 1) * PAGE_SIZE;
       const { data, count } = await q
         .order("posted_at", { ascending: false, nullsFirst: false })
-        .order("scraped_at", { ascending: false })
+        .order("first_seen_at", { ascending: false })
         .range(from, from + PAGE_SIZE - 1);
       if (cancelled) return;
       setJobs(
         (data ?? []).map((r: any) => ({
           id: r.id,
           title: r.title,
-          employer: r.company || "Employer",
-          location: r.location || r.region || "",
-          country: r.region || "",
+          employer: clean(r.employer) || `Employer via ${r.source}`,
+          location: clean(r.location) || r.country || "",
+          country: r.country || "",
           description: stripHtml(r.description),
-          urlLink: r.apply_url,
-          timeAgo: timeAgo(r.posted_at ?? r.scraped_at),
-          jobType: typeLabel(r.job_type),
-          salary: r.salary || "Not disclosed",
-          remote: !!r.remote,
-          logoUrl: r.logo_url ?? null,
-        }))
+          urlLink: r.url_link,
+          timeAgo: timeAgo(r.posted_at ?? r.first_seen_at),
+          jobType: typeLabel(r.type),
+          salary: clean(r.amount) || "Not disclosed",
+          remote: /remote|work from home/i.test(
+            `${r.title ?? ""} ${r.location ?? ""} ${r.type ?? ""}`,
+          ),
+          logoUrl: null,
+        })),
       );
       setTotal(count ?? 0);
       setLoading(false);
     })().catch(() => !cancelled && setLoading(false));
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [country, query, type, page]);
 
   return { jobs, total, loading };

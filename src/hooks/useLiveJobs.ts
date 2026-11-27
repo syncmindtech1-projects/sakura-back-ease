@@ -1,8 +1,12 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import type { Job } from "@/lib/jobData";
-import { setLiveJobsCache, inferCategory, getJobCategoriesWithCounts } from "@/lib/jobData";
-
+import {
+  setLiveJobsCache,
+  inferCategory,
+  jobCategories,
+  getJobCategoriesWithCounts,
+} from "@/lib/jobData";
 
 /**
  * Builds a mailto: apply link when an employer did not supply an apply URL.
@@ -27,7 +31,8 @@ export const buildApplyLink = (opts: {
   return `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 };
 
-export const isEmailApply = (link: string) => link.toLowerCase().startsWith("mailto:");
+export const isEmailApply = (link: string) =>
+  link.toLowerCase().startsWith("mailto:");
 
 const relative = (iso?: string | null) => {
   if (!iso) return "Recently";
@@ -52,74 +57,79 @@ const normaliseType = (t?: string | null): Job["type"] => {
   return "Full-time";
 };
 
+/** The database stores "Not Specified" / "Not Disclosed" as defaults; treat them as empty. */
+const clean = (v?: string | null) => {
+  const s = (v ?? "").trim();
+  return !s || /^not (specified|disclosed)$/i.test(s) ? "" : s;
+};
+
+/** Use the stored sector only when it matches one of the site's categories; otherwise infer one. */
+const resolveCategory = (
+  sector: string,
+  title: string,
+  description?: string | null,
+) => {
+  const known = jobCategories.find(
+    (c) => c.name.toLowerCase() === sector.toLowerCase(),
+  );
+  return known
+    ? known.name
+    : inferCategory(`${title} ${sector} ${description ?? ""}`);
+};
+
 let cache: Job[] | null = null;
 let inflight: Promise<Job[]> | null = null;
 
 const fetchJobs = async (): Promise<Job[]> => {
-  const [scraped, posted] = await Promise.all([
-    supabase
-      .from("scraped_jobs")
-      .select("*")
-      .order("posted_at", { ascending: false, nullsFirst: false })
-      .limit(1000),
-    supabase.from("posted_jobs").select("*").order("created_at", { ascending: false }).limit(300),
-  ]);
+  const { data } = await supabase
+    .from("jobs")
+    .select(
+      "id,title,employer,location,country,industry_sector,type,amount,description,url_link,source,posted_at,first_seen_at",
+    )
+    .eq("status", "active")
+    .order("posted_at", { ascending: false, nullsFirst: false })
+    .order("first_seen_at", { ascending: false })
+    .limit(1000);
 
-  const postedJobs: Job[] = (posted.data ?? []).map((p: any) => ({
-    id: `posted-${p.id}`,
-    title: p.title,
-    company: p.company,
-    location: p.location ?? "Uganda",
-    type: normaliseType(p.job_type),
-    category: p.category ?? "General",
-    salary: p.salary ?? "Not disclosed",
-    posted: relative(p.created_at),
-    featured: true,
-    remote: /remote/i.test(`${p.location ?? ""} ${p.job_type ?? ""}`),
-    description: p.description ?? "",
-    tags: [p.category, p.job_type].filter(Boolean) as string[],
-    applyUrl: buildApplyLink({
-      applyUrl: p.apply_url,
-      contactEmail: p.contact_email,
-      title: p.title,
-      company: p.company,
-    }),
-    contactEmail: p.contact_email ?? undefined,
-    source: "JobSphere",
-  }));
-
-  const scrapedJobs: Job[] = (scraped.data ?? [])
-    .filter((s: any) => !!s.apply_url)
+  const all: Job[] = (data ?? [])
+    .filter((s: any) => !!s.url_link)
     .map((s: any) => {
       const title = s.title as string;
-      const region = s.region ?? "East Africa";
-      const category = s.category ?? inferCategory(`${title} ${s.description ?? ""}`);
-      const remote = !!s.remote || /remote|work from home/i.test(`${title} ${s.location ?? ""}`);
+      const country = clean(s.country) || "East Africa";
+      const location = clean(s.location) || country;
+      const category = resolveCategory(
+        clean(s.industry_sector),
+        title,
+        s.description,
+      );
+      const remote = /remote|work from home/i.test(
+        `${title} ${s.location ?? ""} ${s.type ?? ""}`,
+      );
       return {
         id: `sc-${s.id}`,
         title,
-        company: s.company ?? "Employer",
-        location: s.location ?? region,
-        type: normaliseType(s.job_type),
+        company: clean(s.employer) || `Employer via ${s.source}`,
+        location,
+        type: normaliseType(s.type),
         category,
-        salary: s.salary ?? "Not disclosed",
-        posted: relative(s.posted_at ?? s.scraped_at),
+        salary: clean(s.amount) || "Not disclosed",
+        posted: relative(s.posted_at ?? s.first_seen_at),
         remote,
         description:
           s.description ||
-          `${title} — an open ${category.toLowerCase()} vacancy in ${region}. Click through to the original listing for full requirements, responsibilities and how to apply.`,
-        tags: [category, remote ? "Remote" : null, region].filter(Boolean) as string[],
-        applyUrl: s.apply_url,
-        source: s.source_name,
+          `${title} — an open ${category.toLowerCase()} vacancy in ${country}. Click through to the original listing for full requirements, responsibilities and how to apply.`,
+        tags: [category, remote ? "Remote" : null, country].filter(
+          Boolean,
+        ) as string[],
+        applyUrl: s.url_link,
+        source: s.source,
       } as Job;
     });
 
-  const all = [...postedJobs, ...scrapedJobs];
   cache = all;
   setLiveJobsCache(all);
   return all;
 };
-
 
 export const useLiveJobs = () => {
   const [jobs, setJobs] = useState<Job[]>(cache ?? []);
@@ -127,12 +137,20 @@ export const useLiveJobs = () => {
 
   useEffect(() => {
     let cancelled = false;
-    if (!inflight) inflight = fetchJobs().finally(() => { inflight = null; });
+    if (!inflight)
+      inflight = fetchJobs().finally(() => {
+        inflight = null;
+      });
     const p = cache ? Promise.resolve(cache) : inflight;
     p.then((data) => {
-      if (!cancelled) { setJobs(data); setLoading(false); }
+      if (!cancelled) {
+        setJobs(data);
+        setLoading(false);
+      }
     }).catch(() => !cancelled && setLoading(false));
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   return { jobs, loading };
@@ -152,7 +170,11 @@ const SUPPORTED_COUNTRIES = new Set([
 export const useLiveJobStats = () => {
   const { jobs, loading } = useLiveJobs();
   const companies = new Set(jobs.map((j) => j.company)).size;
-  const countries = SUPPORTED_COUNTRIES.size;
+  const countries = new Set(
+    jobs
+      .map((j) => j.location.split(",").pop()?.trim())
+      .filter((c): c is string => !!c && SUPPORTED_COUNTRIES.has(c)),
+  ).size;
   return { totalJobs: jobs.length, companies, countries, loading };
 };
 

@@ -4,499 +4,556 @@ export type Json =
   | boolean
   | null
   | { [key: string]: Json | undefined }
-  | Json[]
+  | Json[];
 
 export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "14.4"
-  }
+    PostgrestVersion: "14.4";
+  };
   public: {
     Tables: {
+      jobs: {
+        Row: {
+          amount: string | null;
+          country: string;
+          description: string | null;
+          employer: string | null;
+          first_seen_at: string;
+          id: string;
+          industry_sector: string | null;
+          last_seen_at: string;
+          location: string | null;
+          posted_at: string | null;
+          source: string;
+          status: string;
+          title: string;
+          type: string | null;
+          url_link: string;
+        };
+        Insert: {
+          amount?: string | null;
+          country?: string;
+          description?: string | null;
+          employer?: string | null;
+          first_seen_at?: string;
+          id?: string;
+          industry_sector?: string | null;
+          last_seen_at?: string;
+          location?: string | null;
+          posted_at?: string | null;
+          source: string;
+          status?: string;
+          title: string;
+          type?: string | null;
+          url_link: string;
+        };
+        Update: {
+          amount?: string | null;
+          country?: string;
+          description?: string | null;
+          employer?: string | null;
+          first_seen_at?: string;
+          id?: string;
+          industry_sector?: string | null;
+          last_seen_at?: string;
+          location?: string | null;
+          posted_at?: string | null;
+          source?: string;
+          status?: string;
+          title?: string;
+          type?: string | null;
+          url_link?: string;
+        };
+        Relationships: [];
+      };
       ad_submissions: {
         Row: {
-          ad_type: string | null
-          advertiser_name: string
-          budget: string | null
-          company: string | null
-          contact_email: string
-          created_at: string
-          id: string
-          message: string
-          phone: string | null
-          rejection_reason: string | null
-          source: string | null
-          status: string
-          target_url: string | null
-          video_url: string | null
-        }
+          ad_type: string | null;
+          advertiser_name: string;
+          budget: string | null;
+          company: string | null;
+          contact_email: string;
+          created_at: string;
+          id: string;
+          message: string;
+          phone: string | null;
+          rejection_reason: string | null;
+          source: string | null;
+          status: string;
+          target_url: string | null;
+          video_url: string | null;
+        };
         Insert: {
-          ad_type?: string | null
-          advertiser_name: string
-          budget?: string | null
-          company?: string | null
-          contact_email: string
-          created_at?: string
-          id?: string
-          message: string
-          phone?: string | null
-          rejection_reason?: string | null
-          source?: string | null
-          status?: string
-          target_url?: string | null
-          video_url?: string | null
-        }
+          ad_type?: string | null;
+          advertiser_name: string;
+          budget?: string | null;
+          company?: string | null;
+          contact_email: string;
+          created_at?: string;
+          id?: string;
+          message: string;
+          phone?: string | null;
+          rejection_reason?: string | null;
+          source?: string | null;
+          status?: string;
+          target_url?: string | null;
+          video_url?: string | null;
+        };
         Update: {
-          ad_type?: string | null
-          advertiser_name?: string
-          budget?: string | null
-          company?: string | null
-          contact_email?: string
-          created_at?: string
-          id?: string
-          message?: string
-          phone?: string | null
-          rejection_reason?: string | null
-          source?: string | null
-          status?: string
-          target_url?: string | null
-          video_url?: string | null
-        }
-        Relationships: []
-      }
+          ad_type?: string | null;
+          advertiser_name?: string;
+          budget?: string | null;
+          company?: string | null;
+          contact_email?: string;
+          created_at?: string;
+          id?: string;
+          message?: string;
+          phone?: string | null;
+          rejection_reason?: string | null;
+          source?: string | null;
+          status?: string;
+          target_url?: string | null;
+          video_url?: string | null;
+        };
+        Relationships: [];
+      };
       contact_messages: {
         Row: {
-          created_at: string
-          email: string
-          form_type: string
-          id: string
-          message: string | null
-          meta: Json | null
-          name: string | null
-          subject: string | null
-        }
+          created_at: string;
+          email: string;
+          form_type: string;
+          id: string;
+          message: string | null;
+          meta: Json | null;
+          name: string | null;
+          subject: string | null;
+        };
         Insert: {
-          created_at?: string
-          email: string
-          form_type: string
-          id?: string
-          message?: string | null
-          meta?: Json | null
-          name?: string | null
-          subject?: string | null
-        }
+          created_at?: string;
+          email: string;
+          form_type: string;
+          id?: string;
+          message?: string | null;
+          meta?: Json | null;
+          name?: string | null;
+          subject?: string | null;
+        };
         Update: {
-          created_at?: string
-          email?: string
-          form_type?: string
-          id?: string
-          message?: string | null
-          meta?: Json | null
-          name?: string | null
-          subject?: string | null
-        }
-        Relationships: []
-      }
+          created_at?: string;
+          email?: string;
+          form_type?: string;
+          id?: string;
+          message?: string | null;
+          meta?: Json | null;
+          name?: string | null;
+          subject?: string | null;
+        };
+        Relationships: [];
+      };
       deleted_jobs: {
         Row: {
-          apply_url: string | null
-          category: string | null
-          company: string
-          contact_email: string | null
-          created_at: string
-          deleted_at: string
-          deleted_by: string | null
-          description: string | null
-          id: string
-          job_type: string | null
-          location: string | null
-          original_created_at: string | null
-          original_id: string | null
-          posted_by: string | null
-          salary: string | null
-          source_table: string
-          title: string
-          updated_at: string
-        }
+          apply_url: string | null;
+          category: string | null;
+          company: string;
+          contact_email: string | null;
+          created_at: string;
+          deleted_at: string;
+          deleted_by: string | null;
+          description: string | null;
+          id: string;
+          job_type: string | null;
+          location: string | null;
+          original_created_at: string | null;
+          original_id: string | null;
+          posted_by: string | null;
+          salary: string | null;
+          source_table: string;
+          title: string;
+          updated_at: string;
+        };
         Insert: {
-          apply_url?: string | null
-          category?: string | null
-          company: string
-          contact_email?: string | null
-          created_at?: string
-          deleted_at?: string
-          deleted_by?: string | null
-          description?: string | null
-          id?: string
-          job_type?: string | null
-          location?: string | null
-          original_created_at?: string | null
-          original_id?: string | null
-          posted_by?: string | null
-          salary?: string | null
-          source_table?: string
-          title: string
-          updated_at?: string
-        }
+          apply_url?: string | null;
+          category?: string | null;
+          company: string;
+          contact_email?: string | null;
+          created_at?: string;
+          deleted_at?: string;
+          deleted_by?: string | null;
+          description?: string | null;
+          id?: string;
+          job_type?: string | null;
+          location?: string | null;
+          original_created_at?: string | null;
+          original_id?: string | null;
+          posted_by?: string | null;
+          salary?: string | null;
+          source_table?: string;
+          title: string;
+          updated_at?: string;
+        };
         Update: {
-          apply_url?: string | null
-          category?: string | null
-          company?: string
-          contact_email?: string | null
-          created_at?: string
-          deleted_at?: string
-          deleted_by?: string | null
-          description?: string | null
-          id?: string
-          job_type?: string | null
-          location?: string | null
-          original_created_at?: string | null
-          original_id?: string | null
-          posted_by?: string | null
-          salary?: string | null
-          source_table?: string
-          title?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
+          apply_url?: string | null;
+          category?: string | null;
+          company?: string;
+          contact_email?: string | null;
+          created_at?: string;
+          deleted_at?: string;
+          deleted_by?: string | null;
+          description?: string | null;
+          id?: string;
+          job_type?: string | null;
+          location?: string | null;
+          original_created_at?: string | null;
+          original_id?: string | null;
+          posted_by?: string | null;
+          salary?: string | null;
+          source_table?: string;
+          title?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       job_submissions: {
         Row: {
-          apply_url: string | null
-          category: string | null
-          company: string
-          contact_email: string
-          created_at: string
-          description: string
-          id: string
-          job_type: string | null
-          location: string | null
-          plan: string | null
-          rejection_reason: string | null
-          salary: string | null
-          status: string
-          title: string
-        }
+          apply_url: string | null;
+          category: string | null;
+          company: string;
+          contact_email: string;
+          created_at: string;
+          description: string;
+          id: string;
+          job_type: string | null;
+          location: string | null;
+          plan: string | null;
+          rejection_reason: string | null;
+          salary: string | null;
+          status: string;
+          title: string;
+        };
         Insert: {
-          apply_url?: string | null
-          category?: string | null
-          company: string
-          contact_email: string
-          created_at?: string
-          description: string
-          id?: string
-          job_type?: string | null
-          location?: string | null
-          plan?: string | null
-          rejection_reason?: string | null
-          salary?: string | null
-          status?: string
-          title: string
-        }
+          apply_url?: string | null;
+          category?: string | null;
+          company: string;
+          contact_email: string;
+          created_at?: string;
+          description: string;
+          id?: string;
+          job_type?: string | null;
+          location?: string | null;
+          plan?: string | null;
+          rejection_reason?: string | null;
+          salary?: string | null;
+          status?: string;
+          title: string;
+        };
         Update: {
-          apply_url?: string | null
-          category?: string | null
-          company?: string
-          contact_email?: string
-          created_at?: string
-          description?: string
-          id?: string
-          job_type?: string | null
-          location?: string | null
-          plan?: string | null
-          rejection_reason?: string | null
-          salary?: string | null
-          status?: string
-          title?: string
-        }
-        Relationships: []
-      }
+          apply_url?: string | null;
+          category?: string | null;
+          company?: string;
+          contact_email?: string;
+          created_at?: string;
+          description?: string;
+          id?: string;
+          job_type?: string | null;
+          location?: string | null;
+          plan?: string | null;
+          rejection_reason?: string | null;
+          salary?: string | null;
+          status?: string;
+          title?: string;
+        };
+        Relationships: [];
+      };
       notifications: {
         Row: {
-          body: string | null
-          created_at: string
-          id: string
-          link: string | null
-          read: boolean
-          title: string
-          type: string
-          user_id: string
-        }
+          body: string | null;
+          created_at: string;
+          id: string;
+          link: string | null;
+          read: boolean;
+          title: string;
+          type: string;
+          user_id: string;
+        };
         Insert: {
-          body?: string | null
-          created_at?: string
-          id?: string
-          link?: string | null
-          read?: boolean
-          title: string
-          type?: string
-          user_id: string
-        }
+          body?: string | null;
+          created_at?: string;
+          id?: string;
+          link?: string | null;
+          read?: boolean;
+          title: string;
+          type?: string;
+          user_id: string;
+        };
         Update: {
-          body?: string | null
-          created_at?: string
-          id?: string
-          link?: string | null
-          read?: boolean
-          title?: string
-          type?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
+          body?: string | null;
+          created_at?: string;
+          id?: string;
+          link?: string | null;
+          read?: boolean;
+          title?: string;
+          type?: string;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
       posted_jobs: {
         Row: {
-          apply_url: string | null
-          category: string | null
-          company: string
-          contact_email: string
-          created_at: string
-          description: string
-          id: string
-          is_published: boolean
-          job_type: string | null
-          location: string | null
-          posted_by: string | null
-          salary: string | null
-          title: string
-          updated_at: string
-        }
+          apply_url: string | null;
+          category: string | null;
+          company: string;
+          contact_email: string;
+          created_at: string;
+          description: string;
+          id: string;
+          is_published: boolean;
+          job_type: string | null;
+          location: string | null;
+          posted_by: string | null;
+          salary: string | null;
+          title: string;
+          updated_at: string;
+        };
         Insert: {
-          apply_url?: string | null
-          category?: string | null
-          company: string
-          contact_email: string
-          created_at?: string
-          description: string
-          id?: string
-          is_published?: boolean
-          job_type?: string | null
-          location?: string | null
-          posted_by?: string | null
-          salary?: string | null
-          title: string
-          updated_at?: string
-        }
+          apply_url?: string | null;
+          category?: string | null;
+          company: string;
+          contact_email: string;
+          created_at?: string;
+          description: string;
+          id?: string;
+          is_published?: boolean;
+          job_type?: string | null;
+          location?: string | null;
+          posted_by?: string | null;
+          salary?: string | null;
+          title: string;
+          updated_at?: string;
+        };
         Update: {
-          apply_url?: string | null
-          category?: string | null
-          company?: string
-          contact_email?: string
-          created_at?: string
-          description?: string
-          id?: string
-          is_published?: boolean
-          job_type?: string | null
-          location?: string | null
-          posted_by?: string | null
-          salary?: string | null
-          title?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
+          apply_url?: string | null;
+          category?: string | null;
+          company?: string;
+          contact_email?: string;
+          created_at?: string;
+          description?: string;
+          id?: string;
+          is_published?: boolean;
+          job_type?: string | null;
+          location?: string | null;
+          posted_by?: string | null;
+          salary?: string | null;
+          title?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       profiles: {
         Row: {
-          avatar_url: string | null
-          created_at: string
-          full_name: string | null
-          id: string
-          updated_at: string
-        }
+          avatar_url: string | null;
+          created_at: string;
+          full_name: string | null;
+          id: string;
+          updated_at: string;
+        };
         Insert: {
-          avatar_url?: string | null
-          created_at?: string
-          full_name?: string | null
-          id: string
-          updated_at?: string
-        }
+          avatar_url?: string | null;
+          created_at?: string;
+          full_name?: string | null;
+          id: string;
+          updated_at?: string;
+        };
         Update: {
-          avatar_url?: string | null
-          created_at?: string
-          full_name?: string | null
-          id?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
+          avatar_url?: string | null;
+          created_at?: string;
+          full_name?: string | null;
+          id?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       scraped_jobs: {
         Row: {
-          apply_url: string
-          category: string | null
-          company: string | null
-          created_at: string
-          description: string | null
-          id: string
-          is_published: boolean
-          job_type: string | null
-          location: string | null
-          logo_url: string | null
-          posted_at: string | null
-          region: string | null
-          remote: boolean | null
-          salary: string | null
-          scraped_at: string
-          source_name: string
-          source_url: string | null
-          title: string
-        }
+          apply_url: string;
+          category: string | null;
+          company: string | null;
+          created_at: string;
+          description: string | null;
+          id: string;
+          is_published: boolean;
+          job_type: string | null;
+          location: string | null;
+          logo_url: string | null;
+          posted_at: string | null;
+          region: string | null;
+          remote: boolean | null;
+          salary: string | null;
+          scraped_at: string;
+          source_name: string;
+          source_url: string | null;
+          title: string;
+        };
         Insert: {
-          apply_url: string
-          category?: string | null
-          company?: string | null
-          created_at?: string
-          description?: string | null
-          id?: string
-          is_published?: boolean
-          job_type?: string | null
-          location?: string | null
-          logo_url?: string | null
-          posted_at?: string | null
-          region?: string | null
-          remote?: boolean | null
-          salary?: string | null
-          scraped_at?: string
-          source_name: string
-          source_url?: string | null
-          title: string
-        }
+          apply_url: string;
+          category?: string | null;
+          company?: string | null;
+          created_at?: string;
+          description?: string | null;
+          id?: string;
+          is_published?: boolean;
+          job_type?: string | null;
+          location?: string | null;
+          logo_url?: string | null;
+          posted_at?: string | null;
+          region?: string | null;
+          remote?: boolean | null;
+          salary?: string | null;
+          scraped_at?: string;
+          source_name: string;
+          source_url?: string | null;
+          title: string;
+        };
         Update: {
-          apply_url?: string
-          category?: string | null
-          company?: string | null
-          created_at?: string
-          description?: string | null
-          id?: string
-          is_published?: boolean
-          job_type?: string | null
-          location?: string | null
-          logo_url?: string | null
-          posted_at?: string | null
-          region?: string | null
-          remote?: boolean | null
-          salary?: string | null
-          scraped_at?: string
-          source_name?: string
-          source_url?: string | null
-          title?: string
-        }
-        Relationships: []
-      }
+          apply_url?: string;
+          category?: string | null;
+          company?: string | null;
+          created_at?: string;
+          description?: string | null;
+          id?: string;
+          is_published?: boolean;
+          job_type?: string | null;
+          location?: string | null;
+          logo_url?: string | null;
+          posted_at?: string | null;
+          region?: string | null;
+          remote?: boolean | null;
+          salary?: string | null;
+          scraped_at?: string;
+          source_name?: string;
+          source_url?: string | null;
+          title?: string;
+        };
+        Relationships: [];
+      };
       signup_notifications: {
         Row: {
-          email: string | null
-          full_name: string | null
-          method: string | null
-          notified_at: string
-          reviewed: boolean
-          role: string
-          user_id: string
-        }
+          email: string | null;
+          full_name: string | null;
+          method: string | null;
+          notified_at: string;
+          reviewed: boolean;
+          role: string;
+          user_id: string;
+        };
         Insert: {
-          email?: string | null
-          full_name?: string | null
-          method?: string | null
-          notified_at?: string
-          reviewed?: boolean
-          role?: string
-          user_id: string
-        }
+          email?: string | null;
+          full_name?: string | null;
+          method?: string | null;
+          notified_at?: string;
+          reviewed?: boolean;
+          role?: string;
+          user_id: string;
+        };
         Update: {
-          email?: string | null
-          full_name?: string | null
-          method?: string | null
-          notified_at?: string
-          reviewed?: boolean
-          role?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
+          email?: string | null;
+          full_name?: string | null;
+          method?: string | null;
+          notified_at?: string;
+          reviewed?: boolean;
+          role?: string;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
       site_ads: {
         Row: {
-          active: boolean
-          ad_kind: string
-          blurb: string | null
-          created_at: string
-          cta_label: string | null
-          cta_link: string | null
-          id: string
-          image_url: string | null
-          slot_key: string
-          sponsor: string | null
-          title: string
-          updated_at: string
-          video_url: string | null
-        }
+          active: boolean;
+          ad_kind: string;
+          blurb: string | null;
+          created_at: string;
+          cta_label: string | null;
+          cta_link: string | null;
+          id: string;
+          image_url: string | null;
+          slot_key: string;
+          sponsor: string | null;
+          title: string;
+          updated_at: string;
+          video_url: string | null;
+        };
         Insert: {
-          active?: boolean
-          ad_kind?: string
-          blurb?: string | null
-          created_at?: string
-          cta_label?: string | null
-          cta_link?: string | null
-          id?: string
-          image_url?: string | null
-          slot_key: string
-          sponsor?: string | null
-          title: string
-          updated_at?: string
-          video_url?: string | null
-        }
+          active?: boolean;
+          ad_kind?: string;
+          blurb?: string | null;
+          created_at?: string;
+          cta_label?: string | null;
+          cta_link?: string | null;
+          id?: string;
+          image_url?: string | null;
+          slot_key: string;
+          sponsor?: string | null;
+          title: string;
+          updated_at?: string;
+          video_url?: string | null;
+        };
         Update: {
-          active?: boolean
-          ad_kind?: string
-          blurb?: string | null
-          created_at?: string
-          cta_label?: string | null
-          cta_link?: string | null
-          id?: string
-          image_url?: string | null
-          slot_key?: string
-          sponsor?: string | null
-          title?: string
-          updated_at?: string
-          video_url?: string | null
-        }
-        Relationships: []
-      }
-    }
+          active?: boolean;
+          ad_kind?: string;
+          blurb?: string | null;
+          created_at?: string;
+          cta_label?: string | null;
+          cta_link?: string | null;
+          id?: string;
+          image_url?: string | null;
+          slot_key?: string;
+          sponsor?: string | null;
+          title?: string;
+          updated_at?: string;
+          video_url?: string | null;
+        };
+        Relationships: [];
+      };
+    };
     Views: {
-      [_ in never]: never
-    }
+      [_ in never]: never;
+    };
     Functions: {
-      [_ in never]: never
-    }
+      [_ in never]: never;
+    };
     Enums: {
-      [_ in never]: never
-    }
+      [_ in never]: never;
+    };
     CompositeTypes: {
-      [_ in never]: never
-    }
-  }
-}
+      [_ in never]: never;
+    };
+  };
+};
 
-type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
+type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">;
 
-type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
+type DefaultSchema = DatabaseWithoutInternals[Extract<
+  keyof Database,
+  "public"
+>];
 
 export type Tables<
   DefaultSchemaTableNameOrOptions extends
     | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends (DefaultSchemaTableNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals;
   }
     ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
         DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
-    : never) = never,
+    : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
+  schema: keyof DatabaseWithoutInternals;
 }
   ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
       DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
-      Row: infer R
+      Row: infer R;
     }
     ? R
     : never
@@ -504,98 +561,98 @@ export type Tables<
         DefaultSchema["Views"])
     ? (DefaultSchema["Tables"] &
         DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
-        Row: infer R
+        Row: infer R;
       }
       ? R
       : never
-    : never
+    : never;
 
 export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends (DefaultSchemaTableNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals;
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never) = never,
+    : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
+  schema: keyof DatabaseWithoutInternals;
 }
   ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Insert: infer I
+      Insert: infer I;
     }
     ? I
     : never
   : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
     ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
-        Insert: infer I
+        Insert: infer I;
       }
       ? I
       : never
-    : never
+    : never;
 
 export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends (DefaultSchemaTableNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals;
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never) = never,
+    : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
+  schema: keyof DatabaseWithoutInternals;
 }
   ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Update: infer U
+      Update: infer U;
     }
     ? U
     : never
   : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
     ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
-        Update: infer U
+        Update: infer U;
       }
       ? U
       : never
-    : never
+    : never;
 
 export type Enums<
   DefaultSchemaEnumNameOrOptions extends
     | keyof DefaultSchema["Enums"]
     | { schema: keyof DatabaseWithoutInternals },
-  EnumName extends (DefaultSchemaEnumNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
+  EnumName extends DefaultSchemaEnumNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals;
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
-    : never) = never,
+    : never = never,
 > = DefaultSchemaEnumNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
+  schema: keyof DatabaseWithoutInternals;
 }
   ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
   : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
     ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
-    : never
+    : never;
 
 export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
     | keyof DefaultSchema["CompositeTypes"]
     | { schema: keyof DatabaseWithoutInternals },
-  CompositeTypeName extends (PublicCompositeTypeNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
+  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals;
   }
     ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
-    : never) = never,
+    : never = never,
 > = PublicCompositeTypeNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
+  schema: keyof DatabaseWithoutInternals;
 }
   ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
   : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
     ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
-    : never
+    : never;
 
 export const Constants = {
   public: {
     Enums: {},
   },
-} as const
+} as const;
