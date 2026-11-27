@@ -29,7 +29,9 @@ const LiveJobs = ({ limit = 12, region, compact = false }: LiveJobsProps) => {
     (async () => {
       let q = supabase
         .from("scraped_jobs")
-        .select("id,title,company,location,region,apply_url,source_name,scraped_at")
+        .select(
+          "id,title,company,location,region,apply_url,source_name,scraped_at",
+        )
         .order("scraped_at", { ascending: false })
         .limit(limit);
       if (region) q = q.eq("region", region);
@@ -43,7 +45,8 @@ const LiveJobs = ({ limit = 12, region, compact = false }: LiveJobsProps) => {
     return (
       <section className="py-16 md:py-20 border-t border-border">
         <div className="container mx-auto px-4 md:px-8 flex items-center justify-center py-12 text-muted-foreground">
-          <Loader2 className="animate-spin mr-2" size={16} /> Loading live listings…
+          <Loader2 className="animate-spin mr-2" size={16} /> Loading live
+          listings…
         </div>
       </section>
     );
@@ -51,7 +54,10 @@ const LiveJobs = ({ limit = 12, region, compact = false }: LiveJobsProps) => {
   if (jobs.length === 0) return null;
 
   return (
-    <section className="py-16 md:py-24 border-t border-border" style={{ backgroundColor: "#FAFAF8" }}>
+    <section
+      className="py-16 md:py-24 border-t border-border"
+      style={{ backgroundColor: "#FAFAF8" }}
+    >
       <div className="container mx-auto px-4 md:px-8">
         <header className="flex items-end justify-between mb-10 pb-6 border-b border-border">
           <div>
@@ -66,15 +72,25 @@ const LiveJobs = ({ limit = 12, region, compact = false }: LiveJobsProps) => {
               Fresh listings this week
             </h2>
             <p className="mt-2 text-sm text-muted-foreground">
-              Verified openings pulled directly from BrighterMonday, Fuzu, JobAdverts UG and others.
+              Verified openings pulled directly from BrighterMonday, Fuzu,
+              JobAdverts UG and others.
             </p>
           </div>
-          <Link to="/jobs" className="hidden md:inline-flex text-sm font-medium text-foreground border-b border-foreground pb-0.5 hover:text-primary hover:border-primary transition-colors">
+          <Link
+            to="/jobs"
+            className="hidden md:inline-flex text-sm font-medium text-foreground border-b border-foreground pb-0.5 hover:text-primary hover:border-primary transition-colors"
+          >
             Browse all
           </Link>
         </header>
 
-        <ul className={compact ? "grid md:grid-cols-2 gap-4" : "grid md:grid-cols-2 lg:grid-cols-3 gap-4"}>
+        <ul
+          className={
+            compact
+              ? "grid md:grid-cols-2 gap-4"
+              : "grid md:grid-cols-2 lg:grid-cols-3 gap-4"
+          }
+        >
           {jobs.map((j) => (
             <li key={j.id}>
               <article className="group h-full bg-white border border-border rounded-xl p-5 hover:shadow-[0_10px_40px_-16px_rgba(0,0,0,0.15)] hover:border-foreground/20 transition-all flex flex-col">
@@ -105,7 +121,10 @@ const LiveJobs = ({ limit = 12, region, compact = false }: LiveJobsProps) => {
 
                 <div className="mt-auto pt-4 border-t border-border flex items-center justify-between">
                   <span className="text-xs text-muted-foreground">
-                    {new Date(j.scraped_at).toLocaleDateString("en-GB", { day: "numeric", month: "short" })}
+                    {new Date(j.scraped_at).toLocaleDateString("en-GB", {
+                      day: "numeric",
+                      month: "short",
+                    })}
                   </span>
                   <a
                     href={j.apply_url}
@@ -113,7 +132,7 @@ const LiveJobs = ({ limit = 12, region, compact = false }: LiveJobsProps) => {
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:gap-2 transition-all"
                   >
-                    Apply <ExternalLink size={13} />
+                    Apply. <ExternalLink size={13} />
                   </a>
                 </div>
               </article>
